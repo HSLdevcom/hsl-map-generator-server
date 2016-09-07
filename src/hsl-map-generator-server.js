@@ -2,7 +2,7 @@ const Koa = require('koa');
 const app = new Koa();
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser')();
-const imageGenerator = require('hsl-map-generator-core');
+const imageGenerator = require('./imageGenerator');
 // const stopLabelGenerator = require('./stopLabelGenerator');
 
 router.post('/generateImage', ctx =>
