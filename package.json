@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/HSLdevcom/hsl-map-generator-server.git"
+    "url": "git+https://github.com/HSLdevcom/hsl-map-generator-server.git"
   },
   "keywords": [],
   "author": "Hannes Junnila <hannes.junnila@gmail.com>",
@@ -57,12 +57,14 @@
     "mainVarName": "hslMapGeneratorServer"
   },
   "dependencies": {
+    "file-system": "^2.2.1",
     "hsl-map-generator-utils": "git+https://github.com/HSLdevcom/hsl-map-generator-utils.git",
     "immutable": "^3.8.1",
-    "koa": "^1.2.2",
-    "koa-bodyparser": "^2.2.0",
-    "koa-router": "^5.4.0",
+    "koa": "^2.0.0",
+    "koa-bodyparser": "^3.2.0",
+    "koa-router": "^7.0.1",
     "lodash": "^4.15.0",
+    "path": "^0.12.7",
     "replacestream": "^4.0.2",
     "tilelive": "^5.12.2",
     "tilelive-gl": "git+https://github.com/hannesj/tilelive-gl.git",
