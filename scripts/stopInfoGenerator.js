@@ -1,16 +1,18 @@
 var fs = require("fs");
 var path = require("path");
-var readline = require("readline");
+var groupBy = require("lodash/groupBy");
+var forEach = require("lodash/forEach");
+var parseFile = require("./parseFile");
 
 const SRC_PATH = "../data/src";
 const DEST_PATH = "../data";
 
-const stopFields = [
+const pysakki_fields = [
   [7, "stopId"],
   [7, null],
   [7, null],
-  [8, "lon"],
-  [8, "lat"],
+  [8, "lon", true],
+  [8, "lat", true],
   [20, "name_fi"],
   [20, "name_se"],
   [20, "address_fi"],
@@ -22,30 +24,84 @@ const stopFields = [
   [20, null],
   [2, null],
   [6, "shortId"],
+  [8, null],
+  [8, null],
+  [1, null],
+  [15, "heading"],
 ];
 
-function parseLine(line, fields) {
-  const stop = {};
-  let index = 1;
-  fields.forEach(([length, key]) => {
-    if(key) stop[key] = line.substring(index, index + length).trim();
-    index = index + length;
-  });
-  return stop;
+const reitti_fields = [
+  [7, "stopId"],
+  [7, null],
+  [6, "routeId"],
+  [1, "direction"],
+  [8, "dateBegin"],
+  [8, "dateEnd"],
+  [20, null],
+  [3, "duration", true],
+  [3, "stopNumber", true],
+];
+
+const linjannimet2_fields = [
+  [6, "routeId"],
+  [60, "name_fi"],
+  [60, "name_se"],
+  [30, "origin_fi"],
+  [30, "origin_se"],
+  [30, "destination_fi"],
+  [30, "destination_se"],
+];
+
+function parseDate(dateString) {
+  if(!dateString || dateString.length !== 8) return null;
+  return new Date(
+    dateString.substring(0, 4),
+    dateString.substring(4,6),
+    dateString.substring(6,8)
+  );
 }
 
-const lineReader = readline.createInterface({
-  input: fs.createReadStream(path.join(__dirname, SRC_PATH, "pysakki.dat"))
+function segmentsToStopList(segments) {
+  return segments
+    .sort((a, b) => a.stopNumber - b.stopNumber)
+    .map(({duration, stopId}) => ({duration, stopId}));
+};
+
+function getRoutes(segments, routeId) {
+  const routes = [];
+  const routeSegments = segments.filter(segment => segment.routeId === routeId);
+  const segmentsByRoute = groupBy(routeSegments,
+    ({dateBegin, dateEnd, direction}) => dateBegin + dateEnd + direction);
+
+  forEach(segmentsByRoute, (segments) => {
+    if(segments.length) {
+      routes.push({
+        dateBegin: parseDate(segments[0].dateBegin),
+        dateEnd: parseDate(segments[0].dateEnd),
+        isReverse: (segments[0].direction === "1"),
+        stops: segmentsToStopList(segments),
+      });
+    }
+  });
+  return routes;
+}
+
+const routeFiles = [
+  parseFile("linjannimet2.dat", linjannimet2_fields),
+  parseFile("reitti.dat", reitti_fields)
+];
+
+Promise.all(routeFiles).then(([routes, segments]) => {
+  const routesStops = routes.map(route =>
+    Object.assign({}, route, {routes: getRoutes(segments, route.routeId)})
+  );
+  const outputPath =  path.join(__dirname, DEST_PATH, "routesStops.json");
+  fs.writeFileSync(outputPath, JSON.stringify(routesStops), "utf8");
+  console.log(`Succesfully wrote ${routesStops.length} routes to ${outputPath}`);
 });
 
-const stops = [];
-
-lineReader.on("line", (line) => {
-  stops.push(parseLine(line, stopFields));
-});
-
-lineReader.on("close", (line) => {
+parseFile("pysakki.dat", pysakki_fields).then(stops => {
   const outputPath =  path.join(__dirname, DEST_PATH, "stops.json");
   fs.writeFileSync(outputPath, JSON.stringify(stops), "utf8");
-  console.log(`${stops.length} features succesfully imported to ${outputPath}`);
+  console.log(`Succesfully wrote ${stops.length} stops to ${outputPath}`);
 });
