@@ -4,15 +4,23 @@ const router = require("koa-router")();
 const bodyParser = require("koa-bodyparser")();
 const fs = require('file-system');
 const path = require("path");
-const dataPath = path.join(__dirname, "..", "data");
-
 const imageGenerator = require("./imageGenerator");
 // const stopLabelGenerator = require('./stopLabelGenerator');
+
+const dataPath = path.join(__dirname, "..", "data");
+
 const routes = require("../data/routes.json");
-const shapes = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
-const stops = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
+const routesWithStops
+const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
+const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
+
 const PORT = 8000;
 
+function successResponse(ctx, body) {
+    ctx.response.set("Access-Control-Allow-Origin", "*");
+    ctx.status = 200;
+    ctx.body = body;
+};
 
 router.post("/generateImage", ctx =>
     new Promise(resolve =>
@@ -28,46 +36,21 @@ router.post("/generateImage", ctx =>
   )
 );
 
-router.get("/routes", ctx =>
-    new Promise((resolve) => {
-        ctx.response.set("Access-Control-Allow-Origin", "*");
-        ctx.status = 200;
-        ctx.body = routes;
-        resolve();
-    })
-);
+router.get("/routes", (ctx) => {
+    return successResponse(ctx, routes);
+});
 
-router.get("/routeGeometries/:routeId", ctx =>
-    new Promise((resolve) => {
-        ctx.response.set("Access-Control-Allow-Origin", "*");
-        ctx.status = 200;
-        ctx.body = shapes.features.filter(feature =>
-            feature.properties.shape_id.startsWith(ctx.params.routeId)
-        );
-        resolve();
-    })
-);
+router.get("/routeGeometries/:routeId", (ctx) => {
+    const features = routeGeometries.features.filter(feature =>
+        feature.properties.shape_id.startsWith(ctx.params.routeId));
+    return successResponse(ctx, features);
+});
 
-router.get("/routeStops/:routeId", ctx =>
-    new Promise((resolve) => {
-        ctx.response.set("Access-Control-Allow-Origin", "*");
-        ctx.status = 200;
-        ctx.body = stops.features.filter(feature =>
-            feature.properties.route.startsWith(ctx.params.routeId)
-        );
-        resolve();
-    })
-);
-
-router.get("/stops", ctx =>
-    new Promise((resolve) => {
-        ctx.response.set("Access-Control-Allow-Origin", "*");
-        ctx.status = 200;
-        ctx.body = stops;
-        resolve();
-    })
-);
-
+router.get("/stopGeometries/:routeId", (ctx) => {
+    const features = stopGeometries.features.filter(feature =>
+        feature.properties.route.startsWith(ctx.params.routeId));
+    return successResponse(ctx, features);
+});
 
 // router.post('/generateStopLabels', ctx =>
 //   new Promise((resolve) =>
