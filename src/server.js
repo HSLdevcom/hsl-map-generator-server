@@ -14,6 +14,9 @@ const routes = require("../data/routes.json");
 const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
+const routeNames = routes.map(({name_fi, name_se, routeId}) =>
+  ({name_fi, name_se, routeId}));
+
 const PORT = 8000;
 
 function successResponse(ctx, body) {
@@ -41,8 +44,32 @@ router.get("/stops/:stopId", (ctx) => {
     return successResponse(ctx, stop);
 });
 
-router.get("/routes", (ctx) => {
-    return successResponse(ctx, routes);
+router.get("/routeNames", (ctx) => {
+    return successResponse(ctx, routeNames);
+});
+
+router.get("/routes/:stopId", (ctx) => {
+    const matchedRoutes = [];
+
+    routes.forEach(route => {
+        const stopLists = route.stopLists
+            .filter(stopList =>
+                // Find stopLists that contain given stop id
+                stopList.stops.some(({stopId}) => stopId === ctx.params.stopId)
+            ).map(stopList => {
+                // Replace stop ids with full stop info
+                const stopInfos = stopList.stops.map(
+                    ({stopId}) => stops.find(stop => stop.stopId === stopId)
+                );
+                return Object.assign({}, stopList, {stops: stopInfos});
+            });
+
+        if(stopLists.length) {
+            matchedRoutes.push(Object.assign({}, route, {stopLists}));
+        }
+    });
+
+    return successResponse(ctx, matchedRoutes);
 });
 
 router.get("/stopGeometries/:routeId", (ctx) => {
