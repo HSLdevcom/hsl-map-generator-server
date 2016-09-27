@@ -9,8 +9,8 @@ const imageGenerator = require("./imageGenerator");
 
 const dataPath = path.join(__dirname, "..", "data");
 
+const stops = require("../data/stops.json");
 const routes = require("../data/routes.json");
-const routesWithStops
 const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
@@ -36,19 +36,24 @@ router.post("/generateImage", ctx =>
   )
 );
 
-router.get("/routes", (ctx) => {
-    return successResponse(ctx, routes);
+router.get("/stops/:stopId", (ctx) => {
+    const stop = stops.find(stop => stop.stopId === ctx.params.stopId);
+    return successResponse(ctx, stop);
 });
 
-router.get("/routeGeometries/:routeId", (ctx) => {
-    const features = routeGeometries.features.filter(feature =>
-        feature.properties.shape_id.startsWith(ctx.params.routeId));
-    return successResponse(ctx, features);
+router.get("/routes", (ctx) => {
+    return successResponse(ctx, routes);
 });
 
 router.get("/stopGeometries/:routeId", (ctx) => {
     const features = stopGeometries.features.filter(feature =>
         feature.properties.route.startsWith(ctx.params.routeId));
+    return successResponse(ctx, features);
+});
+
+router.get("/routeGeometries/:routeId", (ctx) => {
+    const features = routeGeometries.features.filter(feature =>
+        feature.properties.shape_id.startsWith(ctx.params.routeId));
     return successResponse(ctx, features);
 });
 
