@@ -15,7 +15,7 @@ const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`,
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
 const routeNames = routes.map(({name_fi, name_se, routeId}) =>
-  ({name_fi, name_se, routeId}));
+    ({name_fi, name_se, routeId}));
 
 const PORT = 8000;
 
