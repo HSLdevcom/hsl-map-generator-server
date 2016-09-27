@@ -5,7 +5,7 @@ var forEach = require("lodash/forEach");
 var parseFile = require("./parseFile");
 
 const SRC_PATH = "../data/src";
-const DEST_PATH = "../data";
+const OUTPUT_PATH = "../data";
 
 const pysakki_fields = [
   [7, "stopId"],
@@ -83,25 +83,26 @@ function getStopLists(segments, routeId) {
       });
     }
   });
-  return routes;
+  return stopLists;
 }
 
+const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
+const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
+
 const routeFiles = [
-  parseFile("linjannimet2.dat", linjannimet2_fields),
-  parseFile("reitti.dat", reitti_fields)
+  parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
+  parseFile(sourcePath("reitti.dat"), reitti_fields)
 ];
 
 Promise.all(routeFiles).then(([routes, segments]) => {
-  const routes = routes.map(route =>
-    Object.assign({}, route, {routes: getStopLists(segments, route.routeId)})
+  const routesWithStops = routes.map(route =>
+    Object.assign({}, route, {stopLists: getStopLists(segments, route.routeId)})
   );
-  const outputPath =  path.join(__dirname, DEST_PATH, "routes.json");
-  fs.writeFileSync(outputPath, JSON.stringify(routesStops), "utf8");
-  console.log(`Succesfully wrote ${routesStops.length} routes to ${outputPath}`);
+  fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routesWithStops), "utf8");
+  console.log(`Succesfully imported ${routesWithStops.length} routes`);
 });
 
-parseFile("pysakki.dat", pysakki_fields).then(stops => {
-  const outputPath =  path.join(__dirname, DEST_PATH, "stops.json");
-  fs.writeFileSync(outputPath, JSON.stringify(stops), "utf8");
-  console.log(`Succesfully wrote ${stops.length} stops to ${outputPath}`);
+parseFile(sourcePath("pysakki.dat"), pysakki_fields).then(stops => {
+  fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
+  console.log(`Succesfully imported ${stops.length} stops`);
 });

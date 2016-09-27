@@ -2,14 +2,12 @@ var fs = require("fs");
 var path = require("path");
 var readline = require("readline");
 
-const SRC_PATH = "../data/src";
-
 function parseFile(filename, fields) {
   const records = [];
 
   return new Promise((resolve) => {
     const lineReader = readline.createInterface({
-      input: fs.createReadStream(path.join(__dirname, SRC_PATH, filename))
+      input: fs.createReadStream(filename)
     });
 
     lineReader.on("line", (line) => {
