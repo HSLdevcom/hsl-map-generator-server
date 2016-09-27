@@ -67,15 +67,15 @@ function segmentsToStopList(segments) {
     .map(({duration, stopId}) => ({duration, stopId}));
 };
 
-function getRoutes(segments, routeId) {
-  const routes = [];
+function getStopLists(segments, routeId) {
+  const stopLists = [];
   const routeSegments = segments.filter(segment => segment.routeId === routeId);
-  const segmentsByRoute = groupBy(routeSegments,
+  const segmentsByGroup = groupBy(routeSegments,
     ({dateBegin, dateEnd, direction}) => dateBegin + dateEnd + direction);
 
-  forEach(segmentsByRoute, (segments) => {
+  forEach(segmentsByGroup, (segments) => {
     if(segments.length) {
-      routes.push({
+      stopLists.push({
         dateBegin: parseDate(segments[0].dateBegin),
         dateEnd: parseDate(segments[0].dateEnd),
         isReverse: (segments[0].direction === "1"),
@@ -92,10 +92,10 @@ const routeFiles = [
 ];
 
 Promise.all(routeFiles).then(([routes, segments]) => {
-  const routesStops = routes.map(route =>
-    Object.assign({}, route, {routes: getRoutes(segments, route.routeId)})
+  const routes = routes.map(route =>
+    Object.assign({}, route, {routes: getStopLists(segments, route.routeId)})
   );
-  const outputPath =  path.join(__dirname, DEST_PATH, "routesStops.json");
+  const outputPath =  path.join(__dirname, DEST_PATH, "routes.json");
   fs.writeFileSync(outputPath, JSON.stringify(routesStops), "utf8");
   console.log(`Succesfully wrote ${routesStops.length} routes to ${outputPath}`);
 });
