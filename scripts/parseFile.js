@@ -1,6 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var readline = require("readline");
+var iconv = require("iconv-lite");
 
 function parseFile(filename, fields) {
     const records = [];
@@ -8,6 +9,7 @@ function parseFile(filename, fields) {
     return new Promise((resolve) => {
         const lineReader = readline.createInterface({
             input: fs.createReadStream(filename)
+                .pipe(iconv.decodeStream("ISO-8859-15"))
         });
 
         lineReader.on("line", (line) => {
