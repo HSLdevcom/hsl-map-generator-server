@@ -1,9 +1,33 @@
-# hsl-map-generator-server
 
-Server component for the HSL map generator
+# HSL Map Generator Server
 
-[![Travis build status](http://img.shields.io/travis/HSLdevcom/hsl-map-generator-server.svg?style=flat)](https://travis-ci.org/HSLdevcom/hsl-map-generator-server)
-[![Code Climate](https://codeclimate.com/github/HSLdevcom/hsl-map-generator-server/badges/gpa.svg)](https://codeclimate.com/github/HSLdevcom/hsl-map-generator-server)
-[![Test Coverage](https://codeclimate.com/github/HSLdevcom/hsl-map-generator-server/badges/coverage.svg)](https://codeclimate.com/github/HSLdevcom/hsl-map-generator-server)
-[![Dependency Status](https://david-dm.org/HSLdevcom/hsl-map-generator-server.svg)](https://david-dm.org/HSLdevcom/hsl-map-generator-server)
-[![devDependency Status](https://david-dm.org/HSLdevcom/hsl-map-generator-server/dev-status.svg)](https://david-dm.org/HSLdevcom/hsl-map-generator-server#info=devDependencies)
+Server component for [hsl-map-web-ui](https://github.com/HSLdevcom/hsl-map-web-ui),
+[hsl-map-publisher](https://github.com/HSLdevcom/hsl-map-publisher) and
+[hsl-map-generator-ui](https://github.com/HSLdevcom/hsl-map-generator-ui).
+
+### Install
+
+Install dependencies:
+```
+npm install
+```
+
+Download and extract [http://dev.hsl.fi/infopoiminta/latest/](http://dev.hsl.fi/infopoiminta/latest/) to `data/src`.
+
+Convert relevant DAT files to JSON:
+```
+node -r babel-register scripts/import.js
+```
+
+### Run
+
+Start server:
+```
+node -r babel-register src/server.js
+```
+
+Generate driver instruction maps and mapbox-gl style files with embedded route
+data from the imported JORE data dumps:
+```
+node -r babel-register scripts/routeMapsGenerator.js
+```
