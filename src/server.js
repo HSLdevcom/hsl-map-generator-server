@@ -1,21 +1,20 @@
+const fs = require('file-system');
+const path = require("path");
+const forEach = require("lodash/forEach");
+
 const Koa = require("koa");
 const app = new Koa();
 const router = require("koa-router")();
 const bodyParser = require("koa-bodyparser")();
-const fs = require('file-system');
-const path = require("path");
+
 const imageGenerator = require("./imageGenerator");
 // const stopLabelGenerator = require('./stopLabelGenerator');
 
 const dataPath = path.join(__dirname, "..", "data");
-
 const stops = require("../data/stops.json");
-const routes = require("../data/routes.json");
+const routesById = require("../data/routes.json");
 const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
-
-const routeNames = routes.map(({name_fi, name_se, routeId}) =>
-    ({name_fi, name_se, routeId}));
 
 const PORT = 8000;
 
@@ -49,27 +48,27 @@ router.get("/routeNames", (ctx) => {
 });
 
 router.get("/routes/:stopId", (ctx) => {
-    const matchedRoutes = [];
+    const stopRoutesById = {};
 
-    routes.forEach(route => {
-        const stopLists = route.stopLists
-            .filter(stopList =>
-                // Find stopLists that contain given stop id
-                stopList.stops.some(({stopId}) => stopId === ctx.params.stopId)
-            ).map(stopList => {
+    forEach(routesById, (routes, routeId) => {
+        const stopRoutes = routes
+            .filter(route =>
+                // Find routes that contain given stop id
+                route.stops.some(({stopId}) => stopId === ctx.params.stopId)
+            ).map(route => {
                 // Replace stop ids with full stop info
-                const stopInfos = stopList.stops.map(
+                const stopInfos = route.stops.map(
                     ({stopId}) => stops.find(stop => stop.stopId === stopId)
                 );
-                return Object.assign({}, stopList, {stops: stopInfos});
+                return Object.assign({}, route, {stops: stopInfos});
             });
 
-        if(stopLists.length) {
-            matchedRoutes.push(Object.assign({}, route, {stopLists}));
+        if(stopRoutes.length) {
+            stopRoutesById[routeId] = stopRoutes;
         }
     });
 
-    return successResponse(ctx, matchedRoutes);
+    return successResponse(ctx, stopRoutesById);
 });
 
 router.get("/stopGeometries/:routeId", (ctx) => {
