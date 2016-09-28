@@ -58,10 +58,16 @@ router.get("/lines", (ctx) => {
     return successResponse(ctx, lines);
 });
 
-router.get("/routesById/:routeId", (ctx) => {
-    const routes = routesById[ctx.params.routeId] || [];
-    const routesWithStopInfos = addStopInfos(routes);
-    return successResponse(ctx, routesWithStopInfos);
+router.get("/routesByLine/:lineId", (ctx) => {
+    const lineId = ctx.params.lineId;
+    const lineRoutesById = {};
+
+    forEach(routesById, (routes, routeId) => {
+        if(routeId === lineId || routeId.slice(0, -1) === lineId) {
+            lineRoutesById[routeId] = addStopInfos(routes);
+        }
+    });
+    return successResponse(ctx, lineRoutesById);
 });
 
 router.get("/routesByStop/:stopId", (ctx) => {
