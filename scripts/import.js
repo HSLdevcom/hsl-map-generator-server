@@ -30,6 +30,26 @@ const pysakki_fields = [
     [15, "heading"],
 ];
 
+const linjannimet2_fields = [
+    [6, "lineId"],
+    [60, "name_fi"],
+    [60, "name_se"],
+    [30, "origin_fi"],
+    [30, "origin_se"],
+    [30, "destination_fi"],
+    [30, "destination_se"],
+];
+
+const linja3_fields = [
+    [6, "routeId"],
+    [8, null],
+    [8, null],
+    [1, null],
+    [60, null],
+    [60, null],
+    [2, "type"],
+];
+
 const reitti_fields = [
     [7, "stopId"],
     [7, null],
@@ -40,16 +60,6 @@ const reitti_fields = [
     [20, null],
     [3, "duration", true],
     [3, "stopNumber", true],
-];
-
-const linjannimet2_fields = [
-    [6, "lineId"],
-    [60, "name_fi"],
-    [60, "name_se"],
-    [30, "origin_fi"],
-    [30, "origin_se"],
-    [30, "destination_fi"],
-    [30, "destination_se"],
 ];
 
 function parseDate(dateString) {
@@ -93,24 +103,36 @@ function groupRoutes(segments) {
     return groupedRoutes;
 }
 
+function addLineTypes(lines, routeTypes) {
+    return lines.map((line) => {
+        const types = routeTypes
+            .filter(({routeId}) => line.lineId.startsWith(routeId))
+            .map(({type}) => type)
+            .filter(type => !!type.length);
+        return Object.assign({}, line, {types: [...new Set(types)]});
+    });
+}
+
 const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
 const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
 const sourceFiles = [
     parseFile(sourcePath("pysakki.dat"), pysakki_fields),
     parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
+    parseFile(sourcePath("linja3.dat"), linja3_fields),
     parseFile(sourcePath("reitti.dat"), reitti_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, segments]) => {
+Promise.all(sourceFiles).then(([stops, lines, routeTypes, routeSegments]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
-    fs.writeFileSync(outputPath("lines.json"), JSON.stringify(lines), "utf8");
-    console.log(`Succesfully imported ${lines.length} lines`);
+    const linesTypes = addLineTypes(lines, routeTypes);
+    fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
+    console.log(`Succesfully imported ${linesTypes.length} lines`);
 
-    const routes = groupRoutes(segments);
+    const routes = groupRoutes(routeSegments);
     const routeIds = Object.keys(routes);
-    fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routes, null, 2), "utf8");
+    fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routes), "utf8");
     console.log(`Succesfully imported ${routeIds.length} routes`);
 });
