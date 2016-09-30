@@ -48,6 +48,11 @@ router.post("/generateImage", ctx =>
   )
 );
 
+router.get("/stopIds", (ctx) => {
+    const stopIds = stops.map(({stopId}) => stopId);
+    return successResponse(ctx, stopIds);
+});
+
 router.get("/stops/:stopId", (ctx) => {
     const stop = stops.find(stop => stop.stopId === ctx.params.stopId);
     return successResponse(ctx, stop);
