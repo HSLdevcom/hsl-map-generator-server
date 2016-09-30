@@ -112,7 +112,7 @@ function getRoutes(routes, routeSegments) {
     const routesById = {};
     forEach(groupBy(routeSegments, "routeId"), (segments, routeId) => {
         const routesWithInfos = segmentsToRoutes(segments).map(route =>
-            Object.assign({}, route, getRouteInfo(routes, routeId, route.direction)));
+            ({...route, ...getRouteInfo(routes, routeId, route.direction)}));
         routesById[routeId] = routesWithInfos;
     });
     return routesById;
@@ -140,8 +140,8 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
-    const linesTypes = lines.map((line) => Object.assign({}, line,
-        {types: getRouteTypes(routes, line.lineId)}));
+    const linesTypes = lines.map(line =>
+        ({...line, types: getRouteTypes(routes, line.lineId)}));
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
     console.log(`Succesfully imported ${linesTypes.length} lines`);
 

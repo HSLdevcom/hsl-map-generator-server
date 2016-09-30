@@ -29,8 +29,8 @@ function addStopInfos(routes) {
     return routes.map(route => {
         // Replace stop ids with full stop info
         const stopInfos = route.stops.map(({stopId, duration}) =>
-            Object.assign({}, stops.find(stop => stop.stopId === stopId), {duration}));
-        return Object.assign({}, route, {stops: stopInfos});
+            ({...stops.find(stop => stop.stopId === stopId), duration}));
+        return {...route, stops: stopInfos};
     });
 }
 
