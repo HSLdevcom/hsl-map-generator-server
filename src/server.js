@@ -28,10 +28,9 @@ function successResponse(ctx, body) {
 function addStopInfos(routes) {
     return routes.map(route => {
         // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(
-            ({stopId}) => stops.find(stop => stop.stopId === stopId)
-        );
-        return Object.assign({}, route, {stops: stopInfos});
+        const stopInfos = route.stops.map(({stopId, duration}) =>
+            ({...stops.find(stop => stop.stopId === stopId), duration}));
+        return {...route, stops: stopInfos};
     });
 }
 
@@ -48,6 +47,11 @@ router.post("/generateImage", ctx =>
     )
   )
 );
+
+router.get("/stopIds", (ctx) => {
+    const stopIds = stops.map(({stopId}) => stopId);
+    return successResponse(ctx, stopIds);
+});
 
 router.get("/stops/:stopId", (ctx) => {
     const stop = stops.find(stop => stop.stopId === ctx.params.stopId);

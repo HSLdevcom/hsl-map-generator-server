@@ -2,6 +2,7 @@ var fs = require("fs");
 var path = require("path");
 var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
+
 var parseFile = require("./parseFile");
 
 const SRC_PATH = "../data/src";
@@ -28,6 +29,8 @@ const pysakki_fields = [
     [8, null],
     [1, null],
     [15, "heading"],
+    [3, null],
+    [7, "terminalId"]
 ];
 
 const linjannimet2_fields = [
@@ -44,10 +47,16 @@ const linja3_fields = [
     [6, "routeId"],
     [8, null],
     [8, null],
-    [1, null],
+    [1, "direction"],
     [60, null],
     [60, null],
     [2, "type"],
+    [20, null],
+    [20, null],
+    [7, null],
+    [5, null],
+    [20, "destination_fi"],
+    [20, "destination_se"],
 ];
 
 const reitti_fields = [
@@ -87,7 +96,7 @@ function segmentsToRoutes(segments, routeId) {
             routes.push({
                 dateBegin: parseDate(groupSegments[0].dateBegin),
                 dateEnd: parseDate(groupSegments[0].dateEnd),
-                isReverse: (groupSegments[0].direction === "1"),
+                direction: groupSegments[0].direction,
                 stops: segmentsToStopList(groupSegments),
             });
         }
@@ -95,22 +104,28 @@ function segmentsToRoutes(segments, routeId) {
     return routes;
 }
 
-function groupRoutes(segments) {
-    const groupedRoutes = {};
-    forEach(groupBy(segments, "routeId"), (segments, id) => {
-        groupedRoutes[id] = segmentsToRoutes(segments);
-    });
-    return groupedRoutes;
+function getRouteInfo(routes, routeId, direction) {
+    const {destination_fi, destination_se} = routes.find(route =>
+        route.routeId === routeId && route.direction == direction)
+        return {destination_fi, destination_se};
 }
 
-function addLineTypes(lines, routeTypes) {
-    return lines.map((line) => {
-        const types = routeTypes
-            .filter(({routeId}) => line.lineId.startsWith(routeId))
-            .map(({type}) => type)
-            .filter(type => !!type.length);
-        return Object.assign({}, line, {types: [...new Set(types)]});
+function getRoutes(routes, routeSegments) {
+    const routesById = {};
+    forEach(groupBy(routeSegments, "routeId"), (segments, routeId) => {
+        const routesWithInfos = segmentsToRoutes(segments).map(route =>
+            ({...route, ...getRouteInfo(routes, routeId, route.direction)}));
+        routesById[routeId] = routesWithInfos;
     });
+    return routesById;
+}
+
+function getRouteTypes(routes, lineId) {
+    const types = routes
+        .filter(({routeId}) => lineId.startsWith(routeId))
+        .map(({type}) => type)
+        .filter(type => !!type.length);
+    return [...new Set(types)];
 }
 
 const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
@@ -123,16 +138,16 @@ const sourceFiles = [
     parseFile(sourcePath("reitti.dat"), reitti_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routeTypes, routeSegments]) => {
+Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
-    const linesTypes = addLineTypes(lines, routeTypes);
+    const linesTypes = lines.map(line =>
+        ({...line, types: getRouteTypes(routes, line.lineId)}));
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
     console.log(`Succesfully imported ${linesTypes.length} lines`);
 
-    const routes = groupRoutes(routeSegments);
-    const routeIds = Object.keys(routes);
-    fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routes), "utf8");
-    console.log(`Succesfully imported ${routeIds.length} routes`);
+    const routesById = getRoutes(routes, routeSegments);
+    fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routesById, null, 2), "utf8");
+    console.log(`Succesfully imported ${Object.keys(routesById).length} routes`);
 });
