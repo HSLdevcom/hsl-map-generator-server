@@ -4,6 +4,7 @@ var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
 
 var parseFile = require("./parseFile");
+var parseCsv = require ("./parseCsv");
 
 const SRC_PATH = "../data/src";
 const OUTPUT_PATH = "../data";
@@ -71,6 +72,12 @@ const reitti_fields = [
     [3, "stopNumber", true],
 ];
 
+//CSV file fields: part index(es), key, seperator character for combining parts
+const ajantasaus_fields = [
+    [[0,1], "id","_"],
+    [4, "stop_id"],
+]
+
 function parseDate(dateString) {
     if(!dateString || dateString.length !== 8) return null;
     return new Date(
@@ -136,9 +143,11 @@ const sourceFiles = [
     parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
     parseFile(sourcePath("linja3.dat"), linja3_fields),
     parseFile(sourcePath("reitti.dat"), reitti_fields),
+    parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments]) => {
+
+Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, timingStops]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
@@ -150,4 +159,7 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments]) => {
     const routesById = getRoutes(routes, routeSegments);
     fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routesById, null, 2), "utf8");
     console.log(`Succesfully imported ${Object.keys(routesById).length} routes`);
+
+    fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
+    console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
 });
