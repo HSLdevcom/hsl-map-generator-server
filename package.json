@@ -58,6 +58,7 @@
     "mainVarName": "hslMapGeneratorServer"
   },
   "dependencies": {
+    "babel-runtime": "^6.11.6",
     "file-system": "^2.2.1",
     "hsl-map-generator-utils": "git+https://github.com/HSLdevcom/hsl-map-generator-utils.git",
     "iconv-lite": "^0.4.13",
