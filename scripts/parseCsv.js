@@ -4,17 +4,8 @@ function parseLine(line, fields) {
     const parts = line.split(";")
     let stop = {};
 
-    fields.forEach(([ids, key, separator]) => {
-        if(typeof(ids) === "object") {
-            stop[key] = ids.map((id) => {
-                return parts[id];
-            })
-            .reduce((pre,cur) => {
-                return pre+separator+cur;
-            })
-        } else stop[key] = parts[ids];
-    })
-    
+    fields.forEach(([index, key]) => stop[key] = parts[index])
+  
     return stop;
 }
 

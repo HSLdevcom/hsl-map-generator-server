@@ -29,7 +29,7 @@ function successResponse(ctx, body) {
 function isTimingStop(stopId, routeId) {
     let isTiming = false;
     forEach(timingStops, (timingStop) => {
-        if (routeId === timingStop.id && stopId === timingStop.stop_id) {
+        if (routeId === timingStop.id + "_" +timingStop.direction && stopId === timingStop.stopId) {
             isTiming = true;
         }
     })
@@ -41,7 +41,7 @@ function addStopInfos(routes, routeId) {
         // Replace stop ids with full stop info
         const stopInfos = route.stops.map(({stopId, duration}) => 
             ({...stops.find(stop => {
-                if (isTimingStop(stop.stopId, routeId+"_"+route.direction)) stop.isTiming = true;
+                if (isTimingStop(stop.stopId, routeId + "_" + route.direction)) stop.isTiming = true;
                 return stop.stopId === stopId;
             }), duration}));
 

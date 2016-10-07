@@ -72,10 +72,11 @@ const reitti_fields = [
     [3, "stopNumber", true],
 ];
 
-//CSV file fields: part index(es), key, seperator character for combining parts
+//CSV file fields: part index, key
 const ajantasaus_fields = [
-    [[0,1], "id","_"],
-    [4, "stop_id"],
+    [0, "id"],
+    [1, "direction"],
+    [4, "stopId"],
 ]
 
 function parseDate(dateString) {
