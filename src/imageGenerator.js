@@ -1,8 +1,10 @@
 const tilelive = require('tilelive');
 const tileliveGl = require('tilelive-gl');
-const geomUtils = require('hsl-map-generator-utils');
 const transit = require('transit-immutable-js');
-const style = require('hsl-map-style/hsl-gl-map-with-stops-v9.json');
+const omit = require("lodash/omit");
+
+const geomUtils = require('hsl-map-generator-utils');
+const style = require('hsl-map-style/hsl-gl-map-v9.json');
 
 // const viewportMercator = require('viewport-mercator-project');
 
@@ -10,36 +12,47 @@ const LIMIT = 18000;
 
 tileliveGl.registerProtocols(tilelive);
 
+const defaultOptions = {
+    center: [24.9, 60.5],
+    width: 500,
+    height: 500,
+    zoom: 10,
+    scale: 2,
+    pitch: 0,
+    bearing: 0
+};
 
 function generate(options, callback) {
-
     const glSource = {
-        protocol: 'gl:',
-        style: style,
-        query: { scale: 3 }
+        protocol: "gl:",
+        style: {...style},
+        query: { scale: options.scale || defaultOptions.scale }
     };
 
-    tilelive.load(glSource, (err, source) => {
-        const defaultOptions = {
-            center: [24.9, 60.5],
-            width: 500,
-            height: 500,
-            zoom: 10,
-            scale: 2,
-            pitch: 0,
-            bearing: 0
+    if (options.sources) {
+        glSource.style.sources = {
+            ...glSource.style.sources,
+            ...options.sources
         };
+    }
+    if (options.layers) {
+        glSource.style.layers = [
+            ...glSource.style.layers,
+            ...options.layers
+        ];
+    }
 
-        const opts = {...defaultOptions, ...options};
+    const opts = {...defaultOptions, ...omit(options, ["sources", "layers"])};
 
+    tilelive.load(glSource, (err, source) => {
         source.getStatic.bind(source)(opts, (error, data) => {
+            if (error) console.error(error);
             callback({ data: data, options: options });
         });
     });
 }
 
 function generateFromTransit(callback, opts) {
-
     const mapSelection = transit.fromJSON(opts.mapSelection);
     const scale = geomUtils.mapSelectionToTileScale(mapSelection);
 
@@ -80,7 +93,7 @@ function generateFromTransit(callback, opts) {
             callback({ data: data, options: options });
         });
     });
-};
+}
 
 module.exports = {
     generate,
