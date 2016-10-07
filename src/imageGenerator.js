@@ -2,19 +2,54 @@ const tilelive = require('tilelive');
 const tileliveGl = require('tilelive-gl');
 const geomUtils = require('hsl-map-generator-utils');
 const transit = require('transit-immutable-js');
+const style = require('hsl-map-style/hsl-gl-map-with-stops-v9.json');
+
 // const viewportMercator = require('viewport-mercator-project');
 
 const LIMIT = 18000;
 
 tileliveGl.registerProtocols(tilelive);
 
-module.exports = (callback, opts) => {
-    const mapSelection = transit.fromJSON(opts.mapSelection);
 
-    const glSource = { protocol: 'gl:', style: opts.style, query: { scale: geomUtils.mapSelectionToTileScale(mapSelection) } };
+function generate(options, callback) {
+
+    const glSource = {
+        protocol: 'gl:',
+        style: style,
+        query: { scale: 3 }
+    };
 
     tilelive.load(glSource, (err, source) => {
-        const scale = geomUtils.mapSelectionToTileScale(mapSelection);
+        const defaultOptions = {
+            center: [24.9, 60.5],
+            width: 500,
+            height: 500,
+            zoom: 10,
+            scale: 2,
+            pitch: 0,
+            bearing: 0
+        };
+
+        const opts = {...defaultOptions, ...options};
+
+        source.getStatic.bind(source)(opts, (error, data) => {
+            callback({ data: data, options: options });
+        });
+    });
+}
+
+function generateFromTransit(callback, opts) {
+
+    const mapSelection = transit.fromJSON(opts.mapSelection);
+    const scale = geomUtils.mapSelectionToTileScale(mapSelection);
+
+    const glSource = {
+        protocol: 'gl:',
+        style: opts.style,
+        query: { scale: scale }
+    };
+
+    tilelive.load(glSource, (err, source) => {
         const options = {
             center: mapSelection.getIn(['center', 0, 'location']).toArray(),
             width: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[0] / scale),
@@ -45,4 +80,9 @@ module.exports = (callback, opts) => {
             callback({ data: data, options: options });
         });
     });
+};
+
+module.exports = {
+    generate,
+    generateFromTransit,
 };

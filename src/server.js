@@ -6,6 +6,7 @@ const Koa = require("koa");
 const app = new Koa();
 const router = require("koa-router")();
 const bodyParser = require("koa-bodyparser")();
+const cors = require("koa-cors")();
 
 const imageGenerator = require("./imageGenerator");
 // const stopLabelGenerator = require('./stopLabelGenerator');
@@ -19,9 +20,9 @@ const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "
 
 const PORT = 8000;
 
-function successResponse(ctx, body) {
-    ctx.response.set("Access-Control-Allow-Origin", "*");
+function successResponse(ctx, body, type = "application/json") {
     ctx.status = 200;
+    ctx.type = type;
     ctx.body = body;
 };
 
@@ -35,17 +36,24 @@ function addStopInfos(routes) {
 }
 
 router.post("/generateImage", ctx =>
-    new Promise(resolve =>
-    imageGenerator(
-        (data) => {
-            ctx.status = 200;
-            ctx.type = "image/png";
-            ctx.body = data;
+    new Promise((resolve) => {
+        imageGenerator.generate(ctx.request.body, (result) => {
+            successResponse(ctx, result.data, "image/png");
             resolve();
-        },
-        ctx.request.body
-    )
-  )
+        });
+    })
+);
+
+router.post("/generateImageFromTransit", ctx =>
+    new Promise((resolve) => {
+        imageGenerator.generateFromTransit(
+            ctx.request.body,
+            (result) => {
+                successResponse(ctx, result.data, "image/png");
+                resolve();
+            }
+        );
+    })
 );
 
 router.get("/stopIds", (ctx) => {
@@ -117,6 +125,7 @@ router.get("/routeGeometries/:routeId", (ctx) => {
 // );
 
 app
+    .use(cors)
     .use(bodyParser)
     .use(router.routes())
     .use(router.allowedMethods())
