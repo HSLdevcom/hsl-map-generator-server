@@ -3,8 +3,10 @@ var path = require("path");
 var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
 
+var parseDate = require("./parseDate")
 var parseFile = require("./parseFile");
 var parseCsv = require ("./parseCsv");
+var transformGeometries = require ("./transformGeometries");
 
 const SRC_PATH = "../data/src";
 const OUTPUT_PATH = "../data";
@@ -72,21 +74,24 @@ const reitti_fields = [
     [3, "stopNumber", true],
 ];
 
+const reittimuoto_fields = [
+    [6, "lineId"],
+    [1, "direction"],
+    [8, "beginDate"],
+    [8, "endDate"],
+    [7, null],
+    [1, null],
+    [4, null],
+    [7, "coordX"],
+    [7, "coordY"],
+];
+
 //CSV file fields: part index, key
 const ajantasaus_fields = [
     [0, "id"],
     [1, "direction"],
     [4, "stopId"],
 ]
-
-function parseDate(dateString) {
-    if(!dateString || dateString.length !== 8) return null;
-    return new Date(
-        dateString.substring(0, 4),
-        dateString.substring(4,6),
-        dateString.substring(6,8)
-    );
-}
 
 function segmentsToStopList(segments) {
     return segments
@@ -144,12 +149,11 @@ const sourceFiles = [
     parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
     parseFile(sourcePath("linja3.dat"), linja3_fields),
     parseFile(sourcePath("reitti.dat"), reitti_fields),
+    parseFile(sourcePath("reittimuoto.dat"), reittimuoto_fields),
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
-
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, timingStops]) => {
-    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
+Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
     const linesTypes = lines.map(line =>
@@ -160,6 +164,10 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, timingStops
     const routesById = getRoutes(routes, routeSegments);
     fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routesById, null, 2), "utf8");
     console.log(`Succesfully imported ${Object.keys(routesById).length} routes`);
+
+    const routeGeometries = transformGeometries(geometries);
+    fs.writeFileSync(outputPath("routeGeometries.geojson"), JSON.stringify(routeGeometries), "utf8");
+    console.log(`Succesfully imported ${Object.keys(routeGeometries).length} route geometries`);
 
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
     console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
