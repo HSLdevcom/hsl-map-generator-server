@@ -3,7 +3,7 @@ var path = require("path");
 var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
 
-var parseDate = require("../utils/parseDate")
+var parseDate = require("./parseDate")
 var parseFile = require("./parseFile");
 var parseCsv = require ("./parseCsv");
 var transformGeometries = require ("./transformGeometries");
@@ -152,7 +152,6 @@ const sourceFiles = [
     parseFile(sourcePath("reittimuoto.dat"), reittimuoto_fields),
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
-
 
 Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
