@@ -22,10 +22,17 @@ const defaultOptions = {
     bearing: 0
 };
 
-function generate(options, callback) {
+/**
+ * Returns a map image from given area
+ * @param {Object} options - Options used to generate map image
+ * @param {Object} options.sources - Sources (e.g. geojson) to merge to GL style
+ * @param {Array} options.layers - Layer definitions for sources
+ * @return {Promise} - PNG map image
+ */
+function generate(options) {
     const glSource = {
         protocol: "gl:",
-        style: {...style},
+        style: { ...style },
         query: { scale: options.scale || defaultOptions.scale }
     };
 
@@ -42,55 +49,52 @@ function generate(options, callback) {
         ];
     }
 
-    const opts = {...defaultOptions, ...omit(options, ["sources", "layers"])};
+    const opts = { ...defaultOptions, ...omit(options, ["sources", "layers"]) };
 
-    tilelive.load(glSource, (err, source) => {
-        source.getStatic.bind(source)(opts, (error, data) => {
-            if (error) console.error(error);
-            callback({ data: data, options: options });
+    return new Promise((resolve, reject) => {
+        tilelive.load(glSource, (err, source) => {
+            source.getStatic.bind(source)(opts, (error, data) =>
+                error ? reject(error) : resolve(data));
         });
     });
 }
 
-function generateFromTransit(callback, opts) {
-    const mapSelection = transit.fromJSON(opts.mapSelection);
+/**
+* Returns a map image rendered using style specified in options
+ * @param {Object} options - Options used to generate map image
+ * @param {Object} options.style - Full GL style to use
+ * @param {Object} options.mapSelection - Serialized state from generator UI
+ * @return {Promise} - PNG map image
+ */
+function generateFromTransit(options) {
+    const mapSelection = transit.fromJSON(options.mapSelection);
     const scale = geomUtils.mapSelectionToTileScale(mapSelection);
 
     const glSource = {
         protocol: 'gl:',
-        style: opts.style,
+        style: options.style,
         query: { scale: scale }
     };
 
-    tilelive.load(glSource, (err, source) => {
-        const options = {
-            center: mapSelection.getIn(['center', 0, 'location']).toArray(),
-            width: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[0] / scale),
-            height: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[1] / scale),
-            zoom: geomUtils.mapSelectionToZoom(mapSelection) - 1,
-            scale: scale,
-            pitch: 0,
-            bearing: 0
-        };
+    const opts = {
+        center: mapSelection.getIn(['center', 0, 'location']).toArray(),
+        width: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[0] / scale),
+        height: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[1] / scale),
+        zoom: geomUtils.mapSelectionToZoom(mapSelection) - 1,
+        scale: scale,
+        pitch: 0,
+        bearing: 0
+    };
 
-        // const viewport = viewportMercator({
-        //     longitude: options.center[0],
-        //     latitude: options.center[1],
-        //     zoom: options.zoom,
-        //     width: options.width,
-        //     height: options.height,
-        // });
+    // TODO: Generate image in parts when too large
+    if (opts.width * scale > LIMIT || opts.height * scale > LIMIT) {
+        return Promise.reject();
+    }
 
-        if (options.width * scale > LIMIT) {
-            return;
-        }
-
-        if (options.height * scale > LIMIT) {
-            return;
-        }
-
-        source.getStatic.bind(source)(options, (error, data) => {
-            callback({ data: data, options: options });
+    return new Promise((resolve, reject) => {
+        tilelive.load(glSource, (err, source) => {
+            source.getStatic.bind(source)(opts, (error, data) =>
+                error ? reject(error) : resolve(data));
         });
     });
 }

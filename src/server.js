@@ -26,6 +26,11 @@ function successResponse(ctx, body, type = "application/json") {
     ctx.body = body;
 };
 
+function errorResponse(ctx, error) {
+    ctx.status = error.status || 500;
+    ctx.body = {error: error.message};
+}
+
 function addStopInfos(routes) {
     return routes.map(route => {
         // Replace stop ids with full stop info
@@ -35,26 +40,17 @@ function addStopInfos(routes) {
     });
 }
 
-router.post("/generateImage", ctx =>
-    new Promise((resolve) => {
-        imageGenerator.generate(ctx.request.body, (result) => {
-            successResponse(ctx, result.data, "image/png");
-            resolve();
-        });
-    })
-);
+router.post("/generateImage", ctx => {
+    return imageGenerator.generate(ctx.request.body)
+        .then(data => successResponse(ctx, data, "image/png"))
+        .catch(error => errorResponse(ctx, error));
+});
 
-router.post("/generateImageFromTransit", ctx =>
-    new Promise((resolve) => {
-        imageGenerator.generateFromTransit(
-            ctx.request.body,
-            (result) => {
-                successResponse(ctx, result.data, "image/png");
-                resolve();
-            }
-        );
-    })
-);
+router.post("/generateImageFromTransit", (ctx) => {
+    return imageGenerator.generateFromTransit(ctx.request.body)
+        .then(data => successResponse(ctx, data, "image/png"))
+        .catch(error => errorResponse(ctx, error));
+});
 
 router.get("/stopIds", (ctx) => {
     const stopIds = stops.map(({stopId}) => stopId);
