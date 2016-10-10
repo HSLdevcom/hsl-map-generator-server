@@ -15,7 +15,7 @@ const stops = require("../data/stops.json");
 const lines = require("../data/lines.json");
 const routesById = require("../data/routes.json");
 const timingStops = require("../data/timingStops.json");
-const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
+const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/routeGeometries.geojson`, "utf8"));
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
 const PORT = 8000;
@@ -113,7 +113,7 @@ router.get("/stopGeometries/:routeId", (ctx) => {
 
 router.get("/routeGeometries/:routeId", (ctx) => {
     const features = routeGeometries.features.filter(feature =>
-        feature.properties.shape_id.startsWith(ctx.params.routeId));
+        feature.properties.lineId.startsWith(ctx.params.routeId));
     return successResponse(ctx, features);
 });
 
