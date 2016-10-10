@@ -23,11 +23,15 @@ node -r babel-register scripts/import.js
 
 Start server:
 ```
-node -r babel-register src/server.js
+npm start
 ```
 
-Generate driver instruction maps and mapbox-gl style files with embedded route
-data from the imported JORE data dumps:
+Start server in development mode:
 ```
-node -r babel-register scripts/routeMapsGenerator.js
+npm run watch
+```
+
+Build production version to `dist`:
+```
+npm run build
 ```
