@@ -31,3 +31,5 @@ tmp
 .lock-wscript
 
 route-maps/**
+
+dist
