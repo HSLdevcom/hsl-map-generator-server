@@ -15,7 +15,8 @@ const dataPath = path.join(__dirname, "..", "data");
 const stops = require("../data/stops.json");
 const lines = require("../data/lines.json");
 const routesById = require("../data/routes.json");
-const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/shapes.geojson`, "utf8"));
+const timingStops = require("../data/timingStops.json");
+const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/routeGeometries.geojson`, "utf8"));
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
 const PORT = 8000;
@@ -31,11 +32,25 @@ function errorResponse(ctx, error) {
     ctx.body = {error: error.message};
 }
 
-function addStopInfos(routes) {
+function isTimingStop(stopId, routeId) {
+    let isTiming = false;
+    forEach(timingStops, (timingStop) => {
+        if (routeId === timingStop.id + "_" +timingStop.direction && stopId === timingStop.stopId) {
+            isTiming = true;
+        }
+    })
+    return isTiming;
+}
+
+function addStopInfos(routes, routeId) {
     return routes.map(route => {
         // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(({stopId, duration}) =>
-            ({...stops.find(stop => stop.stopId === stopId), duration}));
+        const stopInfos = route.stops.map(({stopId, duration}) => 
+            ({...stops.find(stop => {
+                if (isTimingStop(stop.stopId, routeId + "_" + route.direction)) stop.isTiming = true;
+                return stop.stopId === stopId;
+            }), duration}));
+
         return {...route, stops: stopInfos};
     });
 }
@@ -72,7 +87,7 @@ router.get("/routesByLine/:lineId", (ctx) => {
 
     forEach(routesById, (routes, routeId) => {
         if(routeId === lineId || routeId.slice(0, -1) === lineId) {
-            lineRoutesById[routeId] = addStopInfos(routes);
+            lineRoutesById[routeId] = addStopInfos(routes, routeId);
         }
     });
     return successResponse(ctx, lineRoutesById);
@@ -102,7 +117,7 @@ router.get("/stopGeometries/:routeId", (ctx) => {
 
 router.get("/routeGeometries/:routeId", (ctx) => {
     const features = routeGeometries.features.filter(feature =>
-        feature.properties.shape_id.startsWith(ctx.params.routeId));
+        feature.properties.lineId.startsWith(ctx.params.routeId));
     return successResponse(ctx, features);
 });
 
