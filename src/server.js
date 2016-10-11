@@ -32,22 +32,23 @@ function errorResponse(ctx, error) {
     ctx.body = {error: error.message};
 }
 
-function isTimingStop(stopId, routeId) {
-    let isTiming = false;
+function getTimingStops(route) {
+    const routeTimingStops = [];
     forEach(timingStops, (timingStop) => {
-        if (routeId === timingStop.id + "_" +timingStop.direction && stopId === timingStop.stopId) {
-            isTiming = true;
+        if (route === timingStop.id + "_" +timingStop.direction) {
+            routeTimingStops.push(timingStop.stopId);
         }
     })
-    return isTiming;
+    return routeTimingStops;
 }
 
 function addStopInfos(routes, routeId) {
     return routes.map(route => {
+        const routeTimingStops = getTimingStops(routeId + "_" + route.direction);
         // Replace stop ids with full stop info
         const stopInfos = route.stops.map(({stopId, duration}) => 
             ({...stops.find(stop => {
-                if (isTimingStop(stop.stopId, routeId + "_" + route.direction)) stop.isTiming = true;
+                if (routeTimingStops.length && routeTimingStops.find((timingStop) => timingStop === stop.stopId)) stop.isTiming = true;
                 return stop.stopId === stopId;
             }), duration}));
 
