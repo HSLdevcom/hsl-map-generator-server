@@ -12,10 +12,10 @@ const imageGenerator = require("./imageGenerator");
 // const stopLabelGenerator = require('./stopLabelGenerator');
 
 const dataPath = path.join(__dirname, "..", "data");
-const stops = require("../data/stops.json");
-const lines = require("../data/lines.json");
-const routesById = require("../data/routes.json");
-const timingStops = require("../data/timingStops.json");
+const stops = require(`${dataPath}/stops.json`);
+const lines = require(`${dataPath}/lines.json`);
+const routesById = require(`${dataPath}/routes.json`);
+const timingStops = require(`${dataPath}/timingStops.json`);
 const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/routeGeometries.geojson`, "utf8"));
 const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
@@ -35,7 +35,7 @@ function errorResponse(ctx, error) {
 function getTimingStops(route) {
     const routeTimingStops = [];
     forEach(timingStops, (timingStop) => {
-        if (route === timingStop.id + "_" +timingStop.direction) {
+        if (route === `${timingStop.id}_${timingStop.direction}`) {
             routeTimingStops.push(timingStop.stopId);
         }
     })
@@ -44,7 +44,7 @@ function getTimingStops(route) {
 
 function addStopInfos(routes, routeId) {
     return routes.map(route => {
-        const routeTimingStops = getTimingStops(routeId + "_" + route.direction);
+        const routeTimingStops = getTimingStops(`${routeId}_${route.direction}`);
         // Replace stop ids with full stop info
         const stopInfos = route.stops.map(({stopId, duration}) => 
             ({...stops.find(stop => {
