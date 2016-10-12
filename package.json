@@ -32,6 +32,7 @@
     "babel-watch": "^2.0.3-rc0"
   },
   "dependencies": {
+    "babel-runtime": "^6.11.6",
     "file-system": "^2.2.1",
     "hsl-map-generator-utils": "git+https://github.com/HSLdevcom/hsl-map-generator-utils.git",
     "hsl-map-style": "github:hsldevcom/hsl-map-style",
