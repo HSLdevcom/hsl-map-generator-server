@@ -23,13 +23,13 @@ const defaultOptions = {
 };
 
 /**
- * Returns a map image from given area
+ * Returns TileLive source and options
  * @param {Object} options - Options used to generate map image
  * @param {Object} options.sources - Sources (e.g. geojson) to merge to GL style
  * @param {Array} options.layers - Layer definitions for sources
- * @return {Promise} - PNG map image
+ * @return {Promise} - TileLive source and options
  */
-function generate(options) {
+function sourceFromJson(options) {
     const glSource = {
         protocol: "gl:",
         style: { ...style },
@@ -49,24 +49,19 @@ function generate(options) {
         ];
     }
 
-    const opts = { ...defaultOptions, ...omit(options, ["sources", "layers"]) };
+    const glOptions = { ...defaultOptions, ...omit(options, ["sources", "layers"]) };
 
-    return new Promise((resolve, reject) => {
-        tilelive.load(glSource, (err, source) => {
-            source.getStatic.bind(source)(opts, (error, data) =>
-                error ? reject(error) : resolve(data));
-        });
-    });
+    return { source: glSource, options: glOptions };
 }
 
 /**
-* Returns a map image rendered using style specified in options
+ * Returns TileLive source and options
  * @param {Object} options - Options used to generate map image
- * @param {Object} options.style - Full GL style to use
+ * @param {Object} options.style - Complete GL style to use
  * @param {Object} options.mapSelection - Serialized state from generator UI
- * @return {Promise} - PNG map image
+ * @return {Object} - TileLive source and options
  */
-function generateFromTransit(options) {
+function sourceFromTransit(options) {
     const mapSelection = transit.fromJSON(options.mapSelection);
     const scale = geomUtils.mapSelectionToTileScale(mapSelection);
 
@@ -76,7 +71,7 @@ function generateFromTransit(options) {
         query: { scale: scale }
     };
 
-    const opts = {
+    const glOptions = {
         center: mapSelection.getIn(['center', 0, 'location']).toArray(),
         width: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[0] / scale),
         height: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[1] / scale),
@@ -86,14 +81,26 @@ function generateFromTransit(options) {
         bearing: 0
     };
 
+    return { source: glSource, options: glOptions };
+}
+
+/**
+ * Renders a map image using map selection and complete style or json params and partial style
+ * @param {Object} opts - Options used to generate map image
+ * @return {Promise} - PNG map image
+ */
+function generate(opts) {
+    const { source, options } = opts.mapSelection ? sourceFromTransit(opts): sourceFromJson(opts);
+
     // TODO: Generate image in parts when too large
-    if (opts.width * scale > LIMIT || opts.height * scale > LIMIT) {
+    if (options.width * options.scale > LIMIT || options.height * options.scale > LIMIT) {
         return Promise.reject();
     }
 
     return new Promise((resolve, reject) => {
-        tilelive.load(glSource, (err, source) => {
-            source.getStatic.bind(source)(opts, (error, data) =>
+        tilelive.load(source, (err, instance) => {
+            if(err) return reject(err);
+            instance.getStatic.bind(instance)(options, (error, data) =>
                 error ? reject(error) : resolve(data));
         });
     });
@@ -101,5 +108,4 @@ function generateFromTransit(options) {
 
 module.exports = {
     generate,
-    generateFromTransit,
 };
