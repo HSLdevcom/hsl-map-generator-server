@@ -3,8 +3,9 @@ var path = require("path");
 var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
 
-var parseDate = require("./parseDate")
+var parseDate = require("./parseDate");
 var parseFile = require("./parseFile");
+var splitFile = require("./splitFile");
 var parseCsv = require ("./parseCsv");
 var transformGeometries = require ("./transformGeometries");
 
@@ -91,7 +92,21 @@ const ajantasaus_fields = [
     [0, "id"],
     [1, "direction"],
     [4, "stopId"],
-]
+];
+
+const aikat_fields = [
+    [7, "stopId"],
+    [6, "routeId"],
+    [1, "direction"],
+    [2, "dayType"],
+    [4, "seqNumber", true],
+    [1, "isNextDay", true],
+    [2, "hours", true],
+    [2, "minutes", true],
+    [1, "isAccessible", true],
+    [8, "dateBegin"],
+    [8, "dateEnd"],
+];
 
 function segmentsToStopList(segments) {
     return segments
@@ -144,6 +159,7 @@ function getRouteTypes(routes, lineId) {
 const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
 const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
+
 const sourceFiles = [
     parseFile(sourcePath("pysakki.dat"), pysakki_fields),
     parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
@@ -153,11 +169,11 @@ const sourceFiles = [
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
+Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {
+    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
-    const linesTypes = lines.map(line =>
-        ({...line, types: getRouteTypes(routes, line.lineId)}));
+    const linesTypes = lines.map(line => ({...line, types: getRouteTypes(routes, line.lineId)}));
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
     console.log(`Succesfully imported ${linesTypes.length} lines`);
 
@@ -171,4 +187,9 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries,
 
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
     console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
+
+    return splitFile(sourcePath("aikat.dat"), aikat_fields, outputPath("timetables"), "stopId");
+}).then((paths) => {
+    console.log("Importing timetables");
+    // TODO: Group timetables by dateBegin, dateEnd and dayType
 });
