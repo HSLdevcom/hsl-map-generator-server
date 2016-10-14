@@ -4,8 +4,8 @@ var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
 
 var parseDate = require("./parseDate");
-var parseFile = require("./parseFile");
-var splitFile = require("./splitFile");
+var parseDat = require("./parseDat");
+var splitDat = require("./splitDat");
 var parseCsv = require ("./parseCsv");
 var transformGeometries = require ("./transformGeometries");
 
@@ -161,11 +161,11 @@ const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
 
 const sourceFiles = [
-    parseFile(sourcePath("pysakki.dat"), pysakki_fields),
-    parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
-    parseFile(sourcePath("linja3.dat"), linja3_fields),
-    parseFile(sourcePath("reitti.dat"), reitti_fields),
-    parseFile(sourcePath("reittimuoto.dat"), reittimuoto_fields),
+    parseDat(sourcePath("pysakki.dat"), pysakki_fields),
+    parseDat(sourcePath("linjannimet2.dat"), linjannimet2_fields),
+    parseDat(sourcePath("linja3.dat"), linja3_fields),
+    parseDat(sourcePath("reitti.dat"), reitti_fields),
+    parseDat(sourcePath("reittimuoto.dat"), reittimuoto_fields),
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
@@ -188,8 +188,8 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries,
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
     console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
 
-    return splitFile(sourcePath("aikat.dat"), aikat_fields, outputPath("timetables"), "stopId");
-}).then((paths) => {
     console.log("Importing timetables");
+    return splitDat(sourcePath("aikat.dat"), aikat_fields, outputPath("timetables"), "stopId");
+}).then((paths) => {
     // TODO: Group timetables by dateBegin, dateEnd and dayType
 });

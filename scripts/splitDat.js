@@ -2,19 +2,7 @@ const fs = require('file-system');
 var path = require("path");
 var readline = require("readline");
 var iconv = require("iconv-lite");
-
-function parseLine(line, fields) {
-    const stop = {};
-    let index = 1;
-    fields.forEach(([length, key, isNumeric]) => {
-        if(key) {
-            const value = line.substring(index, index + length).trim();
-            stop[key] = isNumeric ? parseFloat(value) : value;
-        }
-        index = index + length;
-});
-    return stop;
-}
+const parseLine = require("./parseLine");
 
 /**
  * Parses each row in DAT file to JSON file named after value of given field
@@ -24,8 +12,8 @@ function parseLine(line, fields) {
  * @param {string} splitField
  * @returns {boolean}
  */
-function splitFile(filename, fields, outdir, splitField) {
-    let paths;
+function splitDat(filename, fields, outdir, splitField) {
+    let paths = [];
 
     return new Promise((resolve) => {
         const lineReader = readline.createInterface({
@@ -46,4 +34,4 @@ function splitFile(filename, fields, outdir, splitField) {
     });
 }
 
-module.exports = splitFile;
+module.exports = splitDat;
