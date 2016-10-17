@@ -1,4 +1,4 @@
-const fs = require('file-system');
+const fs = require("fs-extra");
 var path = require("path");
 var readline = require("readline");
 var iconv = require("iconv-lite");
@@ -13,9 +13,11 @@ const parseLine = require("./parseLine");
  * @returns {boolean}
  */
 function splitDat(filename, fields, outdir, splitField) {
-    let paths = [];
+    const paths = [];
 
     return new Promise((resolve) => {
+        fs.emptyDir(outdir);
+
         const lineReader = readline.createInterface({
             input: fs.createReadStream(filename)
                 .pipe(iconv.decodeStream("ISO-8859-15"))
@@ -24,12 +26,13 @@ function splitDat(filename, fields, outdir, splitField) {
         lineReader.on("line", (line) => {
             const valuesByField = parseLine(line, fields);
             const outpath = path.join(outdir, `${valuesByField[splitField]}.json`);
-            fs.appendFileSync(outpath, JSON.stringify(valuesByField));
-            paths = [...new Set([...paths, outpath])];
+            fs.appendFileSync(outpath, `${JSON.stringify(valuesByField)}\n`);
+            paths.push(outpath);
         });
 
         lineReader.on("close", (line) => {
-            resolve(paths);
+            const uniquePaths = [...new Set(paths)];
+            resolve(uniquePaths);
         });
     });
 }
