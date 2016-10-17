@@ -1,4 +1,4 @@
-const fs = require('file-system');
+const fs = require("fs");
 const path = require("path");
 const forEach = require("lodash/forEach");
 
@@ -46,7 +46,7 @@ function addStopInfos(routes, routeId) {
     return routes.map(route => {
         const routeTimingStops = getTimingStops(`${routeId}_${route.direction}`);
         // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(({stopId, duration}) => 
+        const stopInfos = route.stops.map(({stopId, duration}) =>
             ({...stops.find(stop => {
                 if (routeTimingStops.length && routeTimingStops.find((timingStop) => timingStop === stop.stopId)) stop.isTiming = true;
                 return stop.stopId === stopId;

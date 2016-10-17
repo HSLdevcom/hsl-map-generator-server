@@ -1,4 +1,4 @@
-const fs = require('file-system');
+const fs = require("fs");
 var path = require("path");
 var readline = require("readline");
 var iconv = require("iconv-lite");
