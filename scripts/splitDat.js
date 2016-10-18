@@ -2,6 +2,7 @@ const fs = require("fs-extra");
 var path = require("path");
 var readline = require("readline");
 var iconv = require("iconv-lite");
+const omit = require("lodash/omit");
 const parseLine = require("./parseLine");
 
 /**
@@ -16,7 +17,7 @@ function splitDat(filename, fields, outdir, splitField) {
     const paths = [];
 
     return new Promise((resolve) => {
-        fs.emptyDir(outdir);
+        fs.emptyDirSync(outdir);
 
         const lineReader = readline.createInterface({
             input: fs.createReadStream(filename)
@@ -26,7 +27,7 @@ function splitDat(filename, fields, outdir, splitField) {
         lineReader.on("line", (line) => {
             const valuesByField = parseLine(line, fields);
             const outpath = path.join(outdir, `${valuesByField[splitField]}.json`);
-            fs.appendFileSync(outpath, `${JSON.stringify(valuesByField)}\n`);
+            fs.appendFileSync(outpath, `${JSON.stringify(omit(valuesByField, splitField))}\n`);
             paths.push(outpath);
         });
 
