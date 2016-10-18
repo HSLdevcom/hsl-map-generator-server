@@ -5,6 +5,7 @@ var forEach = require("lodash/forEach");
 const isEqual = require("lodash/isEqual");
 const pick = require("lodash/pick");
 const omit = require("lodash/omit");
+const differenceWith = require("lodash/differenceWith");
 
 var parseDate = require("./parseDate");
 var parseDat = require("./parseDat");
@@ -164,6 +165,11 @@ function isEqualDeparture(departure, other) {
     return isEqual(pick(departure, ...identifyFields), pick(other, ...identifyFields));
 }
 
+function getDepartureList(departures) {
+    const omittedFields = ["stopId", "dateBegin", "dateEnd", "dayType"];
+    return departures ? departures.map(departure => omit(departure, omittedFields)) : [];
+}
+
 function getTimetables(departures) {
     const timetables = [];
     const departuresByDate = groupBy(departures, ({dateBegin, dateEnd}) => dateBegin + dateEnd);
@@ -171,25 +177,40 @@ function getTimetables(departures) {
     forEach(departuresByDate, (departuresForDate) => {
         const departuresByType = groupBy(departuresForDate, ({dayType}) => dayType);
 
-        for(const departure of departuresByType["Pe"]) {
-            if(!departuresByType["Ma"].find(value => isEqualDeparture(departure, value))) {
+        if (departuresByType["Pe"] && departuresByType["Ma"]) {
+            const fridayOnlyDepartures = differenceWith(
+                departuresByType["Pe"],
+                departuresByType["Ma"],
+                isEqualDeparture
+            );
+            for (const departure of fridayOnlyDepartures) {
                 departure.isFridayOnly = true;
             }
         }
 
-        const omitFields = ["dateBegin", "dayEnd", "dayType"];
         timetables.push({
             dateBegin: departuresForDate[0].dateBegin,
             dateEnd: departuresForDate[0].dateEnd,
             departures: {
-                weekdays: omit(departuresByType["Pe"], omitFields),
-                saturdays: omit(departuresByType["La"], omitFields),
-                sundays: omit(departuresByType["Su"], omitFields),
+                weekdays: getDepartureList(departuresByType["Pe"]),
+                saturdays: getDepartureList(departuresByType["La"]),
+                sundays: getDepartureList(departuresByType["Su"]),
             }
         });
     });
 
     return timetables;
+}
+
+function parseDepartures(filepath) {
+    return new Promise(resolve => {
+        parseDat(filepath, aikat_fields).then(departures => {
+            console.log(`Writing timetable (stop id: ${departures[0].stopId})`);
+            const timetables = getTimetables(departures);
+            fs.writeFileSync(filepath, JSON.stringify(timetables));
+            resolve();
+        });
+    });
 }
 
 const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
@@ -223,15 +244,19 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries,
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
     console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
 
-    return splitDat(sourcePath("aikat.dat"), aikat_fields, outputPath("timetables"), "stopId");
+    return splitDat(sourcePath("aikat.dat"), outputPath("timetables"), 1, 8);
 }).then((paths) => {
-    for(const filepath of paths) {
-        const departures = fs.readFileSync(filepath, "utf8").split("\n")
-            .filter(line => !!line.length).map(JSON.parse);
-        const timetables = getTimetables(departures);
-        fs.writeFileSync(filepath, JSON.stringify(timetables));
+    let prev;
+    for (const filepath of paths) {
+        if (prev) {
+            prev = prev.then(() => parseDepartures(filepath));
+        } else {
+            prev = parseDepartures(filepath);
+        }
     }
-    console.log(`Succesfully imported timetables for ${paths.length} stops`);
+    prev.then(() => {
+        console.log(`Succesfully imported timetables for ${paths.length} stops`);
+    });
 }).catch(error => {
     console.error(error);
 });

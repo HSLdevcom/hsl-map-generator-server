@@ -2,7 +2,20 @@ const fs = require("fs");
 var path = require("path");
 var readline = require("readline");
 var iconv = require("iconv-lite");
-const parseLine = require("./parseLine");
+
+
+function parseLine(line, fields) {
+    const stop = {};
+    let index = 1;
+    fields.forEach(([length, key, isNumeric]) => {
+        if(key) {
+            const value = line.substring(index, index + length).trim();
+            stop[key] = isNumeric ? parseFloat(value) : value;
+        }
+        index = index + length;
+    });
+    return stop;
+}
 
 function parseDat(filename, fields) {
     const records = [];
