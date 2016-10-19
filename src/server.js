@@ -78,6 +78,20 @@ router.get("/stops/:stopId", (ctx) => {
     return successResponse(ctx, stop);
 });
 
+router.get("/timetables/:stopId", (ctx) => {
+    return new Promise((resolve) => {
+        const sanitizedId = ctx.params.stopId.replace(/\D/g, "");
+        fs.readFile(`${dataPath}/timetables/${sanitizedId}.json`, "utf8", (error, data) => {
+            if (error) {
+                errorResponse(ctx, error);
+            } else {
+                successResponse(ctx, data);
+            }
+            resolve();
+        });
+    });
+});
+
 router.get("/lines", (ctx) => {
     return successResponse(ctx, lines);
 });
