@@ -1,5 +1,6 @@
 const tilelive = require('tilelive');
 const tileliveGl = require('tilelive-gl');
+const sharp = require("sharp");
 const transit = require('transit-immutable-js');
 const omit = require("lodash/omit");
 
@@ -8,7 +9,7 @@ const style = require('hsl-map-style/hsl-gl-map-v9.json');
 
 // const viewportMercator = require('viewport-mercator-project');
 
-const LIMIT = 18000;
+const MAX_TILE_SIZE = 800;
 
 tileliveGl.registerProtocols(tilelive);
 
@@ -84,6 +85,66 @@ function sourceFromTransit(options) {
     return { source: glSource, options: glOptions };
 }
 
+function initGl(source) {
+    return new Promise((resolve, reject) => {
+        tilelive.load(source, (err, instance) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(instance);
+            }
+        });
+    });
+}
+
+function generateTile(glInstance, options) {
+    return new Promise((resolve, reject) => {
+        glInstance.getStatic.bind(glInstance)(options, (error, data) =>
+            error ? reject(error) : resolve(data));
+    });
+}
+
+function createTileInfos(options) {
+    const tileCountX = Math.ceil(options.width / MAX_TILE_SIZE);
+    const tileCountY = Math.ceil(options.height / MAX_TILE_SIZE);
+    const tileWidth = options.width / tileCountX;
+    const tileHeight = options.height / tileCountY;
+
+    // TODO: Expand last tiles in rows and columns to fill dimensions
+
+    let tileInfos = [];
+    for (let x = 0; x < tileCountX; x++) {
+        for (let y = 0; y < tileCountY; y++) {
+            tileInfos.push({
+                options: {
+                    // TODO: Use correct center for each tile
+                    center: options.center,
+                    width: tileWidth,
+                    height: tileHeight,
+                },
+                offsetX: x * tileWidth * options.scale,
+                offsetY: y * tileHeight * options.scale,
+            })
+        }
+    }
+    return tileInfos;
+}
+
+function addTile(glInstance, options, tileInfo, canvas) {
+    const tileOptions = { ...options, ...tileInfo.options };
+
+    return generateTile(glInstance, tileOptions).then((tile) => {
+        if(!canvas) {
+            const opts = { top: 0, bottom: options.width, left: 0, right: options.height };
+            return sharp(tile).extend(opts).toBuffer();
+        } else {
+            const opts = { left: tileInfo.offsetX, top: tileInfo.offsetY };
+            return sharp(canvas).overlayWith(tile, opts).toBuffer();
+        }
+    });
+}
+
+
 /**
  * Renders a map image using map selection and complete style or json params and partial style
  * @param {Object} opts - Options used to generate map image
@@ -92,17 +153,16 @@ function sourceFromTransit(options) {
 function generate(opts) {
     const { source, options } = opts.mapSelection ? sourceFromTransit(opts): sourceFromJson(opts);
 
-    // TODO: Generate image in parts when too large
-    if (options.width * options.scale > LIMIT || options.height * options.scale > LIMIT) {
-        return Promise.reject();
-    }
+    let output;
+    const tileInfos = createTileInfos(options);
 
-    return new Promise((resolve, reject) => {
-        tilelive.load(source, (err, instance) => {
-            if(err) return reject(err);
-            instance.getStatic.bind(instance)(options, (error, data) =>
-                error ? reject(error) : resolve(data));
-        });
+    return initGl(source).then(glInstance => {
+        let prev;
+        for (const tileInfo of tileInfos) {
+            const next = (canvas) => addTile(glInstance, options, tileInfo, canvas);
+            prev = prev ? prev.then(next) : next();
+        }
+        return prev;
     });
 }
 
