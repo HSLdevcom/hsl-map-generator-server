@@ -2,9 +2,14 @@ var fs = require("fs");
 var path = require("path");
 var groupBy = require("lodash/groupBy");
 var forEach = require("lodash/forEach");
+const isEqual = require("lodash/isEqual");
+const pick = require("lodash/pick");
+const omit = require("lodash/omit");
+const differenceWith = require("lodash/differenceWith");
 
-var parseDate = require("./parseDate")
-var parseFile = require("./parseFile");
+var parseDate = require("./parseDate");
+var parseDat = require("./parseDat");
+var splitDat = require("./splitDat");
 var parseCsv = require ("./parseCsv");
 var transformGeometries = require ("./transformGeometries");
 
@@ -91,7 +96,21 @@ const ajantasaus_fields = [
     [0, "id"],
     [1, "direction"],
     [4, "stopId"],
-]
+];
+
+const aikat_fields = [
+    [7, "stopId"],
+    [6, "routeId"],
+    [1, "direction"],
+    [2, "dayType"],
+    [4, null],
+    [1, null],
+    [2, "hours", true],
+    [2, "minutes", true],
+    [1, "isAccessible", true],
+    [8, "dateBegin"],
+    [8, "dateEnd"],
+];
 
 function segmentsToStopList(segments) {
     return segments
@@ -141,23 +160,76 @@ function getRouteTypes(routes, lineId) {
     return [...new Set(types)];
 }
 
+function isEqualDeparture(departure, other) {
+    const identifyFields = ["routeId", "direction", "hours", "minutes"];
+    return isEqual(pick(departure, ...identifyFields), pick(other, ...identifyFields));
+}
+
+function getDepartureList(departures) {
+    const omittedFields = ["stopId", "dateBegin", "dateEnd", "dayType"];
+    return departures ? departures.map(departure => omit(departure, omittedFields)) : [];
+}
+
+function getTimetables(departures) {
+    const timetables = [];
+    const departuresByDate = groupBy(departures, ({dateBegin, dateEnd}) => dateBegin + dateEnd);
+
+    forEach(departuresByDate, (departuresForDate) => {
+        const departuresByType = groupBy(departuresForDate, ({dayType}) => dayType);
+
+        if (departuresByType["Pe"] && departuresByType["Ma"]) {
+            const fridayOnlyDepartures = differenceWith(
+                departuresByType["Pe"],
+                departuresByType["Ma"],
+                isEqualDeparture
+            );
+            for (const departure of fridayOnlyDepartures) {
+                departure.isFridayOnly = true;
+            }
+        }
+
+        timetables.push({
+            dateBegin: departuresForDate[0].dateBegin,
+            dateEnd: departuresForDate[0].dateEnd,
+            departures: {
+                weekdays: getDepartureList(departuresByType["Pe"]),
+                saturdays: getDepartureList(departuresByType["La"]),
+                sundays: getDepartureList(departuresByType["Su"]),
+            }
+        });
+    });
+
+    return timetables;
+}
+
+function parseDepartures(filepath) {
+    return new Promise(resolve => {
+        parseDat(filepath, aikat_fields).then(departures => {
+            console.log(`Writing timetable (stop id: ${departures[0].stopId})`);
+            const timetables = getTimetables(departures);
+            fs.writeFileSync(filepath, JSON.stringify(timetables));
+            resolve();
+        });
+    });
+}
+
 const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
 const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
 const sourceFiles = [
-    parseFile(sourcePath("pysakki.dat"), pysakki_fields),
-    parseFile(sourcePath("linjannimet2.dat"), linjannimet2_fields),
-    parseFile(sourcePath("linja3.dat"), linja3_fields),
-    parseFile(sourcePath("reitti.dat"), reitti_fields),
-    parseFile(sourcePath("reittimuoto.dat"), reittimuoto_fields),
+    parseDat(sourcePath("pysakki.dat"), pysakki_fields),
+    parseDat(sourcePath("linjannimet2.dat"), linjannimet2_fields),
+    parseDat(sourcePath("linja3.dat"), linja3_fields),
+    parseDat(sourcePath("reitti.dat"), reitti_fields),
+    parseDat(sourcePath("reittimuoto.dat"), reittimuoto_fields),
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
+Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {
+    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
-    const linesTypes = lines.map(line =>
-        ({...line, types: getRouteTypes(routes, line.lineId)}));
+    const linesTypes = lines.map(line => ({...line, types: getRouteTypes(routes, line.lineId)}));
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
     console.log(`Succesfully imported ${linesTypes.length} lines`);
 
@@ -171,4 +243,20 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries,
 
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
     console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
+
+    return splitDat(sourcePath("aikat.dat"), outputPath("timetables"), 1, 8);
+}).then((paths) => {
+    let prev;
+    for (const filepath of paths) {
+        if (prev) {
+            prev = prev.then(() => parseDepartures(filepath));
+        } else {
+            prev = parseDepartures(filepath);
+        }
+    }
+    prev.then(() => {
+        console.log(`Succesfully imported timetables for ${paths.length} stops`);
+    });
+}).catch(error => {
+    console.error(error);
 });

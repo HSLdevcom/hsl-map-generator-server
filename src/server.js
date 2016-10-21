@@ -1,4 +1,4 @@
-const fs = require('file-system');
+const fs = require("fs");
 const path = require("path");
 const forEach = require("lodash/forEach");
 
@@ -70,6 +70,20 @@ router.get("/stopIds", (ctx) => {
 router.get("/stops/:stopId", (ctx) => {
     const stop = stops.find(stop => stop.stopId === ctx.params.stopId);
     return successResponse(ctx, stop);
+});
+
+router.get("/timetables/:stopId", (ctx) => {
+    return new Promise((resolve) => {
+        const sanitizedId = ctx.params.stopId.replace(/\D/g, "");
+        fs.readFile(`${dataPath}/timetables/${sanitizedId}.json`, "utf8", (error, data) => {
+            if (error) {
+                errorResponse(ctx, error);
+            } else {
+                successResponse(ctx, data);
+            }
+            resolve();
+        });
+    });
 });
 
 router.get("/lines", (ctx) => {
