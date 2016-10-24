@@ -50,6 +50,7 @@
     "tilelive": "^5.12.2",
     "tilelive-gl": "git+https://github.com/hannesj/tilelive-gl.git",
     "transit-immutable-js": "^0.6.0",
-    "transit-js": "^0.8.846"
+    "transit-js": "^0.8.846",
+    "viewport-mercator-project": "^2.1.0"
   }
 }

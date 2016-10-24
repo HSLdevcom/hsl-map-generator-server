@@ -7,9 +7,9 @@ const omit = require("lodash/omit");
 const geomUtils = require('hsl-map-generator-utils');
 const style = require('hsl-map-style/hsl-gl-map-v9.json');
 
-// const viewportMercator = require('viewport-mercator-project');
+const viewportMercator = require('viewport-mercator-project');
 
-const MAX_TILE_SIZE = 800;
+const MAX_TILE_SIZE = 1000;
 
 tileliveGl.registerProtocols(tilelive);
 
@@ -98,6 +98,7 @@ function initGl(source) {
 }
 
 function generateTile(glInstance, options) {
+    console.log("Generating tile...");
     return new Promise((resolve, reject) => {
         glInstance.getStatic.bind(glInstance)(options, (error, data) =>
             error ? reject(error) : resolve(data));
@@ -107,18 +108,26 @@ function generateTile(glInstance, options) {
 function createTileInfos(options) {
     const tileCountX = Math.ceil(options.width / MAX_TILE_SIZE);
     const tileCountY = Math.ceil(options.height / MAX_TILE_SIZE);
-    const tileWidth = options.width / tileCountX;
-    const tileHeight = options.height / tileCountY;
+    const tileWidth = Math.floor(options.width / tileCountX);
+    const tileHeight = Math.floor(options.height / tileCountY);
 
     // TODO: Expand last tiles in rows and columns to fill dimensions
+
+    const viewport = viewportMercator({
+        longitude: options.center[0],
+        latitude: options.center[1],
+        zoom: options.zoom,
+        width: options.width,
+        height: options.height
+    });
 
     let tileInfos = [];
     for (let x = 0; x < tileCountX; x++) {
         for (let y = 0; y < tileCountY; y++) {
+            const center = [x * tileWidth + tileWidth / 2, y * tileHeight + tileHeight / 2];
             tileInfos.push({
                 options: {
-                    // TODO: Use correct center for each tile
-                    center: options.center,
+                    center: viewport.unproject(center),
                     width: tileWidth,
                     height: tileHeight,
                 },
@@ -135,7 +144,12 @@ function addTile(glInstance, options, tileInfo, canvas) {
 
     return generateTile(glInstance, tileOptions).then((tile) => {
         if(!canvas) {
-            const opts = { top: 0, bottom: options.width, left: 0, right: options.height };
+            const opts = {
+                top: 0,
+                left: 0,
+                bottom: (options.width - tileOptions.width) * options.scale,
+                right: (options.height - tileOptions.height) * options.scale,
+            };
             return sharp(tile).extend(opts).toBuffer();
         } else {
             const opts = { left: tileInfo.offsetX, top: tileInfo.offsetY };
