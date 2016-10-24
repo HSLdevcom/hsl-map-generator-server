@@ -30,6 +30,9 @@ function successResponse(ctx, body, type = "application/json") {
 function errorResponse(ctx, error) {
     ctx.status = error.status || 500;
     ctx.body = {error: error.message};
+    // TODO: Properly handle and log errors
+    console.log(error);
+    console.log(error.stack);
 }
 
 function getTimingStops(route) {
