@@ -98,10 +98,9 @@ function initGl(source) {
 }
 
 function generateTile(glInstance, options) {
-    console.log("Generating tile...");
     return new Promise((resolve, reject) => {
-        glInstance.getStatic.bind(glInstance)(options, (error, data) =>
-            error ? reject(error) : resolve(data));
+        const callback = (error, data, info) => error ? reject(error) : resolve({data, info});
+        glInstance.getStatic.bind(glInstance)(options, callback, true);
     });
 }
 
@@ -147,13 +146,17 @@ function addTile(glInstance, options, tileInfo, canvas) {
             const opts = {
                 top: 0,
                 left: 0,
-                bottom: (options.width - tileOptions.width) * options.scale,
-                right: (options.height - tileOptions.height) * options.scale,
+                bottom: options.width * options.scale - tile.info.width,
+                right: options.height * options.scale - tile.info.width,
             };
-            return sharp(tile).extend(opts).toBuffer();
+            return sharp(tile.data, { raw: tile.info }).extend(opts).png().toBuffer();
         } else {
-            const opts = { left: tileInfo.offsetX, top: tileInfo.offsetY };
-            return sharp(canvas).overlayWith(tile, opts).toBuffer();
+            const opts = {
+                raw: tile.info,
+                left: tileInfo.offsetX,
+                top: tileInfo.offsetY,
+            };
+            return sharp(canvas).overlayWith(tile.data, opts).png().toBuffer();
         }
     });
 }
