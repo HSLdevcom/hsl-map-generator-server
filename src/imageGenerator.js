@@ -98,17 +98,22 @@ function initGl(source) {
 }
 
 function generateTile(glInstance, options) {
+    const opts = { ...options, format: "raw" };
     return new Promise((resolve, reject) => {
-        const callback = (error, data, info) => error ? reject(error) : resolve({data, info});
-        glInstance.getStatic.bind(glInstance)(options, callback, true);
+        const callback = (error, data, info) => error ? reject(error) : resolve({ data, ...info });
+        glInstance.getStatic.bind(glInstance)(opts, callback, true);
     });
 }
 
-function createTileInfos(options) {
+function createTileInfo(options) {
     const tileCountX = Math.ceil(options.width / MAX_TILE_SIZE);
     const tileCountY = Math.ceil(options.height / MAX_TILE_SIZE);
+    // Width and height values passed to tilelive-gl
     const tileWidth = Math.floor(options.width / tileCountX);
     const tileHeight = Math.floor(options.height / tileCountY);
+    // Actual pixel values of generated tiles
+    const imageWidth = Math.floor(tileWidth * options.scale);
+    const imageHeight = Math.floor(tileHeight * options.scale);
 
     // TODO: Expand last tiles in rows and columns to fill dimensions
 
@@ -117,50 +122,58 @@ function createTileInfos(options) {
         latitude: options.center[1],
         zoom: options.zoom,
         width: options.width,
-        height: options.height
+        height: options.height,
     });
 
-    let tileInfos = [];
-    for (let x = 0; x < tileCountX; x++) {
-        for (let y = 0; y < tileCountY; y++) {
+    let tiles = [];
+    for (let y = 0; y < tileCountY; y++) {
+        for (let x = 0; x < tileCountX; x++) {
             const center = [x * tileWidth + tileWidth / 2, y * tileHeight + tileHeight / 2];
-            tileInfos.push({
+            tiles.push({
                 options: {
                     center: viewport.unproject(center),
                     width: tileWidth,
                     height: tileHeight,
                 },
-                offsetX: x * tileWidth * options.scale,
-                offsetY: y * tileHeight * options.scale,
-            })
+                offsetX: x * imageWidth,
+                offsetY: y * imageHeight,
+            });
         }
     }
-    return tileInfos;
+
+    return {
+        width: tileCountX * imageWidth,
+        height: tileCountY * imageHeight,
+        tiles: tiles,
+    };
 }
 
-function addTile(glInstance, options, tileInfo, canvas) {
-    const tileOptions = { ...options, ...tileInfo.options };
+function appendTile(canvas, glInstance, mapOptions, tileInfo, tileIndex) {
+    const CHANNELS = 4;
+    const outputLength = tileInfo.width * tileInfo.height * CHANNELS;
+    const output = canvas || {
+        data: Buffer.allocUnsafe(outputLength),
+        width: tileInfo.width,
+        height: tileInfo.height,
+        channels: CHANNELS,
+    };
+
+    const tileParams = tileInfo.tiles[tileIndex];
+    const tileOptions = { ...mapOptions, ...tileParams.options };
 
     return generateTile(glInstance, tileOptions).then((tile) => {
-        if(!canvas) {
-            const opts = {
-                top: 0,
-                left: 0,
-                bottom: options.width * options.scale - tile.info.width,
-                right: options.height * options.scale - tile.info.width,
-            };
-            return sharp(tile.data, { raw: tile.info }).extend(opts).png().toBuffer();
-        } else {
-            const opts = {
-                raw: tile.info,
-                left: tileInfo.offsetX,
-                top: tileInfo.offsetY,
-            };
-            return sharp(canvas).overlayWith(tile.data, opts).png().toBuffer();
+        let tileIndex = 0;
+        let tileLength = tile.width * tile.height * tile.channels;
+        let outputIndex = (tileParams.offsetY * tileInfo.width + tileParams.offsetX) * CHANNELS;
+
+        while (tileIndex < tileLength) {
+            tile.data.copy(output.data, outputIndex, tileIndex, tileIndex + tile.width * CHANNELS);
+            outputIndex += tileInfo.width * CHANNELS;
+            tileIndex += tile.width * CHANNELS;
         }
+        return output;
     });
 }
-
 
 /**
  * Renders a map image using map selection and complete style or json params and partial style
@@ -170,16 +183,19 @@ function addTile(glInstance, options, tileInfo, canvas) {
 function generate(opts) {
     const { source, options } = opts.mapSelection ? sourceFromTransit(opts): sourceFromJson(opts);
 
-    let output;
-    const tileInfos = createTileInfos(options);
+    const tileInfo = createTileInfo(options);
 
     return initGl(source).then(glInstance => {
         let prev;
-        for (const tileInfo of tileInfos) {
-            const next = (canvas) => addTile(glInstance, options, tileInfo, canvas);
+
+        for (const tileIndex in tileInfo.tiles) {
+            const next = (output) => appendTile(output, glInstance, options, tileInfo, tileIndex);
             prev = prev ? prev.then(next) : next();
         }
-        return prev;
+
+        return prev.then((output) => {
+            return sharp(output.data, { raw: omit(output, "data") }).png().toBuffer();
+        });
     });
 }
 
