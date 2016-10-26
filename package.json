@@ -48,7 +48,7 @@
     "replacestream": "^4.0.2",
     "sharp": "^0.16.1",
     "tilelive": "^5.12.2",
-    "tilelive-gl": "git+https://github.com/hannesj/tilelive-gl.git",
+    "tilelive-gl": "git+https://github.com/HSLdevcom/tilelive-gl.git",
     "transit-immutable-js": "^0.6.0",
     "transit-js": "^0.8.846",
     "viewport-mercator-project": "^2.1.0"
