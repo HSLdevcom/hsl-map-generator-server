@@ -17,7 +17,6 @@ const lines = require(`${dataPath}/lines.json`);
 const routesById = require(`${dataPath}/routes.json`);
 const timingStops = require(`${dataPath}/timingStops.json`);
 const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/routeGeometries.geojson`, "utf8"));
-const stopGeometries = JSON.parse(fs.readFileSync(`${dataPath}/stops.geojson`, "utf8"));
 
 const PORT = 8000;
 
@@ -38,7 +37,7 @@ function getTimingStops(route) {
         if (route === `${timingStop.id}_${timingStop.direction}`) {
             routeTimingStops.push(timingStop.stopId);
         }
-    })
+    });
     return routeTimingStops;
 }
 
@@ -116,12 +115,6 @@ router.get("/routesByStop/:stopId", (ctx) => {
     });
 
     return successResponse(ctx, stopRoutesById);
-});
-
-router.get("/stopGeometries/:routeId", (ctx) => {
-    const features = stopGeometries.features.filter(feature =>
-        feature.properties.route.startsWith(ctx.params.routeId));
-    return successResponse(ctx, features);
 });
 
 router.get("/routeGeometries/:routeId", (ctx) => {
