@@ -62,13 +62,17 @@ router.post("/generateImage", ctx => {
 });
 
 router.get("/stopIds", (ctx) => {
-    const stopIds = stops.map(({stopId}) => stopId);
+    const stopIds = stops.map(({ stopId }) => stopId);
     return successResponse(ctx, stopIds);
 });
 
-router.get("/stops/:stopId", (ctx) => {
-    const stop = stops.find(stop => stop.stopId === ctx.params.stopId);
-    return successResponse(ctx, stop);
+router.get("/stops/:stopId?", (ctx) => {
+    if(ctx.params.stopId) {
+        const stop = stops.find(stop => stop.stopId === ctx.params.stopId);
+        successResponse(ctx, stop);
+    } else {
+        successResponse(ctx, stops);
+    }
 });
 
 router.get("/timetables/:stopId", (ctx) => {
