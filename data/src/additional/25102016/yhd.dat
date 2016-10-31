@@ -1,0 +1,788 @@
+ 100N  120000814200112311Otaniemi/Tapiola/Haukilahti yölinja     Nattlinje till Otnäs/Hagalund/Gäddvik    
+ 100N  220000814200112310Otaniemi/Tapiola/Haukilahti yölinja     Nattlinje till Otnäs/Hagalund/Gäddvik    
+ 102   119921013200112311Helsinki-Otaniemi                       Helsingfors-Otnäs                        
+ 102   219921013200112311Otaniemi-Helsinki                       Otnäs-Helsingfors                        
+ 103   119921013200112311Helsinki-Otaniemi-Tapiola               Helsingfors-Otnäs-Hagalund               
+ 103   219921013200112311Tapiola-Otaniemi-Helsinki               Hagalund-Otnäs-Helsingfors               
+ 105   119950828200112311Helsinki-Mankkaa                        Helsingfors-Mankans                      
+ 105   219950828200112311Mankkaa-Helsinki                        Mankans-Helsingfors                      
+ 106   119921013200112311Helsinki-Leppävaara                     Helsingfors-Alberga                      
+ 106   219921013200112311Leppävaara-Helsinki                     Alberga-Helsingfors                      
+ 109   119920831200112311Helsinki-Jorvi                          Helsingfors-Jorvi                        
+ 109   219920831200112311Jorvi-Helsinki                          Jorv-Helsingfors                         
+ 110   120070603201101011Helsinki- Leppävaara                                                             
+ 110   220070603201101011Helsinki - Leppävaara                                                            
+ 110T  119920831200112311Helsinki-Leppävaara                     Helsingfors-Alberga                      
+ 110T  219920831200112311Leppävaara-Helsinki                     Alberga-Helsingfors                      
+ 111   119950823200112311Helsinki-Westend-Haukilahti             Helsingfors-Westend-Gäddvik              
+ 111   219950823200112311Haukilahti-Westend-Helsinki             Gäddvik-Westend-Helsingfors              
+ 112   119950823200112311Helsinki-Westend-Haukilahti             Helsingfors-Westend-Gäddvik              
+ 112   219950823200112311Haukilahti-Helsinki                     Gäddvik-Helsingfors                      
+ 120   119990101200112311Helsinki-Orion                          Helsingfors-Orion                        
+ 120   219990101200112311Orion-Helsinki                          Orion-Helsingfors                        
+ 121   119921013200112311Kuitinmäki/Puolarmetsä-Helsinki         Kvisbacka/Bolarskog-Helsingfors          
+ 121   219921013200112311Helsinki-Kuitinmäki/Puolarmetsä         Helsingfors-Kvisbacka/Bolarskog          
+ 122   119921013200112311Helsinki-Friisilänaukio/Holmanmäki      Helsingfors-Frisansplatsen/Holmbacken    
+ 122   219921013200112311Friisilänaukio/Holmanmäki-Helsinki      Frisansplatsen/Holmbacken-Helsingfors    
+ 128   119921014200112311Helsinki-Piispankylä-Nöykkiö            Helsingfors-Biskopsby-Nöykis             
+ 128   219921014200112311Nöykkiö-Piispankylä-Helsinki            Nöykis-Biskopsby-Helsingfors             
+ 130N  120000814200112311Matinkylä/Olari yölinja                 Mattby/Olars nattlinje                   
+ 130N  220000814200112310Matinkylä/Olari yölinja                 Mattby/Olars nattlinje                   
+ 132   119921014200112311Helsinki-Matinkylä-Friisilänaukio       Helsingfors-Mattby-Frisansplatsen        
+ 132   219921014200112311Friisilänaukio-Matinkylä-Helsinki       Frisansplatsen-Mattby-Helsingfors        
+ 140N  120000814200112311Espoonlahden yölinja                    Nattlinje till Esboviken                 
+ 140N  220000814200112310Espoonlahden yölinja                    Nattlinje till Esboviken                 
+ 143   119921014200112311Helsinki-Soukka/Soukanniemi             Helsingfors-Sökö/Sökö udd                
+ 143   219921014200112311Soukka/Soukanniemi-Helsinki             Sökö/Sökö udd-Helsingfors                
+ 145   119990811200112311Helsinki-Suvisaaristo                   Helsingfors-Sommaröarna                  
+ 145   219990811200112311Suvisaaristo-Helsinki                   Sommaröarna-Helsingfors                  
+ 147   119990909200112311Helsinki-Soukka-Kivenlahti              Helsingfors-Sökö-Stensvik                
+ 147   219990909200112311Kivenlahti-Soukka-Helsinki              Stensvik-Sökö-Helsingfors                
+ 150   119920831200112311Helsinki-Kivenlahti/Tillinmäki          Helsingfors-Stensvik/Tillisbacken        
+ 150   219920831200112311Kivenlahti-Helsinki                     Stensvik-Helsingfors                     
+ 151   119990101200112311Helsinki-Tillinmäki                     Helsingfors-Tillisbacken                 
+ 151   219990101200112311Tillinmäki-Helsinki                     Tillisbacken-Helsingfors                 
+ 154   119920831200112311Helsinki-Suomenoja-Tuomarila            Helsingfors-Finno-Domsby                 
+ 154   219920831200112311Tuomarila-Suomenoja-Helsinki            Domsby-Finno-Helsingfors                 
+ 156   119990101200112311Helsinki-Sunanniitty                    Helsingfors-Sunaängen                    
+ 156   219990101200112311Sunanniitty-Helsinki                    Sunaängen-Helsingfors                    
+ 158   120060813201501010Helsinki-Nöykkiönlaakso                                                          
+ 158   220060813201501010Helsinki-Nöykkiönlaakso                                                          
+ 160   119920831200112311Helsinki-Latokaski                      Helsingfors-Ladusved                     
+ 160   219920831200112311Latokaski-Helsinki                      Ladusved-Helsingfors                     
+ 165   119920831200112311Helsinki-Kauklahti-Espoonkartano        Helsingfors-Köklax-Esbogård              
+ 165   219920831200112311Espoonkartano-Kauklahti-Helsinki        Esbogård-Köklax-Helsingfors              
+ 166   119920831200112311Helsinki-Kauklahti-Hvitträsk            Helsingfors-Köklax-Hvitträsk             
+ 166   219920831200112311Hvitträsk-Kauklahti-Helsinki            Hvitträsk-Köklax-Helsingfors             
+ 167   120090601202001011Helsinki - Länsiväylä -  Evitskog       Helsingfors- Västerleden - Evitskog      
+ 167   220090601202001011Helsinki - Länsiväylä -  Evitskog       Helsingfors- Västerleden - Evitskog      
+ 170   120090601202001011Hki-Knummi (-Inkoo)                     Hfors-Kslätt (-Ingå)                     
+ 170   220090601202001011Hki-Knummi (-Inkoo)                     Hfors-Kslätt (-Ingå)                     
+ 171   120090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 171   220090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 172   120090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 172   220090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 173   120090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 173   220090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 174   120090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 174   220090601202001011Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ 175   120090601202001011Helsinki-Kirkkonummi-Kantvik            Helsingfors-Kyrkslätt-Kantvik            
+ 175   220090601202001011Helsinki-Kirkkonummi-Kantvik            Helsingfors-Kyrkslätt-Kantvik            
+ 176   120090601202001011Helsinki-Kirkkonummi-Kantvik-Pikkala    Helsingfors-Kyrkslätt-Kantvik-Pickala    
+ 176   220090601202001011Helsinki-Kirkkonummi-Kantvik-Pikkala    Helsingfors-Kyrkslätt-Kantvik-Pickala    
+ 177   120090601202001011Helsinki-Kirkkonummi-Upinniemi          Helsingfors-Kyrkslätt-Obbnäs             
+ 177   220090601202001011Helsinki-Kirkkonummi-Upinniemi          Helsingfors-Kyrkslätt-Obbnäs             
+ 178   120090601202001011Helsinki-Kirkkonummi-Upinniemi          Helsingfors-Kyrkslätt-Obbnäs             
+ 178   220090601202001011Helsinki-Kirkkonummi-Upinniemi          Helsingfors-Kyrkslätt-Obbnäs             
+ 179   120090601202001011Helsinki-Kirkkonummi-Upinniemi          Helsingfors-Kyrkslätt-Obbnäs             
+ 179   220090601202001011Helsinki-Kirkkonummi-Upinniemi          Helsingfors-Kyrkslätt-Obbnäs             
+ 180   120090601202001011Helsinki-Kirkkonummi                    Helsingfors-Kyrkslätt                    
+ 180   220090601202001011Helsinki-Kirkkonummi                    Helsingfors-Kyrkslätt                    
+ 181   120090601202001011Helsinki-Kirkkonummi-Gesterby           Helsingfors-Kyrkslätt-Gesterby           
+ 181   220090601202001011Helsinki-Kirkkonummi-Gesterby           Helsingfors-Kyrkslätt-Gesterby           
+ 182   120090601202001011Helsinki-Kirkkonummi-Ravals             Helsingfors-Kyrkslätt-Ravals             
+ 182   220090601202001011Helsinki-Kirkkonummi-Ravals             Helsingfors-Kyrkslätt-Ravals             
+ 185   120090601202001011Helsinki-Ericsson/Hirsala               Helsingfors-Ericsson/Hirsala             
+ 185   220090601202001011Helsinki-Ericsson/Hirsala               Helsingfors-Ericsson/Hirsala             
+ 186   120090601202001011Helsinki-Pikkala                        Helsingfors-Pickala                      
+ 186   220090601202001011Helsinki-Pikkala                        Helsingfors-Pickala                      
+ 189   120090601202001011Helsinki-Kirkkonummi-Pikkalan tehdas th Helsingfors-Kyrkslätt- Pickala fabrik vg 
+ 189   220090601202001011Helsinki-Kirkkonummi-Pikkalan tehdas th Helsingfors-Kyrkslätt- Pickala fabrik vg 
+ 190   120090601202001011Helsinki-Jorvaksentie-Pikkala th (-InkooHelsingfors-Jorvasvägen-Pickala vgs (-In 
+ 190   220090601202001011Helsinki-Jorvaksentie-Pikkala th (-InkooHelsingfors-Jorvasvägen-Pickala vgs (-In 
+ 194   119920831200112311Helsinki-Tapiola                        Helsingfors-Hagalund                     
+ 194   219920831200112311Tapiola-Helsinki                        Hagalund-Helsingfors                     
+ 195   119990101200112311Helsinki-Puolarmetsä-Latokaski          Helsingfors-Bolarskog-Ladusved           
+ 195   219990101200112311Latokaski-Puolarmetsä-Helsinki          Ladusved-Bolarskog-Helsingfors           
+ 205   120020602200112311Helsinki-Leppävaara                     Helsingfors-Alberga                      
+ 205   220020602200112311Helsinki-Leppävaara                     Helsingfors-Alberga                      
+ 206   119920831200112311Helsinki-Nihtisilta/Karamalmi           Helsingfors-KnektbroKaramalmen           
+ 206   219920831200112311Nihtisilta/Karamalmi-Helsinki           Knektbro/Karamalmen-Helsingfors          
+ 210N  120010813200112311Leppävaara-Karakallio-Espoon keskus     Alberga-Karabacka-Esbo centrum           
+ 210N  220010813200112310Leppävaara-Karakallio-Espoon keskus     Alberga-Karabacka-Esbo centrum           
+ 212   119950512200112311Helsinki-Kauniainen                     Helsingfors-Grankulla                    
+ 212   219950512200112311Kauniainen-Helsinki                     Grankulla-Helsingfors                    
+ 213   119930622200112311Helsinki-Mikkelä                        Helsingfors-Mickels                      
+ 213   219930622200112311Mikkelä-Helsinki                        Mickels-Helsingfors                      
+ 220N  120010813200112311Leppävaara-Kilo-Lippajärvi-Hämevaara    Alberga-Kilo-Klappstrand-Tavastberga     
+ 231   119990101200112311Helsinki-Hämeenkylä                     Helsingfors-Tavastby                     
+ 231   219990101200112311Hämeenkylä-Helsinki                     Tavastby-Helsingfors                     
+ 248   119920831200112311Helsinki-Jupperi                        Helsingfors-Jupper                       
+ 248   219920831200112311Jupperi-Helsinki                        Jupper-Helsingfors                       
+ 2550  220030817201001010Jokeri                                  Joker                                    
+ 261   119920831200112311Helsinki-Kauniala/Kuurinniitty          Helsingfors-Kauniala/Kurängen            
+ 261   219920831200112311Kauniala/Kuurinniitty-Helsinki          Kauniala/Kurängen-Helsingfors            
+ 270   119921014200112311Helsinki-Tuomarila/Kuurinniitty         Helsingfors-Domsby/Kurängen              
+ 270   219921014200112311Tuomarila/Kuurinniitty-Helsinki         Domsby/Kurängen-Helsingfors              
+ 277   119950903200112311Helsinki-Kauklahti                      Helsingfors-Köklax                       
+ 277   219950903200112311Kauklahti-Helsinki                      Köklax-Helsingfors                       
+ 280   120090601200112310Helsinki - Turunväylä - Veikkola -      Helsingfors - Åboleden - Veikkola -      
+ 280   220090601200112311Helsinki - Turunväylä - Veikkola -      Helsingfors - Åboleden - Veikkola -      
+ 290   119950903200112311Helsinki-Turuntie-Kolmperä              Helsingfors-Åboleden-Kolmpers            
+ 290   219950903200112311Kolmperä-Turuntie-Helsinki              Kolmpers-Åboleden-Helsingfors            
+ 315   119990816200112311Helsinki-Järvenperä                     Helsingfors-Träskända                    
+ 315   219990816200112311Järvenperä-Helsinki                     Träskända-Helsingfors                    
+ 321   119990101200112311Helsinki-Koskelo                        Helsingfors-Skrakaby                     
+ 321   219990101200112311Koskelo-Helsinki                        Skrakaby-Helsingfors                     
+ 324   119921019200112311Helsinki-Kalajärvi                      Helsingfors-Kalajärvi                    
+ 324   219921019200112311Kalajärvi-Helsinki                      Kalajärvi-Helsingfors                    
+ 339   119930113200112311Helsinki-Lahnus-Klaukkala               Helsingfors-Lahnus-Klaukkala             
+ 339   219930113200112311Lahnus-Helsinki                         Lahnus-Helsingfors                       
+ 345   119920831200112311Helsinki-Rinnekoti                      Helsingfors-Rinnehemmet                  
+ 345   219920831200112311Rinnekoti-Helsinki                      Rinnehemmet-Helsingfors                  
+ 346   119950903200112311Helsinki-Vihdintie-Kalajärvi            Helsingfors-Vichtisvägen-Kalajärvi       
+ 346   219950903200112311Kalajärvi-Vihdintie-Helsinki            Kalajärvi-Vichtisvägen-Helsingfors       
+ 360   119990101200112311Helsinki-Petikko                        Helsingfors-Petikko                      
+ 360   219990101200112311Petikko-Helsinki                        Petikko-Helsingfors                      
+ 361   119990101200112311Helsinki-Petikko                        Helsingfors-Petikko                      
+ 361   219990101200112311Petikko-Helsinki                        Petikko-Helsingfors                      
+ 362   119990101200112311Helsinki-Petikko                        Helsingfors-Petikko                      
+ 362   219990101200112311Petikko-Helsinki                        Petikko-Helsingfors                      
+ 363   119990101200112311Helsinki-Hämeenkylä/Askisto             Helsingfors-Tavastby/Askis               
+ 363   219990101200112311Hämeenkylä/Askisto-Helsinki             Tavastby/Askis-Helsingfors               
+ 364   120000814200112311Helsinki-Askisto                        Helsingfors-Askis                        
+ 364   220000814200112311Helsinki-Askisto                        Helsingfors-Askis                        
+ 400N  120000814200112311Myyrmäki-Martinlaakso-Ylästö            Myrbacka-Mårtensdal-Övitsböle            
+ 400N  220000814200112310Myyrmäki-Martinlaakso-Ylästö            Myrbacka-Mårtensdal-Övitsböle            
+ 410N  120010813200112311Myyrmäki-Hämeenkylä-Leppävaara          Myrbacka-Tavastberga-Alberga             
+ 410N  220000813200112310Myyrmäki-Hämeenkylä-Leppävaara          Myrbacka-Tavastberga-Alberga             
+ 415   120030817200112311Helsinki-Lentoasema                     Helsingfors-Flygstationen                
+ 415   220030817200112311Lentoasema-Helsinki                     Flygstationen-Helsingfors                
+ 451   120030817200112311Helsinki-Lentoasema                     Helsingfors-Flygstationen                
+ 451   220030817201501011Lentoasema-Helsinki                     Flygstationen-Helsingfors                
+ 452   119990101200112311Helsinki-Myyrmäki                       Helsingfors-Myrbacka                     
+ 452   219990101200112311Myyrmäki-Helsinki                       Myrbacka-Helsingfors                     
+ 453   119990101200112311Helsinki-Martinlaakso                   Helsingfors-Mårtensdal                   
+ 453   219990101200112311Martinlaakso-Helsinki                   Mårtensdal-Helsingfors                   
+ 472   119990101200112311Helsinki-Kannisto/Vestra/Luhtaanmäki    Helsingfors-Kannisto/Västra/Luhtabacka   
+ 472   219990101200112311Kannisto/Vestra/Luhtaanmäki-Helsinki    Kannisto/Västra/Luhtabacka-Helsingfors   
+ 474   120040815201012311Helsinki-Reuna                          Helsingfors-Reuna                        
+ 474   220040815201012311Reuna-Helsinki                          Reuna-Helsingfors                        
+ 484   119990101200112311Helsinki-Reuna                          Helsingfors-Reuna                        
+ 484   219990101200112311Reuna-Helsinki                          Reuna-Helsingfors                        
+ 485   120000101200112311U-linjat Hämeenlinnanväylä              U-linjer Tavastehusleden                 
+ 485   220000101200112311U-linjat Hämeenlinnanväylä              U-linjer Tavastehusleden                 
+ 499   120130601201806011M-junaa korvaava bussi                                                           
+ 499   220130601201806011M-junaa korvaava bussi                                                           
+ 500T  119990101200112311Vattuniemi-Hanasaari-Vattuniemi         Hallonnäs-Hanaholmen-Hallonnäs           
+ 502   119990101200112311Merihaka-Otaniemi                       Havshagen-Otnäs                          
+ 502   219990101200112311Otaniemi-Merihaka                       Otnäs-Havshagen                          
+ 503   119990101200112311Vanhakaupunki-Matinkylä                 Gammelstaden-Mattby                      
+ 503   219990101200112311Matinkylä-Vanhakaupunki                 Mattby-Gammelstaden                      
+ 504   119990101200112311Verkkosaari-Kivenlahti                  Nätholmen-Stensvik                       
+ 504   219990101200112311Kivenlahti-Verkkosaari                  Stensvik-Nätholmen                       
+ 505   119990101200112311Verkkosaari-Puolarmetsä                 Nätholmen-Bolarskog                      
+ 505   219990101200112311Puolarmetsä-Verkkosaari                 Bolarskog-Nätholmen                      
+ 506   120060813201001011Viikki - Pohjois-Tapiola                Vik- Norra Hagalund                      
+ 506   220060813201001010Pohjois-Tapiola - Viikki                Norra Hagalund - Vik                     
+ 509   119990101200112311Verkkosaari-Järvenperä                  Nätholmen-Träskända                      
+ 509   219990101200112311Järvenperä-Verkkosaari                  Träskända-Nätholmen                      
+ 510   119921001200112311Vantaankoski-Tapiola-Westendinasema     Vandaforsen-Hagalund-Westendstationen    
+ 510   219921001200112311Westendinasema-Tapiola-Vantaankoski     Westendstationen-Hagalund-Vandaforsen    
+ 512   119990101200112311Malmi-Westendinasema                    Malm-Westenstationen                     
+ 512   219990101200112311Westendinasema-Tapiola                  Westenstationen-Malm                     
+ 514   119990101200112311Lentoasema-Tapiola                      Flygstationen-Westendstationen           
+ 514   219990101200112311Westendinasema-Lentoasema               Westendstationen-Flygstationen           
+ 516   119990101200112311Hakaniemi-Martinlaakso                  Hagnäs-Mårtensdal                        
+ 516   219990101200112311Martinlaakso-Hakaniemi                  Mårtensdal-Hagnäs                        
+ 518   119990101200112311Sörnäinen-Nissas                        Sörnäs-Nissas                            
+ 518   219990101200112311Nissas-Sörnäinen                        Nissas-Sörnäs                            
+ 519   119990101200112311Itäkeskus/Vuosaari-Lentoasema           Östra centrum/Nordsjö-Flygstationen      
+ 519   219990101200112311Lentoasema-Itäkeskus/Vuosaari           Flygstationen-Östra centrum/Nordsjö      
+ 520   119990101200112311Itäkeskus-Lentoaseman tekninen alue     Östra centrum-Flygstationens tekn. områd 
+ 520   219990101200112311Lentoaseman tekninen alue-Itäkeskus     Flygstationens tekn. område-Östra centru 
+ 522   119990101200112311Itäkeskus-Malmi-Leppävaara              Östra centrum-Malm-Alberga               
+ 522   219990101200112311Leppävaara-Malmi-Itäkeskus              Alberga-Malm-Östra centrum               
+ 530   119921013200112311Martinlaakso-Espoon keskus              Mårtensdal-Esbo centrum                  
+ 530   219921013200112311Espoon keskus-Martinlaakso              Esbo centrum-Mårtensdal                  
+ 532   120070812201401011Martinlaakso-Kalajärvi                  Mårtensdal-Kalajärvi                     
+ 532   220070812201401011Martinlaakso-Kalajärvi                  Mårtensdal-Kalajärvi                     
+ 533   120010101202501011Vanhakartano - Matinkylä                                                         
+ 533   220010101202501011Matinkylä - Vanhakartano                                                         
+ 535   119921013200112311Lentoasema-Espoon keskus                Flygstationen-Esbo centrum               
+ 535   219921013200112311Espoon keskus-Lentoasema                Esbo centrum-Flygstationen               
+ 539   119990101200112311Munkkiniemi-Vantaankoski                Munksnäs-Vandaforsen                     
+ 539   219990101200112311Vantaankoski-Munkkiniemi                Vandaforsen-Munksnäs                     
+ 540   119990101200112311Lentoasema-Espoo                        Flyfstationen-Esbo                       
+ 540   219990101200112311Espoo-Lentoasema                        Esbo-Flygstationen                       
+ 548   120040815201012311Malminkartano-Kaivoksela                Malmgård-Gruvsta                         
+ 548   220040815201012311Kaivoksela-Malminkartano                Gruvsta-Malmgårde                        
+ 550   120030817201001010Jokeri                                  Joker                                    
+ 550   220030817201001010Jokeri                                  Joker                                    
+ 600N  120000814200112311Tikkurilan yölinja                      Nattlinje till Dickursby                 
+ 600N  220000814200112310Tikkurilan yölinja                      Nattlinje till Dickursby                 
+ 611   119961120200112311Helsinki-Simonsilta                     Helsingfors-Simonsbro                    
+ 611   219961120200112311Simonsilta-Helsinki                     Simonsbro-Helsingfors                    
+ 612   120120101203001011Rautatientori - Aviapolis - Kylmäoja                                             
+ 612   220120101203001011Rautatientori - Aviapolis - Kylmäoja                                             
+ 613   120000814200112311Helsinki-Ilola                          Helsingfors-Gladas                       
+ 613   220000814200112311Ilola-Helsinki                          Gladas-Helsingfors                       
+ 615   120000814200112311Helsinki-Lentoasema                     Helsingfors-Flygstationen                
+ 615   220000814200112311Lentoasema-Helsinki                     Flygstationen-Helsingfors                
+ 620   120030817201001010Helsinki- Lentoaseman tekn.alue                                                  
+ 620   220030817201001010Lentoaseman tekn.alue - Helsinki                                                 
+ 623   119950320200112311Helsinki-Rekolanmäki/Havukoski          Helsingfors-Räckhalsbacken/Havukoski     
+ 623   219950320200112311Rekolanmäki/Havukoski-Helsinki          Räckhalsbacken/Havukoski-Helsingfors     
+ 632   119921013200112311Helsinki-Hyrylä/Kerava                  Helsingfors-Hyrylä/Kervo                 
+ 632   219921013200112311Hyrylä-Helsinki                         Hyrylä-Helsingfors                       
+ 633   119921013200112311Helsinki-Kerava                         Helsingfors-Kervo                        
+ 633   219921013200112311Kerava-Helsinki                         Kervo-Helsingfors                        
+ 634   120010813200112311Helsinki-Kerava                         Helsingfors-Kervo                        
+ 634   220010813200112311Kerava - Helsinki                       Kervo - Helsingfors                      
+ 635   120010813200112311Helsinki-Hyrylä                         Helsingfors-Hyrylä                       
+ 635   220010813200112311Hyrylä - Helsinki                       Hyrylä -Helsinfors                       
+ 638   120130101202501010Helsinki - Kerava                                                                
+ 638   220130101202501010Kerava - Helsinki                                                                
+ 640   119990101200112311Helsinki-Hyrylä/Kerava                  HelsingforsHyrylä/Kerava                 
+ 640   219990101200112311Hyrylä-Helsinki                         Hyrylä-Helsingfors                       
+ 650   119921013200112311Helsinki-Vantaanpuisto                  Helsingfors-Vandaparken                  
+ 650   219921013200112311Petas-Helsinki                          Petas-Helsingfors                        
+ 651   120010813200112311Helsinki-Ylästö/Tuupakka                Helsingfors-Övitsböle/Stubbacka          
+ 651   220010813200112311Ylästö/Tuupakka-Helsinki                Övitsböle/Stubbacka-Helsingfors          
+ 652   119990101200112311Helsinki-Tuupakka                       Helsingfors-Stubbacka                    
+ 652   120120101203001011Rautatientori - Aviapolis - Kylmäoja                                             
+ 652   219990101200112311Tuupakka-Helsinki                       Stubbacka-Helsingfors                    
+ 652   220120101203001011Rautatientori - Aviapolis - Kylmäoja                                             
+ 665   120150701200112311Aviapolis-Lentoasema-Aviapolis          Aviapolis-Flygplatsen-Aviapolis          
+ 700N  119990101200112311Lahdentien yölinja                      Nattlinje längs Lahtisleden              
+ 710N  120000814200112311Hakunila/Korso/Kulomäki yölinja         Håkansböle/Korso/Kulomäki nattlinje      
+ 711   119990101200112311Helsinki-Jokiniemi                      Helsingfors-Ånäs                         
+ 711   219990101200112311Jokiniemi-Helsinki                      Ånäs-Helsingfors                         
+ 730   119920923200112311Helsinki-Päiväkumpu                     Helsingfors-Lövkulla                     
+ 730   219920923200112311Päiväkumpu-Helsinki                     Lövkulla-Helsingfors                     
+ 731   119920923200112311Helsinki-Kulomäki                       Helsingfors-Brännberga                   
+ 731   219920923200112311Kulomäki-Helsinki                       Brännberga-Helsingfors                   
+ 732   119921015200112311Helsinki-Havukoski                      Helsingfors-Havukoski                    
+ 732   219921015200112311Havukoski-Helsinki                      Havukoski-Helsingfors                    
+ 733   119921013200112311Helsinki-Jokivarsi (-Kerava)            Helsingfors-Jokivarsi (-Kervo)           
+ 733   219921013200112311Jokivarsi-Helsinki                      Jokovarsi-Helsingfors                    
+ 734   120040815201012311Helsinki - Etelä-Päiväkumpu             Helsingfors- Södra Lövkulla              
+ 734   220040815201012311Etelä-Päiväkumpu - Helsinki             Södra Lövkulla-Helsingfors               
+ 735   119921013200112311Helsinki-Leppäkorpi                     Helsingfors-Alkärr                       
+ 735   219921013200112311Leppäkorpi-Helsinki                     Alkärr-Helsingfors                       
+ 738   120060301201601011Helsinki-Kerava                         Helsingfors-Kervo                        
+ 738   220060301201601011Kerava-Helsinki                         Kervo-Helsingfors                        
+ 740   119950812200112311Helsinki-Hakunila                       Helsingfors-Håkansböle                   
+ 740   219950812200112311Hakunila-Helsinki                       Håkansböle-Helsingfors                   
+ 741   119990101200112311Helsinki-Kuninkaanmäki                  Helsingfors-Kungsbacka                   
+ 741   219990101200112311Kuninkaanmäki-Helsinki                  Kungsbacka-Helsingfors                   
+ 742   119980814200112311Helsinki-Kolohonganmäki                 Helsingfors-Hålatallsbacken              
+ 742   219980814200112311Kolohonganmäki-Helsingfors              Hålatallsbacken-Helsingfors              
+ 746   119990101200112311Helsinki-Kolohonganmäki                 Helsingfors-Hålatallsbacken              
+ 746   219990101200112311Kolohonganmäki-Helsinki                 Hålatallsbacken-Helsingfors              
+ 760   119990101200112311U-linjat Helsinki-Jokivarsi             U-linjer Helsingfors-Jokivarsi           
+ 760   219990101200112311U-linjat Jokivarsi-Helsinki             U-linjer Jokivarsi-Helsingfors           
+ 763   120111201205001011Helsinki - Nikinmäki ( - Nikkilä)       Helsingfors - Nissbacka ( - Nickby)      
+ 763   220111201205001011Helsinki - Nikinmäki ( - Nikkilä)       Helsingfors - Nissbacka ( - Nickby)      
+ 835   120090101202001011Helsinki-Itäsalmi (-Nikkilä)            Helsingfors-Östersundom (-Nickby)        
+ 835   220090101202001010(Nikkilä) - Itäsalmi - Helsinki         (Nickby) - Östersundom - Helsingfors     
+ 841   119960126200112311Hämeenkylä-Lentoasema-Hyrylä            Tavastby-Flygstationen-Hyrylä            
+ 841   219960126200112311Lentoasema-Hämeenkylä                   Flygstationen-Tavastby                   
+ 863   119990101200112311Vantaanportti-Lentoasema-Kerava         Vandaporten-Flygstationen-Kervo          
+ 863   219990101200112311Kerava-Lentoasema-Vantaanportti         Korvo-Flygstationen-Vandaporten          
+ 873   119990101200908151Etelä-Päiväkumpu - Vallinoja - Kerava   Kervo - Södra Lövkulla - Fallbäcken      
+ 873   219990101200908151Kerava - Vallinoja - Etelä-Päiväkumpu   Kervo - Fallbäcken Södra Lövkulla        
+ 874   120040815201012311Etelä-Päiväkumpu - Hyrylä               Södra Lövkulla-Hyrylä                    
+ 874   220040815201012311Hyrylä - Etelä-Päiväkimpu               Hyrylä-Södra Lövkulla                    
+ 915   120090101202010301Karhusaari-Landbo (-Nikkilä)            Björnsö-Landbo (Nickby)                  
+ 915   220090101202010201(Nikkilä) - Landbo - Karhusaari         (Nickby) - Landbo - Björnsö              
+ 916   120090101202010101Karhusaari-Itäsalmi(-Nikkilä)           Björnsö-Östersundom(-Nickby)             
+ 916   220090101202010101(Nikkilä)-Itäsalmi-Karhusaari           (Nickby)- Östersundom - Björnsö          
+ 950   120120601202501011Kerava - Talma - Nikkilä  - Söderkulla                                           
+ 950   220120601202501011Kerava - Talma - Nikkilä - Söderkulla                                            
+ 951   120120601202501011Nikkilä (Kuntala) - Söderkulla                                                   
+ 951   220120601202501011Nikkilä (Kuntala) - Söderkulla          Nikkilä (Kuntala) - Söderkulla           
+ 953   120120601202501011Nikkilä (Kuntala) - Söderkulla                                                   
+ 953   220120601202501011Nikkilä (Kuntala) - Söderkulla                                                   
+ 955   120120601202501011Kitö-Svartbäck-Boxby sk-Skogsby-Nikkilä                                          
+ 955   220120601202501010Kitö-Svartbäck-Boxby sk-Skogsby-Nikkilä                                          
+ 956   120120601202501011Söderk.kk.-Hindsby-Nikkilän kk.-Söderk.                                          
+ 956   220120601202501011Söderk.kk.-Hindsby-Nikkilän kk.-Söderk.                                          
+ 957   120120601202501011Nikkilä (Kuntala) - Söderkulla - Boxby s                                         
+ 957   220120601202501011Nikkilä (Kuntala) - Söderkulla - Boxby s                                         
+ 958   120120601202501011Nik.-Gestb-Söderk.k.-Sip.l.k.-Eriksn-Gum                                         
+ 958   220120601202501011Nik.-Gestb-Söderk.k.-Sip.l.k.-Eriksn-Gum                                         
+ 959   120120601202501011Sipoonl.k.-Söderk.k.-Eriksnäs-Massby th-                                         
+ 959   220120601202501011Sipoonl.k.-Söderk.k.-Eriksnäs-Massby th-                                         
+ 962   120120601202501011Rajakulma - Nikkilä -Savijärvi                                                   
+ 962   220120601202501011Rajakulma - Nikkilä -Savijärvi                                                   
+ 963   120120601202501011Itäinen Jokipuisto - Nikkilä - Linnanpel                                         
+ 964   220120601202501011Itäinen Jokipuisto - Nikkilä - Linnanpel                                         
+ 965   120120601202501011Rajakulma - Pohjois-Paippinen - Ketunaro                                         
+ 965   220120601202501011Rajakulma - Pohjois-Paippinen - Ketunaro                                         
+ 966   220120601202501011Nikkilä - Pornainen - Pohjois-Paippinen                                          
+ 971   120120601202501010Nikkilä - Pornainen - Rajakulma                                                  
+ 972   120120601202501011Rajakulma - Ketunaro                                                             
+ 972   220120601202501011Rajakulma - Ketunaro                                                             
+ 973   120090601202001011Etelä-Päiväkumpu - Vallinoja - Kerava   Kervo - Södra Lövkulla - Fallbäcken      
+ 973   220090601201601011Kerava - Vallinoja - Etelä-Päiväkumpu   Kervo - Fallbäcken Södra Lövkulla        
+ A-JUNA120020602201001010Helsinki - Leppävaara                   Helsingfors - Alberga                    
+ A-JUNA220020602201001010Leppävaara - Helsinki                   Alberga - Helsingfors                    
+ E-JUNA120010101201101010Helsinki - Espoo                        Helsinfors - Esbo                        
+ E-JUNA220010101201101010Espoo - Helsinki                        Helsingfors - Esbo                       
+ E02   119990816200112311Pikalinjat Otaniemi-Tapiola-Espoonlahti Snablinje Otnäs-Hagalund-Esboviken       
+ E02   219990816200112311Pikalinjat Espoonlahti-Tapiola-Otaniemi Snablinje Esboviken-Hagalund-Otnäs       
+ E03   120010101200112310Kivenlahti-Kera                                                                  
+ E03   220010101200112310Kivenlahti-Kera                                                                  
+ E05   120010101200112310Matinkylä-Leppävaara                                                             
+ E05   220010101200112310Matinkylä-Leppävaara                                                             
+ E10   119990816200112311Tapiola-Matinkylä, linjat 10-11         Hagalund-Mattby, linjat 10-11            
+ E10   219990816200112311Matinkylä-Tapiola, linjat 10-11         Mattby-Hagalund, linjen 10-11            
+ E11   119960617200112311Tapiola-Matinkylä-Friisinaukio          Hagalund-Mattby-Frisänsplatsen           
+ E11   219960617200112311Friisinaukio-Matinkylä-Tapiola          Frisansplatsen-Mattby-Hagalund           
+ E12   119921126200112311Tapiola-Soukka-Kivenlahti               Hagalund-Sökö-Stensvik                   
+ E14   119990816200112311Tapiola-Kivenlahti-Soukka               Hagalund-Stensvik-Sökö                   
+ E15   120020811200112311Otaniemi - Juppuri                                                               
+ E15   220020811200112311Otaniemi - Juppuri                                                               
+ E16   120020811200112311Tapiuola - Olari - Henttaa                                                       
+ E16   220020811200112311Tapiuola - Olari - Henttaa                                                       
+ E18   119920817200112311Tapiola-Espoon keskus-Mikkelä           Hagalund-Esbo centrum-Mickels            
+ E18   219920817200112311Mikkelä-Espoon keskus-Tapiola           Mickels-Esbo centrum-Hagalund            
+ E19   119920817200112311Tapiola-Espoon keskus, linjat 17-19     Hagalund-Esbo centrum, linje 17-19       
+ E19   219920817200112311Espoon keskus-Tapiola, linjat 17-19     Esbo centrum-Hagalund, linje 17-19       
+ E20   120020811200112311Leppävaara - Lähderanantie                                                       
+ E20   220020811200112311Leppävaara - Lähderanantie                                                       
+ E21   119951020200112311Leppävaara-Kalajärvi, linjat 21 ja 29   Alberga-Kalajärvi, linjen 21 och 29      
+ E21   219951020200112311Kalajärvi-Leppävaara, linjat 21 ja 29   Kalajärvi-Alberga, linjen 21, och 29     
+ E22   119980817200112311Hämevaara-Otaniemi-Westend, linja 22    Tavastberga-Otnäs-Westend,linjen 22      
+ E22   219980817200112311Westend-Otaniemi-Hämevaara,linja 22     Westend-Otnäs-Tavastberga, linje 22      
+ E23   119920817200112311Uusmäki-Leppävaara-Perkkaa-Friisinmäki  Nybacka-Alberga-Perkans-Frisbacka        
+ E23   219920817200112311Friisinmäki-Pekkaa-Leppävaara-Uusmäki   Frisbacka-bergans-Alberga-Nybacka        
+ E24   119920817200112311Leppävaara-Rastaala-Veini-Jupperi       Alberga-Trastmossen-Sveins-Jupper        
+ E24   219920817200112311Jupperi-Rastaala-Veini-Leppävaara       Jupper-Rastmössen-Svein-Alberga          
+ E25   119960502200112311Leppävaara-Lähderanta                   Alberga-Källstrand                       
+ E25   219960502200112311Lähderanta-Leppävaara                   Källstrand-Alberga                       
+ E26   120020811200112311Leppävaara - Lipparanta                                                          
+ E26   220020811200112311Leppävaara - Lipparanta                                                          
+ E27   120020811200112311Leppävaara - Jorvi                                                               
+ E27   220020811200112311Leppävaara - Jorvi                                                               
+ E28   120020811200112311Leppävaara - Siikajärvi                                                          
+ E28   220030811200112311Leppävaara - Siikajärvi                                                          
+ E29   119990816200112311Leppävaara-Punametsä-Kalajärvi          Alberga-Brunskogen-Kalajärvi             
+ E29   219990816200112311Kalajärvi-Brunskogen-Alberga            Kalajärvi-Punametsä-Leppävaara           
+ E31   119940213200112311Friisilänaukio-Matinkylä-Jorvi          Frisansplatsen-Mattby-Jorv               
+ E31   219940213200112311Jorvi-Matinkylä-Friisilänaukio          Jorv-Mattby-Frisansplatsen               
+ E35   119920817200112311Matinkylä-Leppävaara, linjat 5 ja 35    Mattby-Alberga, linjen 5 och 35          
+ E35   219920817200112311Leppävaara-Matinkylä, linjat 5 ja 35    Alberga-Mattby, linjen 5 och 35          
+ E42   119920817200112311Iivisniemi-Jorvi                        Ivisnäs-Jorv                             
+ E42   219920817200112311Jorvi-Iivisniemi                        Jorv-Ivisnäs                             
+ E43   119920817200112311Kera-Kivenlahti, linjat 3 ja 43         Kera-Stensvik, linjen 3 och 43           
+ E43   219920817200112311Kivenlahti-Kera, linjat 3 ja 43         Stensvik-Kera, linjen 3 och 43           
+ E51   120090604205001011Leppävaara-Kauniainen-Kuurinniitty      Alberga-Grankulla-Kurängen               
+ E51   220090604205001011Leppävaara-Kauniainen-Kuurinniitty      Alberga-Grankulla-Kurängen               
+ E52   120010604200112310Hämevaara-Otaniemi-Westendin asema                                               
+ E52   220010604200112310Hämevaara-Otaniemi-Westendin asema                                               
+ E57   120030817201001010Leppävaara - Tapiola - Westendinasema                                            
+ E57   220030817201001010Westendinasema - Tapiola - Leppävaara                                            
+ E61   120030601201001011Nissinmäki-Kauklahden asema             Nissbacken-Köklax station                
+ E61   220030601201001011Nissinmäki-Kauklahden asema             Nissbacken-Köklax station                
+ E70   120020812200112310Rinnekoti-Röylä-Kalajärvi               Rinnehemmet-Rödskog-Kalajärvi            
+ E70   220020812200112310Kalajärvi-Röylä-Rinnekoti               Kalajärvi-Rödskog-Rinnehemmet            
+ E71   120020811200112310Lepsämäjoki-Röylä                       Lepsämäjoki-Rödskog                      
+ E71   220020811200112310Röylä-Lepsämäjoki                       Rödskog-Lepsämäjoki                      
+ E82   120020811200112310Kalajärvi-Juvanmalmi-Espoon keskus      Kalajärvi-Juvamalmen-Esbo centrum        
+ E82   220020811200112310Espoon keskus-Juvanmalmi-Kalajärvi      Esbo centrum-Juvamalmen-Kalajärvi        
+ E85   119930621200112311Espoon keskus-Nuuksionpää               Esbo centrum-Nouxsändan                  
+ E85   219930621200112311Nuuksionpää-Espoon keskus               Nouxändan-Esbo centrum                   
+ E86   120020811200112310Espoon keskus-Röylä-Bodom-Espoon keskus Esbo centrum-Rödskog-Bodom-Esbo centrum  
+ E87   119920817200112311Espoon Keskus-Siikaniemi                Esbo Centrum-Siknäs                      
+ E87   219920817200112311Siikaniemi-Espoon keskus                Siknäs-Esbo centrum                      
+ G-JUNA120070101201401011Helsinki - Saunakallio                  Helsingfors - Saunakallio                
+ G-JUNA220070101201401011Helsinki - Saunakallio                  Helsingfors - Saunakallio                
+ GRANI 119950721200112310Helsinki-Kauniainen                     Helsingfors-Grankulla                    
+ GRANI 219950721200112310Kauniainen-Helsinki                     Grankulla-Helsingfors                    
+ H-JUNA120010101201101010Helsinki - Riihimäki                    Riihimäki - Helsingfors                  
+ H-JUNA220010101201101010Riihimäki - Helsinki                    Riihimäki - Helsinfors                   
+ H01   120010101200112310Yölinja 01N                                                                      
+ H01   220010101200112310Yölinja 01N                                                                      
+ H02   120010101200112310Yölinja 02N                                                                      
+ H02   220010101200112310Yölinja 02N                                                                      
+ H03   120010101200112310Yölinja 03N                                                                      
+ H03   220010101200112310Yölinja 03N                                                                      
+ H04   120010101200112310Yölinja 04N                                                                      
+ H04   220010101200112310Yölinja 04N                                                                      
+ H05   120010101200112310Yölinja 05N                                                                      
+ H05   220010101200112310Yölinja 05N                                                                      
+ H06   120010101200112310Yölinja 06N                                                                      
+ H06   220010101200112310Yölinja 06N                                                                      
+ H07   120010101200112310Yölinja 07N                                                                      
+ H07   220010101200112310Yölinja 07N                                                                      
+ H08   120010831200112310Rautatientori - Lauttasaari             Järnvägstorget - Drumsö                  
+ H08   220010831200112310Rautatientori - Lauttasaari             Järnvägstorget - Drumsö                  
+ H09   120100101203001011Rautatientori - Torpparinmäki           Järnvägstorget - Torparbacken            
+ H1    119930901200112310Kauppatori - Käpylä                     Salutorget - Kottby                      
+ H1    219930901200112310Kauppatori - Käpylä                     Salutorget - Kottby                      
+ H10   119990607200112310Kirurgi - Pikku Huopalahti              Kirurgen - Lillhoplax                    
+ H10   219990607200112310Kirurgi - Pikku Huopalahti              Kirurgen - Lillhoplax                    
+ H11   119991002200112310Herttoniemi(M)-Korkeasaari(Mustikkamaa) Hertonäs(M)-Högholmen(Blåbärslandet)     
+ H11   219991002200112310Herttoniemi(M)-Korkeasaari(Mustikkamaa) Hertonäs(M)-Högholmen(Blåbärslandet)     
+ H12   120020602200112310Kamppi - Kauppatori - Kamppi            Kampen - Salutorget - Kampen             
+ H13   219990915200112310Katajanokka-Lasipalatsi                 Skatudden-Glaspalatset                   
+ H14   119930115200112311Eira - Pajamäki                         Eira - Smedjebacka                       
+ H14   219930115200112311Eira - Pajamäki                         Eira - Smedjebacka                       
+ H15   119990816200112311Linja-autoas.-Ruoholahti(M)-Länsiterm.  Busstationen-Gräsviken(M)-V.terminalen   
+ H15   219990816200112311Linja-autoas.-Ruoholahti(M)-Länsiterm.  Busstationen-Gräsviken(M)-V.terminalen   
+ H16   119990816200112311Hernesaari-Hakaniemi-Herttoniemi(M)     Ärtholmen-Hagnäs-Hertonäs(M)             
+ H16   219990816200112311Hernesaari - Hakaniemi - Herttoniemi(M) Ärtholmen - Hagnäs - Hertonäs(M)         
+ H17   119990816200112311Merikatu - Itä-Pasila(Messukeskus)      Havsgatan - Östra Böle(Mässcentrum)      
+ H17   219990816200112311Merikatu - Itä-Pasila(Messukeskus)      Havsgatan - Östra Böle(Mässcentrum)      
+ H18   119990816200112311Kruununhaka-Kamppi-Munkkivuori          Kronohagen-Kampen-Munkshöjden            
+ H18   219990816200112311Kruununhaka-Kamppi-Munkkivuori          Kronohagen-Kampen-Munkshöjden            
+ H19   119950825200112311Kauppatori - Suomenlinna                Salutorget - Sveaborg                    
+ H19   219950825200112311Kauppatori - Suomenlinna                Salutorget - Sveaborg                    
+ H19E  119930118200112311Katajanokka - Suomenlinna               Skatudden - Sveaborg                     
+ H19E  219930118200112311Katajanokka - Suomenlinna               Skatudden - Sveaborg                     
+ H2    119930118200112311Katajanokka(terminaali) - Linjat        Skatudden(terminalen) - Linjerna         
+ H2    219930118200112311Katajanokka(terminaali) - Linjat        Skatudden(terminalen) - Linjerna         
+ H20   119990830200112311Erottaja - Lauttasaari (Katajaharju)    Skillnaden - Drumsö (Enåsen)             
+ H20   219990830200112311Erottaja - Lauttasaari (Katajaharju)    Skillnaden - Drumsö (Enåsen)             
+ H20N  119921211200112311Lauttasaari - Erottaja - Kannelmäki     Drumsö - Skillnaden - Gamlas             
+ H20N  219921211200112311Kannelmäki - Erottaja - Lauttasaari     Gamlas - Skillnaden - Drumsö             
+ H21V  119921211200112311Asema-aukio - Lauttasaari (Vattuniemi)  Stationsplatsen - Drumsö (Hallonnäs)     
+ H21V  219921211200112311Asema-aukio - Lauttasaari (Vattuniemi)  Stationsplatsen - Drumsö (Hallonnäs)     
+ H22   119930217200112311Sörnäinen - Pasila - Suursuo            Sörnäs - Böle - Storkärr                 
+ H22   219930217200112310Suursuo - Pasila - Sörnäinen            Storkärr - Böle - Sörnäs                 
+ H23   119930217200112311Rautatientori - Länsi-Pasila - RuskeasuoJärnvägstorget - Västra Böle - Brunakärr 
+ H23   219930217200112311Rautatientori - Länsi-Pasila - RuskeasuoJärnvägstorget - Västra Böle - Brunakärr 
+ H24   119990607200112311Erottaja - Seurasaari                   Skillnaden - Fölisön                     
+ H24   219990607200112311Erottaja - Seurasaari                   Skillnaden - Fölisön                     
+ H3    120130812205012311Kaivopuisto - Kallio - Nordenskiöldinkat                                         
+ H3    220130812205012311Kaivopuisto - Kallio - Nordenskiöldinkat                                         
+ H39   119930614200112311Kamppi- Konala                          Kampen - Kånala                          
+ H39   219930614200112311Kamppi - Konala                         Kampen - Kånala                          
+ H39A  119950308200112311Kamppi - Konala - Malminkartano         Kampen - Kånala - Malmgård               
+ H39A  219950308200112311Kamppi - Konala - Malminkartano         Kampen - Kånala - Malmgård               
+ H3B   119990607200112311Eira-Kallio-Töölö-Kauppatori-Eira       Eira-Berghäll-Tölö-Salutorget-Eira       
+ H3B   219990607200112311Eira-Kallio-Töölö-Kauppatori-Eira       Eira-Berghäll-Tölö-Salutorget-Eira       
+ H3T   119990607200112311Eira-Kauppatori-Töölö-Kallio-Eira       Eira-Salutorget-Tölö-Berghäll-Eira       
+ H3T   219990607200112311Eira-Kauppatori-Töölö-Kallio-Eira       Eira-Salutorget-Tölö-Berghäll-Eira       
+ H4    119990607200112311Katajanokka - Munkkiniemi               Skatudden - Munksnäs                     
+ H4    219990607200112311Katajanokka - Munkkiniemi               Skatudden - Munksnäs                     
+ H40   119990607200112311Linja-autoasema - Pohjois-Haagan asema  Busstationen - Norra Haga station        
+ H40   219990607200112311Linja-autoasema - Pohjois-Haagan asema  Busstationen - Norra Haga station        
+ H41   119990707200112311Linja-autoasema - Haaga - Kannelmäki    Busstationen - Haga - Gamlas             
+ H41   219990707200112311Linja-autoasema - Haaga - Kannelmäki    Busstationen - Haga - Gamlas             
+ H42   119990607200112311Erottaja - Kannelmäki                   Skillnaden - Gamlas                      
+ H42   219990607200112311Erottaja - Kannelmäki                   Skillnaden - Gamlas                      
+ H43   119930614200112311Linja-autoasema-Kannelmäki-Hakuninmaa   Busstationen-Gamlas-Håkansåker           
+ H43   219930614200112311Linja-autoasema-Kannelmäki-Hakuninmaa   Busstationen-Gamlas-Håkansåker           
+ H45   119990607200112311Kamppi - Malminkartano                  Kampen - Malmgård                        
+ H45   219990607200112311Kamppi - Malminkartano                  Kampen - Malmgård                        
+ H46   119950217200112311Kannelmäki - Hakuninmaa                 Gamlas - Håkansåker                      
+ H46   219950217200112311Kannelmäki - Hakuninmaa                 Gamlas - Håkansåker                      
+ H47   119930217200112311Kamppi - Hakuninmaa                     Kampen - Håkansåker                      
+ H47   219930217200112311Kamppi - Hakuninmaa                     Kampen - Håkansåker                      
+ H5    120110613202001011Kauppatori - Eira - Rautatieasema - Kaup                                         
+ H5    220100101203001011Kauppatori - Eira - Rautatieasema - Kaup                                         
+ H50   119930110200112311Sompasaari - Sörnäinen - Pajamäki       Sumparn - Sörnäs - Smedjebacka           
+ H50   219930110200112311Sompasaari - Sörnäinen - Pajamäki       Sumparn - Sörnäs - Smedjebacka           
+ H51   119970604200112311Siltasaari-Maunula-Konala(teoll.alue)   Broholmen-Månsas-Kånala(industriområdet) 
+ H51   219970604200112311Siltasaari-Maunula-Konala(teoll.alue)   Broholmen-Månsas-Kånala(industriområdet) 
+ H52   119981029200112311Vanhakaupunki - Oulunkylä - Munkkiniemi Gammelstaden - Åggelby - Munksnäs        
+ H52   219981029200112311Vanhakaupunki - Oulunkylä - Munkkiniemi Gammelstaden - Åggelby - Munksnäs        
+ H53   120050101200112310Hakaniemi (Merihaka) - Munkkiniemi      Hagnäs (Havshagen) - Munksnäs            
+ H53   220050101200112310Munkkiniemi - Hakaniemi (Merihaka)      Munksnäs - Hagnäs (Havshagen)            
+ H54   119930217200112311Itäkeskus(M) - Pitäjänmäki              Östra centrum(M) - Sockenbacka           
+ H54   219930217200112311Itäkeskus(M) - Pitäjänmäki              Östra centrum(M) - Sockenbacka           
+ H55   119930109200112311Marian sairaala - Koskela               Maria sjukhus - Forsby                   
+ H55   219930109200112311Marian sairaala - Koskela               Maria sjukhus - Forsby                   
+ H56   120130101203001011Kalasatama (M) - Käpylä - Kannelmäki                                             
+ H56   220130101203001011Kalasatama (M) - Käpylä - Kannelmäki                                             
+ H57   119980922200112311Itäkeskus(M) - Käpylä - Munkkivuori     Östra centrum(M) - Kottby - Munkshöjden  
+ H57   219980922200112311Itäkeskus(M) - Käpylä - Munkkivuori     Östra centrum(M) - Kottby - Munkshöjden  
+ H58   119930611200112311Itäkeskus(M) - Pasila - Munkkivuori     Östra centrum(M) - Böle - Munkshöjden    
+ H58   219930611200112311Itäkeskus(M) - Pasila - Munkkivuori     Östra centrum(M) - Böle - Munkshöjden    
+ H59   119950606200112311Herttoniemi(M) - Ilmala                 Hertonäs(M) - Ilmala                     
+ H59   219950606200112311Herttoniemi(M) - Ilmala                 Hertonäs(M) - Ilmala                     
+ H6    119980928200112311Hietalahti - Arabia                     Sandviken - Arabia                       
+ H6    219980928200112311Hietalahti - Arabia                     Sandviken - Arabia                       
+ H62   119910916200112311Rautatientori - Pirkkola                Järnvägstorget - Britas                  
+ H62   219910916200112311Rautatientori - Pirkkola                Järnvägstorget - Britas                  
+ H63   119990607200112311Paasikivenaukio - Maunula - Paloheinä   Paasikiviplatsen - Månsas - Svedängen    
+ H63   219990607200112311Paasikivenaukio - Maunula - Paloheinä   Paasikiviplatsen - Månsas - Svedängen    
+ H64   119930829200112311Rautatientori - Itä-Pakila              Järnvägstorget - Östra Baggböle          
+ H64   219930829200112311Rautatientori - Itä-Pakila              Järnvägstorget - Östra Baggböle          
+ H65A  119930121200112311Lauttasaari - Rautatientori - Oulunkylä Drumsö - Järnvägstorget - Åggelby        
+ H65A  219930121200112311Lauttasaari - Rautatientori - Oulunkylä Drumsö - Järnvägstorget - Åggelby        
+ H66A  119950713200112311Lauttasaari-Rautatientori - Länsi-PakilaDrumsö-Järnvägstorget-Västra Baggböle    
+ H66A  219950713200112311Lauttasaari-Rautatientori - Länsi-PakilaDrumsö-Järnvägstorget-Västra Baggböle    
+ H66B  119930614200112311Rautatientori - Länsi-Pakila            Järnvägstorget - Västra Baggböle         
+ H66B  219930614200112311Rautatientori - Länsi-Pakila            Järnvägstorget - Västra Baggböle         
+ H67   119990607200112311Rautatientori - Torpparinmäki           Järnvägstorget - Torparbacken            
+ H67   219990607200112311Rautatientori - Torpparinmäki           Järnvägstorget - Torparbacken            
+ H68   119990830200112311Rautatientori - Latokartano             Järnvägstorget - Ladugården              
+ H68   219990830200112311Rautatientori - Latokartano             Järnvägstorget - Ladugården              
+ H69   119990607200112311Linja-autoasema - Patola - Malmi        Busstationen - Dammen - Malm             
+ H69   219990607200112311Linja-autoasema - Patola - Malmi        Busstationen - Dammen - Malm             
+ H70   119990607200112311Rautatientori - Siltamäki - Suutarila   Järnvägstorget - Brobacka - Skomakarböle 
+ H70   219990607200112311Rautatientori - Siltamäki - Suutarila   Järnvägstorget - Brobacka - Skomakarböle 
+ H70T  119990607200112311Kamppi - Töölö - Siltamäki - Suutarila  Kampen - Tölö - Brobacka - Skomakarböle  
+ H70T  219990607200112311Kamppi - Töölö - Siltamäki - Suutarila  Kampen - Tölö - Brobacka - Skomakarböle  
+ H71   119990607200112311Rautatientori - Pihlajisto - PihlajamäkiJärnvägstorget - Rönninge - Rönnbacka    
+ H71   219990607200112311Rautatientori - Pihlajisto - PihlajamäkiJärnvägstorget - Rönninge - Rönnbacka    
+ H71S  119990607200112311Kasarmitori - Käpylä - Pihlajamäki      Kaserntorget - Kottby - Rönnbacka        
+ H71S  219990607200112311Kasarmitori - Käpylä - Pihlajamäki      Kaserntorget - Kottby - Rönnbacka        
+ H72   119990607200112311Rautatientori - Pukinmäki - Tapanila    Järnvägstorget - Bocksbacka - Mosabacka  
+ H72   219990607200112311Rautatientori - Pukinmäki - Tapanila    Järnvägstorget - Bocksbacka - Mosabacka  
+ H73   119960825200112311Hakaniemi-Malmi-Puistolan as.-Suutarila Hagnäs-Malm-Parkstad st.-Skomakarböle    
+ H73   219960825200112311Hakaniemi-Malmi-Puistolan as.-Suutarila Hagnäs-Malm-Parkstad st.-Skomakarböle    
+ H73B  119990608200112311Rautatientori - Malmi                   Järnvägstorget - Malm                    
+ H73B  219990608200112311Rautatientori - Malmi                   Järnvägstorget - Malm                    
+ H74   119960825200112311Hakaniemi-Sepänmäki-Tapanila-Puistola   Hagnäs-Smedsbacka-Mosabacka-Parkstad     
+ H74   219960825200112311Hakaniemi-Sepänmäki-Tapanila-Puistola   Hagnäs-Smedsbacka-Mosabacka-Parkstad     
+ H75   119991005200112311Rautatientori-Tattarisuo-Puistolan asemaJärnvägstorget-Tattarmossen-Parkstad st. 
+ H75   219991005200112311Rautatientori-Tattarisuo-Puistolan asemaJärnvägstorget-Tattarmossen-Parkstad st. 
+ H75A  119990607200112311Siltamäki - Puistola - Jakomäki         Brobacka - Parkstad - Jakobacka          
+ H75A  219990607200112311Siltamäki - Puistola - Jakomäki         Brobacka - Parkstad - Jakobacka          
+ H76A  119990607200112311Puistola-Malmi-Tapanila-Puistola        Parkstad-Malm-Mosabacka-Parkstad         
+ H76A  219990607200112311Puistola-Malmi-Tapanila-Puistola        Parkstad-Malm-Mosabacka-Parkstad         
+ H76B  119990607200112311Puistola-Tapanila-Malmi-Puistola        Parkstad-Mosabacka-Malm-Parkstad         
+ H76B  219990607200112311Puistola-Tapanila-Malmi-Puistola        Parkstad-Mosabacka-Malm-Parkstad         
+ H77   119990607200112311Rautatientori - Jakomäki                Järnvägstorget - Jakobacka               
+ H77   219990607200112311Rautatientori - Jakomäki                Järnvägstorget - Jakobacka               
+ H77A  119991005200112311Siltamäki - Malmi - Jakomäki            Brobacka - Malm - Jakobacka              
+ H77A  219991005200112310Siltamäki - Malmi - Jakomäki            Brobacka - Malm - Jakobacka              
+ H77S  119991005200112311Kasarmitori - Jakomäki                  Kaserntorget - Jakobacka                 
+ H77S  219991005200112311Kasarmitori - Jakomäki                  Kaserntorget - Jakobacka                 
+ H78   119971212200112311Vuosaari(M) - Mellunmäki - Malmi        Nordsjö(M) - Mellungsbacka - Malm        
+ H78   219971212200112311Vuosaari(M) - Mellunmäki - Malmi        Nordsjö(M) - Mellungsbacka - Malm        
+ H79   119930217200112311Herttoniemi(M) - Malmi                  Hertonäs(M) - Malm                       
+ H79   219930217200112311Herttoniemi(M) - Malmi                  Hertonäs(M) - Malm                       
+ H79V  119990607200112311Herttoniemi(M) - Oulunkylä - PitäjänmäkiHertonäs(M) - Åggelby - Sockenbacka      
+ H79V  219990607200112311Herttoniemi(M) - Oulunkylä - PitäjänmäkiHertonäs(M) - Åggelby - Sockenbacka      
+ H7A   119990607200112311Senaatintori-Töölö-Pasila-Senaatintori  Senatstorget-Tölö-Böle-Senatstorget      
+ H7A   219990607200112311Senaatintori-Töölö-Pasila-Senaatintori  Senatstorget-Tölö-Böle-Senatstorget      
+ H7B   119990607200112311Senaatintori-Pasila-Töölö-Senaatintori  Senatstorget-Böle-Tölö-Senatstorget      
+ H7B   219990607200112311Senaatintori-Pasila-Töölö-Senaatintori  Senatstorget-Böle-Tölö-Senatstorget      
+ H8    119960902200112311Salmisaari - Sörnäinen - Vallila        Sundholmen - Sörnäs - Vallgård           
+ H8    219960902200112311Salmisaari - Sörnäinen - Vallila        Sundholmen - Sörnäs - Vallgård           
+ H80   119970616200112311Roihupelto-Herttoniemi(M)- L-HerttoniemiKasåkern - Hertonäs(M) - Västra Hertonäs 
+ H80   219990607200112311Roihupelto-Herttoniemi(M)- L-HerttoniemiKasåkern - Hertonäs(M) - Västra Hertonäs 
+ H80N  119990607200112311Rautatientori-Kulosaari - L-Herttoniemi Järnvägstorget-Brändö - Västra Hertonäs  
+ H80N  219990607200112311Rautatientori-Kulosaari - L-Herttoniemi Järnvägstorget-Brändö - Västra Hertonäs  
+ H81   119990607200112311Herttoniemi(M) - Herttoniemenranta      Hertonäs(M) - Hertonäs strand            
+ H81   219990607200112311Herttoniemi(M) - Herttoniemenranta      Hertonäs(M) - Hertonäs strand            
+ H83   119990607200112311Herttoniemi(M) - Tammisalo              Hertonäs(M) - Tammelund                  
+ H83   219990607200112311Herttoniemi(M) - Tammisalo              Hertonäs(M) - Tammelund                  
+ H84   119990607200112311Herttoniemi(M) - Laajasalo (Gunillantie)Hertonäs(M) - Degerö (Gunillavägen)      
+ H84   219990607200112311Herttoniemi(M) - Laajasalo (Gunillantie)Hertonäs(M) - Degerö (Gunillavägen)      
+ H85   119950307200112311Herttoniemi(M) - Yliskylä - Jollas      Hertonäs(M) - Uppby - Jollas             
+ H85   219950307200112311Herttoniemi(M) - Yliskylä - Jollas      Hertonäs(M) - Uppby - Jollas             
+ H85N  119990607200112311Rautatientori - Yliskylä - Jollas       Järnvägstorget - Uppby - Jollas          
+ H85N  219990607200112311Rautatientori - Yliskylä - Jollas       Järnvägstorget - Uppby - Jollas          
+ H86   119990607200112311Herttoniemi(M) - Santahamina            Hertonäs(M) - Sandhamn                   
+ H86   219990607200112311Herttoniemi(M) - Santahamina            Hertonäs(M) - Sandhamn                   
+ H86N  119990607200112311Rautatientori - Santahamina             Järnvägstorget - Sandhamn                
+ H86N  219990607200112311Rautatientori - Santahamina             Järnvägstorget - Sandhamn                
+ H87   119990607200112311Herttoniemi(M) - Laajasalon öljysatama  Hertonäs(M) - Degerö oljehamn            
+ H87   219990607200112311Herttoniemi(M) - Laajasalon öljysatama  Hertonäs(M) - Degerö oljehamn            
+ H88   119990607200112311Herttoniemi(M) - Yliskylä - Kaitalahti  Hertonäs(M) - Uppby - Hålvik             
+ H88   219990607200112311Herttoniemi(M) - Yliskylä - Kaitalahti  Hertonäs(M) - Uppby - Hålvik             
+ H9    120110101202001011Kolmikulma - Itä-Pasila                 Trekanten - Östra Böle                   
+ H9    220110101202001011Itä-Pasila - Kolmikulma                 Östra Böle - Trekanten                   
+ H90   119990607200112311Rastila(M)-Vuosaari(M)-Kallvikintie     Rastböle(M)-Nordsjö(M)-Kallviksvägen     
+ H90   219990607200112311Rastila(M)-Vuosaari(M)-Kallvikintie     Rastböle(M)-Nordsjö(M)-Kallviksvägen     
+ H90A  119930221200112311Uutela - Vuosaari (M) - Satama          Nybonds - Nordsjö(M) - Hamn              
+ H90A  219930221200112311Uutela - Vuosaari (M) - Satama          Nybonds - Nordsjö(M) - Hamn              
+ H90B  119950308200112311Rastila(M) - Vuosaari(M) - Kallvikintie Rastböle(M) - Nordsjö(M) - Kallviksvägen 
+ H90B  219950308200112311Rastila(M) - Vuosaari(M) - Kallvikintie Rastböle(M) - Nordsjö(M) - Kallviksvägen 
+ H90N  119930225200112311Rautatientori - Vuosaari (Kallvikintie) Järnvägstorget - Nordsjö (Kallviksvägen) 
+ H90N  219930225200112311Rautatientori - Vuosaari (Kallvikintie) Järnvägstorget - Nordsjö (Kallviksvägen) 
+ H91   119990607200112311Itäkeskus(M) - Puotila - Vartioharju    Östra centrum(M)-Botby gård-Botbyåsen    
+ H91   219990607200112311Itäkeskus(M) - Puotila - Vartioharju    Östra centrum(M)-Botby gård-Botbyåsen    
+ H92   119930121200112311Itäkeskus(M) - Myllypuro                Östra centrum(M) - Kvarnbäcken           
+ H92   219930121200112311Itäkeskus(M) - Myllypuro                Östra centrum(M) - Kvarnbäcken           
+ H92N  119990607200112311Rautatientori-Myllypuro-Kontula         Järnvägstorget-Kvarnbäcken-Gårdsbacka    
+ H92N  219990607200112311Rautatientori-Myllypuro-Kontula         Järnvägstorget-Kvarnbäcken-Gårdsbacka    
+ H93   119990607200112311Herttoniemi(M)-Marjaniemi-Itäkeskus(M)  Hertonäs(M) - Marudd - Östra centrum(M)  
+ H93   219990607200112311Herttoniemi(M)-Marjaniemi-Itäkeskus(M)  Hertonäs(M) - Marudd - Östra centrum(M)  
+ H93N  119990607200112311Rautatientori-Tammisalo-Marjan.-VuosaariJärnvägstorget-Tammelund-Marudd-Nordsjö  
+ H93N  219990607200112311Rautatientori-Tammisalo-Marjan.-VuosaariJärnvägstorget-Tammelund-Marudd-Nordsjö  
+ H94   119930217200112311Itäkeskus(M)-Kontula(M)-Kontulankaari   Ö.centrum(M)-Gårdsbacka(M)-Gårdsbackab.  
+ H94   219930217200112311Itäkeskus(M)-Kontula(M)-Kontulankaari   Ö.centrum(M)-Gårdsbacka(M)-Gårdsbackab.  
+ H94A  119990607200112311Itäkeskus(M)-Kontula(M)-Mellunmäki(M)   Ö.centrum(M)-Gårdsb.(M)-Mellungsbacka(M) 
+ H94A  219990607200112311Itäkeskus(M)-Kontula(M)-Mellunmäki(M)   Ö.centrum(M)-Gårdsb.(M)-Mellungsbacka(M) 
+ H94B  119990607200112311Kurkimäki - Kontula(M) - Kotikonnuntie  Tranbacka-Gårdsbacka(M)-Hemgårdsvägen    
+ H94B  219990607200112311Kurkimäki - Kontula(M) - Kotikonnuntie  Tranbacka-Gårdsbacka(M)-Hemgårdsvägen    
+ H94N  119970606200112311Rautatientori-Kivikko-Kontulankaari     Järnvägstorget-Stensböle-Gårdsbackab.    
+ H94N  219970606200112311Rautatientori-Kivikko-Kontulankaari     Järnvägstorget-Stensböle-Gårdsbackab.    
+ H94V  119990816200112311Kivikko - Kontula(M)                    Stensböle - Gårdsbacka(M)                
+ H94V  220010604200112311Kivikko - Kontula(M)                    Stensböle - Gårdsbacka(M)                
+ H95   119990607200112311Itäkeskus(M) - Kontula(M) - Keinutie    Östra centrum(M)-Gårdsbacka(M)-Gungvägen 
+ H95   219990607200112311Itäkeskus(M) - Kontula(M) - Keinutie    Östra centrum(M)-Gårdsbacka(M)-Gungvägen 
+ H95N  119990607200112311Rautatientori - Puotila - Vesala        Järnvägstorget - Botby gård - Ärvings    
+ H95N  219990607200112311Rautatientori - Puotila - Vesala        Järnvägstorget - Botby gård - Ärvings    
+ H96   119990607200112311Rastila(M)-Vuosaari(M)-Porslahdentie    Rastböle(M)-Nordsjö(M)-Porslaxvägen      
+ H96   219990607200112311Rastila(M)-Vuosaari(M)-Porslahdentie    Rastböle(M)-Nordsjö(M)-Porslaxvägen      
+ H97   119920909200112311Itäkeskus(M) - Mellunmäki(M)            Östra centrum(M) - Mellungsbacka(M)      
+ H97   219920909200112311Itäkeskus(M) - Mellunmäki(M)            Östra centrum(M) - Mellungsbacka(M)      
+ H97N  119990607200112311Rautatientori - Mellunmäki - Länsimäki  Järnvägstorget-Mellungsbacka-Västerkulla 
+ H97N  219990607200112311Rautatientori - Mellunmäki - Länsimäki  Järnvägstorget-Mellungsbacka-Västerkulla 
+ H98V  119990607200112311Itäkeskus(M) - Kallahti - Vuosaari(M)   Östra centrum(M) - Kallvik - Nordsjö(M)  
+ H98V  219990607200112311Itäkeskus(M) - Kallahti - Vuosaari(M)   Östra centrum(M) - Kallvik - Nordsjö(M)  
+ H99   120050620202012310Rautatientori - Itäkeskus (metroa korv.)samma på svenska                         
+ H99   220050620202012310Itäkeskus - Rautatientori (metroa korv.)samma på svenska                         
+ HAAGA 119950713200112311Linja-autoasema - Pohjois-Haagan asema  Busstationen - Norra Haga station        
+ HAAGA 219950713200112311Linja-autoasema - Pohjois-Haagan asema  Busstationen - Norra Haga station        
+ HONKA 119920901200112310Helsinki-Honkanummi                     Helsingfors-Furumo                       
+ HONKA 219920901200112311Honkanummi-Helsinki                     Furumo-Helsingfors                       
+ HUOPA 120010101200112311Junat Helsingistä Huopalahteen                                                   
+ HUOPA 220010101200112311Junat Huopalahdesta Helsinkiin                                                   
+ I-JUNA120010101200112311Helsinki - Tikkurila                    Helsingfors - Dickursby                  
+ I-JUNA220010101200112311Tikkurila - Helsinki                    Dickursby - Helsingfors                  
+ JORVI 119920831200112311Helsinki-Jorvi                          Helsingfors-Jorv                         
+ JORVI 219920831200112311Jorvi-Helsinki                          Jorv-Helsingfors                         
+ JUVA  119950324200112311Juvan teollisuusalue/Hgistä                                                      
+ JUVA  219950324200112311Juvan teollisuusalue/Hkiin                                                       
+ K-JUNA120010101200112311Helsinki - Kerava                       Helsinfors - Kervo                       
+ K-JUNA220010101200112311Kerava - Helsinki                       Kervo - Helsingfors                      
+ KARA  119950713200112311Helsinki-Karakallio                     Helsingfors-Karabacka                    
+ KARA  219950713200112311Karakallio-Helsinki                     Karabacka-Helsingfors                    
+ KE5   120060301201601010Sorsakorpi-Kerava as.-Mattilanpuisto    Sorsakorpi-Kervo st.-Mattilanpuisto      
+ KE5   220060301201601010Mattilanpuisto-Kerava as.-Sorsakorpi    Mattilanpuisto-Kervo st.-Sorsakorpi      
+ KE8   120060301201601010Keravan as.-Savio-Keravan as.           Kerava st.-Savio-Kerava st.              
+ KE8   220060301201601010Keravan as.-Savio-Keravan as.           Kervo st.-Savio-Kervo st.                
+ KI10  120090601202001011Kirkkonummi-Gesterby-Lindal-Ravals      Kyrkslätt-Gesterby-Lindal-Ravals         
+ KI10  220090601202001011Kirkkonummi-Gesterby-Lindal-Ravals      Kyrkslätt-Gesterby-Lindal-Ravals         
+ KI19  120090601202001011Kirkkonummi-Luoma                       Kyrkslätt-Bobäck                         
+ KI19  220090601202001011Kirkkonummi-Luoma                       Kyrkslätt-Bobäck                         
+ KI20  120090601202001011Kirkkonummi-Gesterby-Ericsson           Kyrkslätt-Gesterby-Ericsson              
+ KI20  220090601202001011Kirkkonummi-Ericsson                    Kyrkslätt-Ericsson                       
+ KI21  120090601202001011Kirkkonummi-Hirsala                     Kyrkslätt-Hirsala                        
+ KI21  220090601202001011Kirkkonummi-Hirsala                     Kyrkslätt-Hirsala                        
+ KIVA  119920831200112311Helsinki-Kivenlahti                     Helsingfors-Stensvik                     
+ KIVA  219920831200112311Kivenlahti-Helsinki                     Stensvik-Helsingfors                     
+ KORSO 120010101200112311Junat Helsingistä Korsoon                                                        
+ KORSO 220010101200112311Junat Korsosta Helsinkiin                                                        
+ KTORI 119950813200112311Kasarmitori - Jakomäki                  Kaserntorget - Jakobacka                 
+ KTORI 219950813200112311Kasarmitori - Jakomäki                  Kaserntorget - Jakobacka                 
+ L-JUNA120010101200112311Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ L-JUNA220010101200112311Kirkkonummi - Helsinki                  Kyrkslätt - Helsingfors                  
+ LARU  119950713200112311Lauttasaari 65A+66A                                                              
+ LARU  219950713200112311Lauttasaari 65A+66A                                                              
+ LAUTTA119950828200112311Helsinki-Lauttasaari                    Helsingfors-Drumsö                       
+ LAUTTA219950828200112311Lauttasaari-Helsinki                    Drumsö-Helsingfors                       
+ LEHTI 119920831200112310Helsinki-Lehtisaari                     Helsingfors-Lövö                         
+ LEHTI 219920831200112310Lehtisaari-Helsinki                     Lövö-Helsingfors                         
+ LEPPA 119920831200112310Helsinki-Leppävaara                     Helsingfors-Alberga                      
+ LEPPA 219920831200112310Leppävaara-Helsinki                     Alberga-Helsingfors                      
+ LEPPÄ 120010101200112310Junat Helsingistä Leppävaaraan                                                   
+ LEPPÄ 220010101200112310Junat Leppävaarasta Helsinkiin                                                   
+ LINTU 119920831200112310Helsinki-Lintuvaara                     Helsingfors-Fågelbacka                   
+ LINTU 219920831200112310Lintuvaara-Helsinki                     Fågelbacka-Helsingfors                   
+ LÄHDE 119920831200112310Helsinki-Lähderanta                     Helsingfors-Källstrand                   
+ LÄHDE 219920831200112310Lähderanta-Helsinki                     Källstrand-Helsingfors-                  
+ M-JUNA120010101201506301Helsinki - Vantaankoski                 Helsingfors - Vandaforsen                
+ M-JUNA220010101201506301Vantaankoski - Helsinki                 Vandaforsen - Helsingfors                
+ MELLU 119920901200112310Mellunmäki---Vantaa                     Mellungsbacka-Vanda                      
+ MELLU 219920901200112310Vantaa-Mellunmäki                       Vanda-Mellungsbacka                      
+ METRO+120050620202012310Metrot ja bussi 99 itään                Metron och bussen 99 österut             
+ METRO+220050620202012310Metrot ja bussi 99 länteen              Metron och bussen 99 västerut            
+ METROT120021017200112310Metrot itään                            Metron österut                           
+ METROT220021017200112310Metrot länteen                          Metron västerut                          
+ N-JUNA120010101200112311Helsinki - Kerava                       Helsingfors - Kervo                      
+ N-JUNA220010101200112311Kerava - Helsinki                       Kervo - Helsinfors                       
+ NIITTY119950124200112310Helsinki-Niittykumpu                    Helsingfors-Ängskulla                    
+ NIITTY219950124200112310Niittykumpu-Helsinki                    Ängskulla-Helsingfors                    
+ NURMI 119981208200112310Nurmijärventietä                        Längs Nurmijärvivägen                    
+ NURMI 219981208200112310Nurmijärventietä                        Längs Nurmijärvivägen                    
+ P-JUNA120010101200112311Helsinki - Huopalahti--Tikkurila-HelsinkHelsingfors - Hoplax - Dickursby -Hfors  
+ P-JUNA220010101200112311Hiekkaharju - Helsinki                  Sandkulla - Helsingfors                  
+ PETI  119951115200112310Helsinki-Petikko                        Helsingfors-Petikko                      
+ PETI  219951115200112310Petikko-Helsinki                        Petikko-Helsingfors                      
+ PITÄJÄ119951115200112310HELSINGIN PITÄJÄ                                                                 
+ PITÄJÄ219951115200112311HELSINGIN PITÄJÄ                                                                 
+ PUISTO120010101200112310Junat Helsingistä Puistolaan                                                     
+ PUISTO220010101200112310Junat Puistolasta Helsinkiin                                                     
+ R-JUNA119930119200112311Helsinki - Riihimäki                    Helsingfors - Riihimäki                  
+ R-JUNA219930119200112311Riihimäki - Helsinki                    Riihimäki - Helsingfors                  
+ S-JUNA120010101200112311Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ S-JUNA220010101200112311Kirkkonummi - Helsinki                  Kyrkslätt - Helsingfors                  
+ SOUKKA119920831200112310Helsinki-Soukka                         Helsingfors-Sökö                         
+ SOUKKA219920831200112310Soukka-Helsinki                         Sökö-Helsingfors                         
+ T-JUNA120010101200112311Helsinki - Riihimäki                    Helsingfors - Riihimäki                  
+ T-JUNA220010101200112311Riihimäki - Helsinki                    Riihimäki - Helsingfors                  
+ TAPIO 119920831200112310Helsinki-Tapiola                        Helsingfors-Hagalund                     
+ TAPIO 219920831200112310Tapiola-Helsinki                        Hagalund-Helsingfors                     
+ TIKKU 120010101200112311Junat Helsingistä Tikkurilaan                                                    
+ TIKKU 220010101200112310Junat Tikkurilasta Helsinkiin                                                    
+ U-JUNA120010101200112311Helsinki - Kirkkonummi                  Kirkkonummi - Helsinki                   
+ U-JUNA220010101200112311Kirkkonummi - Helsinki                  Kyrkslätt - Helsingfors                  
+ V35   119920831200112311Kaivoksela-Askisto                      Gruvsta-Askis                            
+ V35   219920831200112311Askisto-Kaivoksela-                     Askis-Gruvsta                            
+ V37   120060812205001011Pakkala - Ylästö - Petas                                                         
+ V37   220060812205001011Pakkala - Ylästö - Petas                                                         
+ V43   119921026200112311Linnainen-Vestra                        Linnais-Vestra                           
+ V43   219921026200112311Vestra-Linnainen                        Vestra-Linnais                           
+ V44   119940304200112311Linnainen-Myyrmäki-Reuna                Linnais-Myrbacka-Reuna                   
+ V44   219940304200112311Reuna-Myyrmäki-Linnainen                Reuna-Myrbacka-Linnais                   
+ V44-45119990101200112311Myyrmäki-Reuna                          Myrbacka-Reuna                           
+ V44-45219990101200112311Reuna-Myyrmäki                          Reuna-Myrbacka                           
+ V45   119990830200112311Myyrmäki-Reuna                          Myrbacka-Reuna                           
+ V45   219990830200112311Reuna-Myyrmäki                          Reuna-Myrbacka                           
+ V46   119921026200112311Tikkurila-Katriinan sairaala            Dickursby-Katrinesjukhuset               
+ V46   219921026200112311Katriinan sairaala-Tikkurila            Katrinesjukhuset-Dickursby               
+ V50   119990101200112311Tikkyrila-Pähkinärinne-Myyrmäki         Dickursby-Hasselbacken-Myrbacka          
+ V50   219990101200112311Myyrmäki-Pähkinärikke-Tikkurila         Myrbacka-Hasselbacken-Dickursby          
+ V51   119921026200112311Lentoasema-Myyrmäki                     Flygstationen-Myrbacka                   
+ V51   219921026200112311Lentoasema-Myyrmäki                     Flygstationen-Myrbacka                   
+ V52   119990101200112311Korso-Myyrmäki                          Korso-Myrbacka                           
+ V52   219990101200112311Myyrmäki-Korso                          Myrbacka-Korso                           
+ V53   119940304200112311Peijaksen sairaala-Tikkurila-Myyrmäki   Pejas sjukhus-Dickursby-Myrbacka         
+ V53   219940304200112311Myyrmäki-Tikkurila-Peijaksen sairaala   Myrbacka-Dickursby-Pejas sjukhus         
+ V54   119990101200112311Maarukka-Viertola-Myyrmäki              Maarukka-Bäckby-Myrbacka                 
+ V54   219990101200112311Myyrmäki-Viertola-Maarukka              Myrbacka-Bäckby-Maarukka                 
+ V55   119990101200112311Tikkurila-Myyrmäki-Varisto              Dickursby-Myrbacka-Varistorna            
+ V55   219990101200112311Varisto-Myyrmäki-Tikkurila              Varistorna-Myrbacka-Dickursby            
+ V56   119980811200112311Mellunmäki-Myrmäki                      Mellungsbacka-Myrbacka                   
+ V56   219980811200112311Myyrmäki-Mellunmäki                     Myrbacka-Mellungsbacka                   
+ V57   119990101200112311Tikkurila-Ylästö-Myyrmäki               Dickursby-Övitsböle-Myrbacka             
+ V57   219990101200112311Myyrmäki-Ylästö-Tikkurila               Myrbacka-Övitsböle-Dickursby             
+ V60   119990101200112311Tikkurila-Vantaanportti                 Dickursby-Vandaporten                    
+ V60   219990101200112311Vantaanportti-Tikkurila                 Vandaporten-Dickursby                    
+ V61   119921013200112311Tikkurila-Lentoasema                    Dickursby-Flygstationen                  
+ V61   219921013200112311Lentoasema-Tikkurila                    Flygstationen-Dickursby                  
+ V62   120110101203010101Mellunmäki - Tikkurila                                                           
+ V62   220110101203010101Mellunmäki - Tikkurila                                                           
+ V63   119921013200112311Tikkurila-Ilola                         Dickursby-Gladas                         
+ V63   219921013200112311Ilola-Tikkurila                         Gladas-Dickursby                         
+ V67   119990816200112311Lentoasema-Leppäkorpi                   Flygstationen-Alkärr                     
+ V67   219990816200112311Leppäkorpi-Lentoasema                   Alkärr-Flygstationen                     
+ V68   120040815201012211Kuninkaanmäki-Pakkala                   Kungsbacka-Backas                        
+ V68   220040815201012310Pakkala-Kungsbacka                      Backas-Kungsbacka                        
+ V69   120040815201012311Sotunki-Tikkurila                       Sottungsby-Dickursby                     
+ V69   220040815201012311Tikkurila-Sotunki                       Dickursby-Sottungsby                     
+ V70   119990101200112311Tikkurila-Mikkola                       Dickursby-Mikkola                        
+ V70   219990101200112311Mikkola-Tikkurila                       Mikkola-Dickursby                        
+ V71   119950327200112311Tikkurila-Vierumäki                     Dickursby-Vierumäki                      
+ V71   219950327200112311Vierumäki-Tikkurila                     Vierumäki-Dickursby                      
+ V72   119990101200112311Tikkurila-Korso-Kulomäki                Dickursby-Korso-Brännberga               
+ V72   219990101200112311Kulomäki-Korso-Tikkurila                Brännberga-Korso-Dickursby               
+ V73   119970811200112311Nikinmäki-Korso-Vallinoja               Nissbacka-Korso-Fallbäcken               
+ V73   219970811200112311Vallinoja-Korso-Nikinmäki               Fallbäcken-Korso-Nissbacka               
+ V75   119990101200112311Pohjois-Nikinmäki - Korso-Maarukka      Norra Nissbacka-Korso-Maarukka           
+ V75   219990101200112311Maarukka-Korso - Pohjois-Nikinmäki      Maarukka-Korso-Norra Nissbacka           
+ V76   119990101200112311Tikkurila-Päiväkumpu                    Dickursby-Lövkulla                       
+ V76   219990101200112311Päiväkumpu-Tikkurila                    Lövkulla-Dickursby                       
+ V77   120120101203001011Päiväkumpu - Kylmäoja                                                            
+ V77   220120101203001011Päiväkumpu - Kylmäoja                                                            
+ V83   119990101200112311Tikkurila-Kolohonka                     Dickursby-Hålatallen                     
+ V83   219990101200112311Kolohonka-Tikkurila                     Hålatallen-Dickursby                     
+ V84   119921013200112311Mellunmäki-Tikkurila                    Mellungsbacka-Dickursby                  
+ V84   219921013200112311Tikkurila-Mellunmäki                    Dickursby-Mellungsbacka                  
+ V86   119990811200112311Mellunmäki-Korso                        Mellungsbacka-Korso                      
+ V86   219990811200112311Korso-Mellunmäki                        Korso-Mellungsbacka                      
+ V87   119921013200112311Mellunmäki-Nissas-Leppäkorpi            Mellungsbacka-Nissas-Alkärr              
+ V87   219921013200112311Leppäkorpi-Nissas-Mellunmäki            Alkärr-Nissas-Mellungsbacka              
+ V88   119980708200112311Länsisalmi-Sotungin koulu               Västersundom-Sotungin koulu              
+ V88   219980708200112311Sotungin koulu-Länsisalmi               Sotungin koulu-Västersundom              
+ VERKKO119920831200112310Verkkosaari-Espoo                       Nätholmen-Esbo                           
+ VERKKO219920831200112310Espoo-Verkkosaari                       Esbo-Nätholmen                           
+ VIHTI 119920901200112310Vihdintie                               Vichtisvägen                             
+ VIHTI 219920901200112310Vihdintie                               Vichtisvägen                             
+ Y-JUNA120020602200112311Helsinki - Kirkkonummi                  Helsingfors - Kyrkslätt                  
+ Y-JUNA220020602200112311Kirkkonummi - Helsinki                  Kyrkslätt - Helsingfors                  
+ Z-JUNA120070101201401011Helsinki - Lahti                        Helsingfors - Lahtis                     
+ Z-JUNA220070101201401011Helsinki - Lahti                        Helsingfors - Lahtis                     
+ ÄSSÄ  119920901200112310Kasarmintori                            Kasarmintori                             
+ ÄSSÄ  219920901200112310Kasarmintori                            Kasarmintori                             

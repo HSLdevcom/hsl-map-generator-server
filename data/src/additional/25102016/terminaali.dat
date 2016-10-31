@@ -1,0 +1,102 @@
+ 1000001Kamppi (Espoon terminaali)              Kampen (Esboterminalen)                 6673407255189860.1690024.93166 
+ 1000002Elielinaukio                            Elielplatsen                            6673725255232860.1718024.93948 
+ 1000003Rautatientori                           Järnvägstorget                          6673669255250060.1712824.94257 
+ 1000004Pasila                                  Böle                                    6676752255197960.1990124.93397 
+ 1000005Malmin asema (terminaali)               Malm station (terminalen)               6682526255606960.2502925.00929 
+ 1000006Malmin asema                            Malm station                            6682564255624260.2506025.01242 
+ 1000007Kontula                                 Gårdsbacka                              6681044256015060.2364125.08253 
+ 1000008Itäkeskus                               Östra centrum                           6678094255989760.2099725.07710 
+ 1000010Vuosaari                                Nordsjö                                 6677839256361560.2071225.14406 
+ 1000011Puistola                                Parkstad                                6685326255747760.2752225.03550 
+ 1000012Hakaniemi                               Hagnäs                                  6674536255297160.1790024.95128 
+ 1000013Herttoniemi                             Hertonäs                                6676384255739060.1949925.03141 
+ 1000014Mellunmäki                              Mellungsbacka                           6681273256162860.2382425.10927 
+ 1000101Ruoholahden metroasema                  Gräsvikens metrostation                 6672683255091560.1626324.91377 
+ 1000102Kampin metroasema                       Kampens metrostation                    6673455255198660.1694224.93325 
+ 1000103Rautatientorin metroasema               Järnvägstorgets metrostation            6673627255242860.1709124.94126 
+ 1000104Kaisaniemen metroasema                  Kajsaniemi metrostation                 6673657255281660.1711324.94826 
+ 1000105Hakaniemen metroasema                   Hagnäs metrostation                     6674600255296360.1795724.95115 
+ 1000106Sörnäisten metroasema                   Sörnäs metrostation                     6675531255347960.1878624.96069 
+ 1000107Kalasataman metroasema                  Fiskhamnens metrostation                6675518255444460.1876224.97807 
+ 1000108Kulosaaren metroasema                   Brändö metrostation                     6675702255606060.1890525.00725 
+ 1000109Herttoniemen metroasema                 Hertonäs metrostation                   6676385255735960.1950025.03085 
+ 1000110Siilitien metroasema                    Igelkottsvägens metrostation            6677591255806160.2057225.04384 
+ 1000111Itäkeskuksen metroasema                 Östra centrum metrostation              6678082255991160.2098625.07734 
+ 1000112Myllypuron metroasema                   Kvarnbäckens metrostation               6679722255984560.2245925.07664 
+ 1000113Kontulan metroasema                     Gårdsbacka metrostation                 6681028256020760.2362625.08355 
+ 1000114Mellunmäen metroasema                   Mellungsbacka metrostation              6681350256168160.2389325.11025 
+ 1000115Puotilan metroasema                     Botby gårds metrostation                6678626256082160.2146125.09392 
+ 1000116Rastilan metroasema                     Rastböle metrostation                   6677653256231060.2056625.12047 
+ 1000117Vuosaaren metroasema                    Nordsjö metrostation                    6677892256352760.2076125.14249 
+ 1000118Lauttasaaren metroasema                 Drumsö metrostation                     6672372254905460.1600624.88019 
+ 1000119Koivusaaren metroasema                  Björkholmens metrostation               6672751254760160.1636424.85411 
+ 1000201Helsingin rautatieasema                 Helsingfors järnvägsstation             6673729255242360.1718324.94120 
+ 1000202Pasilan asema                           Böle station                            6676775255193160.1992224.93311 
+ 1000203Ilmalan asema                           Ilmala station                          6677698255127260.2075924.92146 
+ 1000204Huopalahden asema                       Hoplaks station                         6678887254970260.2184524.89344 
+ 1000205Valimon asema                           Gjuteriets  station                     6679276254869760.2220724.87541 
+ 1000206Pitäjänmäen asema                       Sockenbacka station                     6679391254786860.2232024.86048 
+ 1000207Pohjois-Haagan asema                    Norra Haga station                      6680155254911160.2299024.88309 
+ 1000208Kannelmäen asema                        Gamlas station                          6681193254881460.2392624.87798 
+ 1000209Käpylän asema                           Kottby station                          6679130255267660.2202624.94715 
+ 1000210Oulunkylän asema                        Åggelby station                         6680037255373960.2282624.96656 
+ 1000211Pukinmäen asema                         Bocksbacka station                      6681666255524160.2426824.99411 
+ 1000212Malmin asema                            Malms station                           6682643255615960.2513225.01095 
+ 1000213Tapanilan asema                         Mosabacka station                       6684012255716460.2634725.02948 
+ 1000214Puistolan asema                         Parkstads station                       6685331255750960.2752625.03608 
+ 1000215Malminkartanon asema                    Malmgårds station                       6682290254787760.2492124.86132 
+ 2000001Leppävaara                              Alberga station                         6678916254525860.2192324.81329 
+ 2000002Tapiola (M)                             Hagalund (M)                            6673965254477760.1748524.80352 
+ 2000003Tapionaukion terminaali                 Tapioplatsens terminal                  6674159254495860.1765724.80683 
+ 2000004Espoon keskus                           Esbo centrum                            6677236253666360.2050124.65794 
+ 2000005Tapiolansolmu                           Hagalundsknuten                         6673466254515160.1703324.81015 
+ 2000006Westendin asema                         Westendstationen                        6673304254484660.1689124.80462 
+ 2000101Keilaniemen metroasema                  Kägeluddens metrostation                6673932254620360.1744024.82920 
+ 2000102Aalto-yliopiston metroasema             Aalto-universitetets metrostation       6675003254616960.1840124.82883 
+ 2000103Tapiolan metroasema                     Hagalunds metrostation                  6674003254488060.1751824.80539 
+ 2000104Urheilupuiston metroasema               Idrottsparkens metrostation             6673695254344460.1725724.77945 
+ 2000105Niittykummun metroasema                 Ängskulla metrostation                  6673471254235160.1706724.75972 
+ 2000106Matinkylän metroasema                   Mattby metrostation                     6672265254114960.1599724.73782 
+ 2000201Mäkkylän asema                          Mäkkylä station                         6679159254688660.2212324.84271 
+ 2000202Leppävaaran asema                       Alberga station                         6678938254532960.2194224.81457 
+ 2000204Keran asema                             Kera station                            6678525254195560.2160724.75362 
+ 2000205Kauniaisten asema                       Grankulla station                       6678056254073660.2119924.73154 
+ 2000206Koivuhovin asema                        Björkgårds  station                     6677489253913760.2070524.70259 
+ 2000207Tuomarilan asema                        Domsby  station                         6677383253801460.2062124.68232 
+ 2000208Espoon asema                            Esbo station                            6677247253657360.2051224.65632 
+ 2000209Kauklahden asema                        Köklax station                          6675448253345660.1892424.59982 
+ 2000210Mankin seisake                          Mankby station                          6674994253246760.1852424.58192 
+ 2000211Kilon asema                             Kilo station                            6678744254352460.2178724.78197 
+ 2000212Matinkylä (M)                           Mattby (M)                              6672274254125360.1600424.73970 
+ 4000001Tikkurila                               Dickursby                               6687144255787560.2914825.04321 
+ 4000002Helsinki-Vantaa lentoasema T1           Helsingfors-Vanda flygplats T1          6689750255383960.3154224.97094 
+ 4000003Helsinki-Vantaa lentoasema T2           Helsingfors-Vanda flygplats T2          6690038255360060.3180324.96670 
+ 4000004Martinlaakso                            Mårtensdal                              6685409254738960.2772624.85324 
+ 4000005Korso                                   Korso                                   6693826255967860.3511825.07778 
+ 4000006Myyrmäki                                Myrbacka                                6683626254754760.2612424.85568 
+ 4000007Kivistön asema                          Kivistö station                         6689465254694160.3137124.84608 
+ 4000011Tikkurilan matkakeskus                  Dickursby rescentralen                  6687347255788060.2933025.04336 
+ 4000201Myyrmäen asema                          Myrbacka station                        6683694254750160.2618524.85486 
+ 4000202Louhelan asema                          Klippsta station                        6684662254741360.2705524.85350 
+ 4000203Martinlaakson asema                     Mårtensdals station                     6685495254734860.2780424.85252 
+ 4000204Vantaankosken asema                     Vandafors station                       6686359254709160.2858224.84807 
+ 4000205Tikkurilan asema                        Dickursby station                       6687239255792360.2923225.04411 
+ 4000206Hiekkaharjun asema                      Sandkulla station                       6688452255818160.3031725.04912 
+ 4000207Koivukylän asema                        Björkby station                         6690740255875360.3236225.06013 
+ 4000208Rekolan asema                           Räckhals station                        6691761255919660.3327225.06844 
+ 4000209Korson asema                            Korso station                           6693835255971460.3512525.07843 
+ 4000210Vehkalan asema                          Veckal station                          6687422254683560.2953924.84369 
+ 4000211Kivistön asema                          Kivistö station                         6689532254695960.3143124.84642 
+ 4000212Aviapoliksen asema                      Aviapolis station                       6688440255301060.3037724.95560 
+ 4000213Lentoaseman asema                       Flygplatsen station                     6689789255371260.3157824.96866 
+ 4000214Leinelän asema                          Lejle station                           6690607255759160.3225925.03906 
+ 6000001Kirkkonummi                             Kyrkslätt                               6667635252469060.1197424.44088 
+ 6000201Luoman asema                            Bobäck station                          6673580253072460.1726924.55030 
+ 6000202Masalan asema                           Masaby station                          6672010253012060.1586424.53919 
+ 6000203Jorvaksen asema                         Jorvas station                          6669643252862960.1375024.51201 
+ 6000204Tolsan asema                            Tolls station                           6667426252632160.1177624.47019 
+ 6000205Kirkkonummen asema                      Kyrkslätts station                      6667619252458660.1196024.43901 
+ 9000001Kerava                                  Kervo                                   6699786256108460.4044525.10505 
+ 9000201Savion asema                            Savio  station                          6697098256072360.3803825.09769 
+ 9000202Keravan asema                           Kervo station                           6699780256113560.4043925.10597 
+ 9200001Nikkilän linja-autoasema                Nickby busstation                       6697182257021060.3796125.26967 
