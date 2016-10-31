@@ -16,7 +16,6 @@ var transformGeometries = require ("./transformGeometries");
 const SRC_PATH = "../data/src";
 const OUTPUT_PATH = "../data";
 const ADDITIONAL_SRC_PATH = path.join(__dirname, "../data/src/additional");
-
 const ADDITIONAL_SRCS = fs.readdirSync(ADDITIONAL_SRC_PATH)
     .filter(file => fs.lstatSync(path.join(ADDITIONAL_SRC_PATH, file)).isDirectory())
     .map(files => path.join(ADDITIONAL_SRC_PATH, files));
@@ -208,7 +207,7 @@ function getTimetables(departures) {
 
 function parseDepartures(filepath) {
     return new Promise(resolve => {
-        parseDat(filepath, aikat_fields).then(departures => {
+        parseDat.parse(filepath, aikat_fields).then(departures => {
             console.log(`Writing timetable (stop id: ${departures[0].stopId})`);
             const timetables = getTimetables(departures);
             fs.writeFileSync(filepath, JSON.stringify(timetables));
@@ -221,11 +220,19 @@ const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
 const additionalPath = (filename, srcPath) => path.join(srcPath, filename);
 const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
-const getAllSourceFiles = (file, fields) => {
-    const src = parseDat(sourcePath(file), fields);
-    const additionalSrcs = ADDITIONAL_SRCS.map((srcPath) => {
+const getAllSourceFiles = (file, fields, removeDuplicate) => {
+    const src = parseDat.parse(sourcePath(file), fields, "original");
+    const additionalSrcs = ADDITIONAL_SRCS.map((srcPath, index) => {
         if (!fs.existsSync(additionalPath(file, srcPath))) return;
-        return parseDat(additionalPath(file, srcPath), fields);
+        if (removeDuplicate) {
+            return parseDat.parseRemoveDuplicate(
+                additionalPath(file, srcPath),
+                sourcePath(file),
+                fields,
+                `additional${index}`
+            );
+        }
+        return parseDat.parse(additionalPath(file, srcPath), fields, `additional${index}`);
     }).filter(src => typeof src !== "undefined");
 
     return additionalSrcs ? [src,...additionalSrcs] : [src];
@@ -233,7 +240,7 @@ const getAllSourceFiles = (file, fields) => {
 
 const sourceFiles = [
     getAllSourceFiles("pysakki.dat", pysakki_fields),
-    getAllSourceFiles("linjannimet2.dat", linjannimet2_fields),
+    getAllSourceFiles("linjannimet2.dat", linjannimet2_fields, true),
     getAllSourceFiles("linja3.dat",linja3_fields),
     getAllSourceFiles("reitti.dat",reitti_fields),
     getAllSourceFiles("reittimuoto.dat",reittimuoto_fields),
