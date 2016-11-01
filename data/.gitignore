@@ -1,3 +1,6 @@
-**
-!src/ajantasaus.csv
+/*
+!/src
+/src/*
+!/src/additional
+!/src/ajantasaus.csv
 !.gitignore

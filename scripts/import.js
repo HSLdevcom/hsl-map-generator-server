@@ -15,6 +15,10 @@ var transformGeometries = require ("./transformGeometries");
 
 const SRC_PATH = "../data/src";
 const OUTPUT_PATH = "../data";
+const ADDITIONAL_SRC_PATH = path.join(__dirname, "../data/src/additional");
+const ADDITIONAL_SRCS = fs.readdirSync(ADDITIONAL_SRC_PATH)
+    .filter(file => fs.lstatSync(path.join(ADDITIONAL_SRC_PATH, file)).isDirectory())
+    .map(files => path.join(ADDITIONAL_SRC_PATH, files));
 
 const pysakki_fields = [
     [7, "stopId"],
@@ -198,13 +202,12 @@ function getTimetables(departures) {
             }
         });
     });
-
     return timetables;
 }
 
 function parseDepartures(filepath) {
     return new Promise(resolve => {
-        parseDat(filepath, aikat_fields).then(departures => {
+        parseDat.parse(filepath, aikat_fields).then(departures => {
             console.log(`Writing timetable (stop id: ${departures[0].stopId})`);
             const timetables = getTimetables(departures);
             fs.writeFileSync(filepath, JSON.stringify(timetables));
@@ -214,35 +217,60 @@ function parseDepartures(filepath) {
 }
 
 const sourcePath = (filename) => path.join(__dirname, SRC_PATH, filename);
+const additionalPath = (filename, srcPath) => path.join(srcPath, filename);
 const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
+const getAllSourceFiles = (file, fields, removeDuplicate) => {
+    const src = parseDat.parse(sourcePath(file), fields, "original");
+    const additionalSrcs = ADDITIONAL_SRCS.map((srcPath, index) => {
+        if (!fs.existsSync(additionalPath(file, srcPath))) return;
+        if (removeDuplicate) {
+            return parseDat.parseRemoveDuplicate(
+                additionalPath(file, srcPath),
+                sourcePath(file),
+                fields,
+                `additional${index}`
+            );
+        }
+        return parseDat.parse(additionalPath(file, srcPath), fields, `additional${index}`);
+    }).filter(src => typeof src !== "undefined");
+
+    return additionalSrcs ? [src,...additionalSrcs] : [src];
+}
+
 const sourceFiles = [
-    parseDat(sourcePath("pysakki.dat"), pysakki_fields),
-    parseDat(sourcePath("linjannimet2.dat"), linjannimet2_fields),
-    parseDat(sourcePath("linja3.dat"), linja3_fields),
-    parseDat(sourcePath("reitti.dat"), reitti_fields),
-    parseDat(sourcePath("reittimuoto.dat"), reittimuoto_fields),
-    parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
+    getAllSourceFiles("pysakki.dat", pysakki_fields),
+    getAllSourceFiles("linjannimet2.dat", linjannimet2_fields, true),
+    getAllSourceFiles("linja3.dat",linja3_fields),
+    getAllSourceFiles("reitti.dat",reitti_fields),
+    getAllSourceFiles("reittimuoto.dat",reittimuoto_fields),
+    [parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields)]
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {
-    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
-    console.log(`Succesfully imported ${stops.length} stops`);
+const sourceFilePromises = sourceFiles.map((file) => Promise.all(file).then(prom => prom));
+const mergeFiles = (files) => files.reduce(
+        ((prev, cur) => [...prev, ...cur]), []);
 
-    const linesTypes = lines.map(line => ({...line, types: getRouteTypes(routes, line.lineId)}));
+Promise.all(sourceFilePromises).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {   
+    fs.writeFileSync(outputPath("stops.json"), JSON.stringify(mergeFiles(stops)), "utf8");
+    console.log(`Succesfully imported ${mergeFiles(stops).length} stops`);
+    
+    const linesTypes = mergeFiles(lines).map(line => ({...line, types: getRouteTypes(mergeFiles(routes), line.lineId)}));
+
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
     console.log(`Succesfully imported ${linesTypes.length} lines`);
 
-    const routesById = getRoutes(routes, routeSegments);
+    // TODO: check why mergeFiles doesnt work for routeSegments
+    const routesById = getRoutes(mergeFiles(routes), routeSegments[0]);
     fs.writeFileSync(outputPath("routes.json"), JSON.stringify(routesById, null, 2), "utf8");
     console.log(`Succesfully imported ${Object.keys(routesById).length} routes`);
 
-    const routeGeometries = transformGeometries(geometries);
+    const routeGeometries = transformGeometries(mergeFiles(geometries));
     fs.writeFileSync(outputPath("routeGeometries.geojson"), JSON.stringify(routeGeometries), "utf8");
-    console.log(`Succesfully imported ${Object.keys(routeGeometries).length} route geometries`);
+    console.log(`Succesfully imported ${routeGeometries.features.length} route geometries`);
 
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
-    console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
+    console.log(`Succesfully imported ${timingStops[0].length} timing stops`);
 
     return splitDat(sourcePath("aikat.dat"), outputPath("timetables"), 1, 8);
 }).then((paths) => {
