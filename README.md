@@ -12,6 +12,8 @@ Install dependencies:
 npm install
 ```
 
+Extract `fontstack.zip` from [hsl-map-style](https://github.com/hsldevcom/hsl-map-style) to `public`.
+
 Download and extract [http://dev.hsl.fi/infopoiminta/latest/](http://dev.hsl.fi/infopoiminta/latest/) to `data/src`.
 
 Convert relevant DAT files to JSON:
