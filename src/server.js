@@ -4,6 +4,7 @@ const forEach = require("lodash/forEach");
 
 const Koa = require("koa");
 const app = new Koa();
+const serve = require("koa-static");
 const router = require("koa-router")();
 const bodyParser = require("koa-bodyparser")();
 const cors = require("koa-cors")();
@@ -12,6 +13,8 @@ const imageGenerator = require("./imageGenerator");
 // const stopLabelGenerator = require('./stopLabelGenerator');
 
 const dataPath = path.join(__dirname, "..", "data");
+const publicPath = path.join(__dirname, "..", "public");
+
 const stops = require(`${dataPath}/stops.json`);
 const lines = require(`${dataPath}/lines.json`);
 const routesById = require(`${dataPath}/routes.json`);
@@ -149,6 +152,7 @@ app
     .use(bodyParser)
     .use(router.routes())
     .use(router.allowedMethods())
+    .use(serve(publicPath))
     .listen(PORT, (err) => {
         if (err) {
             console.log(err);
