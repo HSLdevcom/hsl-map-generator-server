@@ -38,7 +38,8 @@ const pysakki_fields = [
     [1, null],
     [15, "heading"],
     [3, null],
-    [7, "terminalId"]
+    [7, "terminalId"],
+    [7, "stopAreaId"],
 ];
 
 const linjannimet2_fields = [
