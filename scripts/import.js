@@ -42,6 +42,15 @@ const pysakki_fields = [
     [7, "stopAreaId"],
 ];
 
+const terminaali_fields = [
+    [7, "terminalId"],
+    [40, "name_fi"],
+    [40, "name_se"],
+    [14, null],
+    [8, "lat", true],
+    [8, "lon", true],
+];
+
 const linjannimet2_fields = [
     [6, "lineId"],
     [60, "name_fi"],
@@ -219,6 +228,7 @@ const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
 const sourceFiles = [
     parseDat(sourcePath("pysakki.dat"), pysakki_fields),
+    parseDat(sourcePath("terminaali.dat"), terminaali_fields),
     parseDat(sourcePath("linjannimet2.dat"), linjannimet2_fields),
     parseDat(sourcePath("linja3.dat"), linja3_fields),
     parseDat(sourcePath("reitti.dat"), reitti_fields),
@@ -226,9 +236,12 @@ const sourceFiles = [
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {
+Promise.all(sourceFiles).then(([stops, terminals, lines, routes, routeSegments, geometries, timingStops]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
+
+    fs.writeFileSync(outputPath("terminals.json"), JSON.stringify(terminals), "utf8");
+    console.log(`Succesfully imported ${terminals.length} terminals`);
 
     const linesTypes = lines.map(line => ({...line, types: getRouteTypes(routes, line.lineId)}));
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");

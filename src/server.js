@@ -13,6 +13,7 @@ const imageGenerator = require("./imageGenerator");
 
 const dataPath = path.join(__dirname, "..", "data");
 const stops = require(`${dataPath}/stops.json`);
+const terminals = require(`${dataPath}/terminals.json`);
 const lines = require(`${dataPath}/lines.json`);
 const routesById = require(`${dataPath}/routes.json`);
 const timingStops = require(`${dataPath}/timingStops.json`);
@@ -76,6 +77,10 @@ router.get("/stops/:stopId?", (ctx) => {
     } else {
         successResponse(ctx, stops);
     }
+});
+
+router.get("/terminals", (ctx) => {
+    return successResponse(ctx, terminals);
 });
 
 router.get("/timetables/:stopId", (ctx) => {
