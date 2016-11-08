@@ -1,7 +1,7 @@
 const tilelive = require('tilelive');
 const tileliveGl = require('tilelive-gl');
-const sharp = require("sharp");
 const stream = require("stream");
+const PNGEncoder = require("png-stream").Encoder;
 const transit = require('transit-immutable-js');
 const omit = require("lodash/omit");
 
@@ -164,12 +164,9 @@ function createBuffer(tileInfo) {
 }
 
 function createOutStream(tileInfo) {
-    const rawOptions = {
-        width: tileInfo.tileWidth * tileInfo.tileCountX,
-        height: tileInfo.tileHeight * tileInfo.tileCountY,
-        channels: CHANNELS
-    };
-    return sharp(null, { raw: rawOptions }).png();
+    const width = tileInfo.tileWidth * tileInfo.tileCountX;
+    const height = tileInfo.tileHeight * tileInfo.tileCountY;
+    return new PNGEncoder(width, height, { colorSpace: "rgba" });
 }
 
 function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
@@ -212,7 +209,7 @@ function generate(opts) {
             prev = prev.then(() => outStream.write(buffer.data));
         }
         return prev.then(() => {
-            outStream.end(null);
+            outStream.end();
         })
     });
     return outStream;
