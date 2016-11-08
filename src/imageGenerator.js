@@ -192,7 +192,7 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
 /**
  * Renders a map image using map selection and complete style or json params and partial style
  * @param {Object} opts - Options used to generate map image
- * @return {Promise} - PNG map image
+ * @return {Readable} - PNG map image stream
  */
 function generate(opts) {
     const { source, options } = opts.mapSelection ? sourceFromTransit(opts): sourceFromJson(opts);
@@ -200,7 +200,7 @@ function generate(opts) {
     const tileInfo = createTileInfo(options);
     const outStream = createOutStream(tileInfo);
 
-    return initGl(source).then(glInstance => {
+    initGl(source).then(glInstance => {
         let prev;
         for (let y = 0; y < tileInfo.tileCountY; y++) {
             const buffer = createBuffer(tileInfo);
@@ -213,9 +213,9 @@ function generate(opts) {
         }
         return prev.then(() => {
             outStream.end(null);
-            return outStream.toBuffer();
         })
     });
+    return outStream;
 }
 
 module.exports = {

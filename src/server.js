@@ -59,9 +59,8 @@ function addStopInfos(routes, routeId) {
 }
 
 router.post("/generateImage", ctx => {
-    return imageGenerator.generate(ctx.request.body)
-        .then(data => successResponse(ctx, data, "image/png"))
-        .catch(error => errorResponse(ctx, error));
+    const imageStream = imageGenerator.generate(ctx.request.body);
+    successResponse(ctx, imageStream, "image/png");
 });
 
 router.get("/stopIds", (ctx) => {
