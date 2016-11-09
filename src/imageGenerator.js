@@ -137,8 +137,7 @@ function createTileInfo(options) {
                     width: widthOption,
                     height: heightOption,
                 },
-                offsetX: x * tileWidth,
-                offsetY: y * tileHeight,
+                offset: x * tileWidth,
             });
         }
     }
@@ -153,10 +152,10 @@ function createTileInfo(options) {
 }
 
 function createBuffer(tileInfo) {
-    const bufferLength = tileInfo.tileCountX * tileInfo.tileWidth * tileInfo.tileHeight * 4;
+    const bufferLength = tileInfo.tileCountX * tileInfo.tileWidth * tileInfo.tileHeight * CHANNELS;
 
     return {
-        data: Buffer.allocUnsafe(bufferLength),
+        data: Buffer.alloc(bufferLength),
         width: tileInfo.tileWidth * tileInfo.tileCountX,
         height: tileInfo.tileHeight,
         channels: CHANNELS,
@@ -176,7 +175,7 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
     return generateTile(glInstance, tileOptions).then((tile) => {
         let tileIndex = 0;
         let tileLength = tile.width * tile.height * tile.channels;
-        let bufferIndex = (buffer.width + tileParams.offsetX) * CHANNELS;
+        let bufferIndex = tileParams.offset * CHANNELS;
 
         while (tileIndex < tileLength) {
             tile.data.copy(buffer.data, bufferIndex, tileIndex, tileIndex + tile.width * CHANNELS);
@@ -210,7 +209,7 @@ function generate(opts) {
         }
         return prev.then(() => {
             outStream.end();
-        })
+        });
     });
     return outStream;
 }
