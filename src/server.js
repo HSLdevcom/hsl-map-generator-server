@@ -16,6 +16,8 @@ const dataPath = path.join(__dirname, "..", "data");
 const publicPath = path.join(__dirname, "..", "public");
 
 const stops = require(`${dataPath}/stops.json`);
+const terminals = require(`${dataPath}/terminals.json`);
+const stopAreas = require(`${dataPath}/stopAreas.json`);
 const lines = require(`${dataPath}/lines.json`);
 const routesById = require(`${dataPath}/routes.json`);
 const timingStops = require(`${dataPath}/timingStops.json`);
@@ -79,6 +81,14 @@ router.get("/stops/:stopId?", (ctx) => {
     } else {
         successResponse(ctx, stops);
     }
+});
+
+router.get("/terminals", (ctx) => {
+    return successResponse(ctx, terminals);
+});
+
+router.get("/stopAreas", (ctx) => {
+    return successResponse(ctx, stopAreas);
 });
 
 router.get("/timetables/:stopId", (ctx) => {

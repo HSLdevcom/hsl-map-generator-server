@@ -38,7 +38,26 @@ const pysakki_fields = [
     [1, null],
     [15, "heading"],
     [3, null],
-    [7, "terminalId"]
+    [7, "terminalId"],
+    [7, "stopAreaId"],
+];
+
+const terminaali_fields = [
+    [7, "terminalId"],
+    [40, "name_fi"],
+    [40, "name_se"],
+    [14, null],
+    [8, "lat", true],
+    [8, "lon", true],
+];
+
+const pysakkialue_fields = [
+    [6, "stopAreaId"],
+    [40, "name_fi"],
+    [40, "name_se"],
+    [14, null],
+    [8, "lat", true],
+    [8, "lon", true],
 ];
 
 const linjannimet2_fields = [
@@ -218,6 +237,8 @@ const outputPath = (filename) => path.join(__dirname, OUTPUT_PATH, filename);
 
 const sourceFiles = [
     parseDat(sourcePath("pysakki.dat"), pysakki_fields),
+    parseDat(sourcePath("terminaali.dat"), terminaali_fields),
+    parseDat(sourcePath("pysakkialue.dat"), pysakkialue_fields),
     parseDat(sourcePath("linjannimet2.dat"), linjannimet2_fields),
     parseDat(sourcePath("linja3.dat"), linja3_fields),
     parseDat(sourcePath("reitti.dat"), reitti_fields),
@@ -225,9 +246,16 @@ const sourceFiles = [
     parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
-Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries, timingStops]) => {
+Promise.all(sourceFiles)
+    .then(([stops, terminals, stopAreas, lines, routes, routeSegments, geometries, timingStops]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
+
+    fs.writeFileSync(outputPath("terminals.json"), JSON.stringify(terminals), "utf8");
+    console.log(`Succesfully imported ${terminals.length} terminals`);
+
+    fs.writeFileSync(outputPath("stopAreas.json"), JSON.stringify(stopAreas), "utf8");
+    console.log(`Succesfully imported ${stopAreas.length} stop areas`);
 
     const linesTypes = lines.map(line => ({...line, types: getRouteTypes(routes, line.lineId)}));
     fs.writeFileSync(outputPath("lines.json"), JSON.stringify(linesTypes), "utf8");
@@ -239,7 +267,7 @@ Promise.all(sourceFiles).then(([stops, lines, routes, routeSegments, geometries,
 
     const routeGeometries = transformGeometries(geometries);
     fs.writeFileSync(outputPath("routeGeometries.geojson"), JSON.stringify(routeGeometries), "utf8");
-    console.log(`Succesfully imported ${Object.keys(routeGeometries).length} route geometries`);
+    console.log(`Succesfully imported ${routeGeometries.features.length} route geometries`);
 
     fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
     console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
