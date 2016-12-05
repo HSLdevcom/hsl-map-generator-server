@@ -1,14 +1,10 @@
-const tilelive = require('tilelive');
-const tileliveGl = require('tilelive-gl');
+const tilelive = require("tilelive");
+const tileliveGl = require("tilelive-gl");
 const stream = require("stream");
 const PNGEncoder = require("png-stream").Encoder;
-const transit = require('transit-immutable-js');
 const omit = require("lodash/omit");
-
-const geomUtils = require('hsl-map-generator-utils');
-const style = require('hsl-map-style/hsl-gl-map-v9.json');
-
-const viewportMercator = require('viewport-mercator-project');
+const viewportMercator = require("viewport-mercator-project");
+const style = require("hsl-map-style/hsl-gl-map-v9.json");
 
 const MAX_TILE_SIZE = 1000;
 const CHANNELS = 4;
@@ -53,36 +49,6 @@ function sourceFromJson(options) {
     }
 
     const glOptions = { ...defaultOptions, ...omit(options, ["sources", "layers"]) };
-
-    return { source: glSource, options: glOptions };
-}
-
-/**
- * Returns TileLive source and options
- * @param {Object} options - Options used to generate map image
- * @param {Object} options.style - Complete GL style to use
- * @param {Object} options.mapSelection - Serialized state from generator UI
- * @return {Object} - TileLive source and options
- */
-function sourceFromTransit(options) {
-    const mapSelection = transit.fromJSON(options.mapSelection);
-    const scale = geomUtils.mapSelectionToTileScale(mapSelection);
-
-    const glSource = {
-        protocol: 'gl:',
-        style: options.style,
-        query: { scale: scale }
-    };
-
-    const glOptions = {
-        center: mapSelection.getIn(['center', 0, 'location']).toArray(),
-        width: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[0] / scale),
-        height: Math.round(geomUtils.mapSelectionToPixelSize(mapSelection)[1] / scale),
-        zoom: geomUtils.mapSelectionToZoom(mapSelection) - 1,
-        scale: scale,
-        pitch: 0,
-        bearing: 0
-    };
 
     return { source: glSource, options: glOptions };
 }
@@ -191,7 +157,7 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
  * @return {Readable} - PNG map image stream
  */
 function generate(opts) {
-    const { source, options } = opts.mapSelection ? sourceFromTransit(opts): sourceFromJson(opts);
+    const { source, options } = opts ? opts : sourceFromJson(opts);
 
     const tileInfo = createTileInfo(options);
     const outStream = createOutStream(tileInfo);
