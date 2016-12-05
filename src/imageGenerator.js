@@ -157,7 +157,7 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
  * @return {Readable} - PNG map image stream
  */
 function generate(opts) {
-    const { source, options } = opts ? opts : sourceFromJson(opts);
+    const { source, options } = (opts.source && opts.options) ? opts : sourceFromJson(opts);
 
     const tileInfo = createTileInfo(options);
     const outStream = createOutStream(tileInfo);
