@@ -29,11 +29,11 @@ function successResponse(ctx, body, type = "application/json") {
     ctx.status = 200;
     ctx.type = type;
     ctx.body = body;
-};
+}
 
 function errorResponse(ctx, error) {
     ctx.status = error.status || 500;
-    ctx.body = {error: error.message};
+    ctx.body = { error: error.message };
     // TODO: Properly handle and log errors
     console.log(error);
     console.log(error.stack);
@@ -108,12 +108,24 @@ router.get("/lines", (ctx) => {
     return successResponse(ctx, lines);
 });
 
+router.get("/routesById/:routeId", (ctx) => {
+    const routeId = ctx.params.routeId;
+    const route = routesById[routeId];
+
+    if (route) {
+        console.log(route);
+        const routes = addStopInfos(route, routeId);
+        return successResponse(ctx, routes);
+    }
+    return errorResponse(ctx, new Error(`Route ${routeId} not found`));
+});
+
 router.get("/routesByLine/:lineId", (ctx) => {
     const lineId = ctx.params.lineId;
     const lineRoutesById = {};
 
     forEach(routesById, (routes, routeId) => {
-        if(routeId === lineId || routeId.slice(0, -1) === lineId) {
+        if (routeId === lineId || routeId.slice(0, -1) === lineId) {
             lineRoutesById[routeId] = addStopInfos(routes, routeId);
         }
     });
