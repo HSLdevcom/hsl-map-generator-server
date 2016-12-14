@@ -39,27 +39,25 @@ function errorResponse(ctx, error) {
     console.log(error.stack);
 }
 
-function getTimingStops(route) {
-    const routeTimingStops = [];
-    forEach(timingStops, (timingStop) => {
-        if (route === `${timingStop.id}_${timingStop.direction}`) {
-            routeTimingStops.push(timingStop.stopId);
-        }
-    });
-    return routeTimingStops;
+function getTimingStopIds(routeId, direction) {
+    return timingStops
+        .filter(stop => (stop.id === routeId) && (stop.direction === direction))
+        .map(stop => stop.stopId)
 }
 
 function addStopInfos(routes, routeId) {
     return routes.map(route => {
-        const routeTimingStops = getTimingStops(`${routeId}_${route.direction}`);
-        // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(({stopId, duration}) =>
-            ({...stops.find(stop => {
-                if (routeTimingStops.length && routeTimingStops.find((timingStop) => timingStop === stop.stopId)) stop.isTiming = true;
-                return stop.stopId === stopId;
-            }), duration}));
+        // TODO: Import and use timing stop field from dat file
+        const timingStopIds = getTimingStopIds(routeId, route.direction);
 
-        return {...route, stops: stopInfos};
+        // Replace stop ids with full stop info
+        const stopInfos = route.stops.map(({stopId, duration}) => {
+            const stopInfo = { ...stops.find(stop => stop.stopId === stopId), duration };
+            const isTimingStop = timingStopIds.some(val => val === stopId);
+            return isTimingStop ? { ...stopInfo, isTiming: true } : stopInfo;
+        });
+
+        return { ...route, stops: stopInfos };
     });
 }
 
