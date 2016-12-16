@@ -29,37 +29,35 @@ function successResponse(ctx, body, type = "application/json") {
     ctx.status = 200;
     ctx.type = type;
     ctx.body = body;
-};
+}
 
 function errorResponse(ctx, error) {
     ctx.status = error.status || 500;
-    ctx.body = {error: error.message};
+    ctx.body = { error: error.message };
     // TODO: Properly handle and log errors
     console.log(error);
     console.log(error.stack);
 }
 
-function getTimingStops(route) {
-    const routeTimingStops = [];
-    forEach(timingStops, (timingStop) => {
-        if (route === `${timingStop.id}_${timingStop.direction}`) {
-            routeTimingStops.push(timingStop.stopId);
-        }
-    });
-    return routeTimingStops;
+function getTimingStopIds(routeId, direction) {
+    return timingStops
+        .filter(stop => (stop.id === routeId) && (stop.direction === direction))
+        .map(stop => stop.stopId)
 }
 
 function addStopInfos(routes, routeId) {
     return routes.map(route => {
-        const routeTimingStops = getTimingStops(`${routeId}_${route.direction}`);
-        // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(({stopId, duration}) =>
-            ({...stops.find(stop => {
-                if (routeTimingStops.length && routeTimingStops.find((timingStop) => timingStop === stop.stopId)) stop.isTiming = true;
-                return stop.stopId === stopId;
-            }), duration}));
+        // TODO: Import and use timing stop field from dat file
+        const timingStopIds = getTimingStopIds(routeId, route.direction);
 
-        return {...route, stops: stopInfos};
+        // Replace stop ids with full stop info
+        const stopInfos = route.stops.map(({stopId, duration}) => {
+            const stopInfo = { ...stops.find(stop => stop.stopId === stopId), duration };
+            const isTimingStop = timingStopIds.some(val => val === stopId);
+            return isTimingStop ? { ...stopInfo, isTiming: true } : stopInfo;
+        });
+
+        return { ...route, stops: stopInfos };
     });
 }
 
@@ -108,12 +106,24 @@ router.get("/lines", (ctx) => {
     return successResponse(ctx, lines);
 });
 
+router.get("/routesById/:routeId", (ctx) => {
+    const routeId = ctx.params.routeId;
+    const route = routesById[routeId];
+
+    if (route) {
+        console.log(route);
+        const routes = addStopInfos(route, routeId);
+        return successResponse(ctx, routes);
+    }
+    return errorResponse(ctx, new Error(`Route ${routeId} not found`));
+});
+
 router.get("/routesByLine/:lineId", (ctx) => {
     const lineId = ctx.params.lineId;
     const lineRoutesById = {};
 
     forEach(routesById, (routes, routeId) => {
-        if(routeId === lineId || routeId.slice(0, -1) === lineId) {
+        if (routeId === lineId || routeId.slice(0, -1) === lineId) {
             lineRoutesById[routeId] = addStopInfos(routes, routeId);
         }
     });
