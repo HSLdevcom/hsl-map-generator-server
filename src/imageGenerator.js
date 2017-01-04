@@ -4,7 +4,7 @@ const stream = require("stream");
 const PNGEncoder = require("png-stream").Encoder;
 const omit = require("lodash/omit");
 const viewportMercator = require("viewport-mercator-project");
-const style = require("hsl-map-style/hsl-gl-map-v9.json");
+const defaultStyle = require("hsl-map-style/hsl-gl-map-v9.json");
 
 const MAX_TILE_SIZE = 1000;
 const CHANNELS = 4;
@@ -16,39 +16,25 @@ const defaultOptions = {
     width: 500,
     height: 500,
     zoom: 10,
-    scale: 2,
+    scale: 1,
     pitch: 0,
     bearing: 0
 };
 
 /**
  * Returns TileLive source and options
- * @param {Object} options - Options used to generate map image
- * @param {Object} options.sources - Sources (e.g. geojson) to merge to GL style
- * @param {Array} options.layers - Layer definitions for sources
+ * @param {Object} options - Options passed to tilelive-gl
+ * @param {Object} style - GL map style (optional)
  * @return {Promise} - TileLive source and options
  */
-function sourceFromJson(options) {
+function createSource(options, style = null) {
     const glSource = {
         protocol: "gl:",
-        style: { ...style },
+        style: style  || defaultStyle,
         query: { scale: options.scale || defaultOptions.scale }
     };
 
-    if (options.sources) {
-        glSource.style.sources = {
-            ...glSource.style.sources,
-            ...options.sources
-        };
-    }
-    if (options.layers) {
-        glSource.style.layers = [
-            ...glSource.style.layers,
-            ...options.layers
-        ];
-    }
-
-    const glOptions = { ...defaultOptions, ...omit(options, ["sources", "layers"]) };
+    const glOptions = { ...defaultOptions, ...options };
 
     return { source: glSource, options: glOptions };
 }
@@ -152,12 +138,13 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
 }
 
 /**
- * Renders a map image using map selection and complete style or json params and partial style
- * @param {Object} opts - Options used to generate map image
+ * Renders a map image
+ * @param {Object} opts - Options passed to tilelive-gl
+ * @param {Object} style - GL map style (optional)
  * @return {Readable} - PNG map image stream
  */
-function generate(opts) {
-    const { source, options } = (opts.source && opts.options) ? opts : sourceFromJson(opts);
+function generate(opts, style) {
+    const { source, options } = createSource(opts, style);
 
     const tileInfo = createTileInfo(options);
     const outStream = createOutStream(tileInfo);
