@@ -62,7 +62,8 @@ function addStopInfos(routes, routeId) {
 }
 
 router.post("/generateImage", ctx => {
-    const imageStream = imageGenerator.generate(ctx.request.body);
+    const { options, style } = ctx.request.body;
+    const imageStream = imageGenerator.generate(options, style);
     successResponse(ctx, imageStream, "image/png");
 });
 
