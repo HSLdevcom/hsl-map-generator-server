@@ -8,7 +8,6 @@ RUN apt-get update \
 RUN echo "deb http://ftp.us.debian.org/debian testing main" >> /etc/apt/sources.list
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -t testing gcc-5
- 
 
 ENV WORK /opt/mapgenerator
 
@@ -19,10 +18,17 @@ WORKDIR ${WORK}
 # Install app dependencies
 COPY package.json ${WORK}
 RUN npm install
-RUN npm install git+https://github.com/HSLdevcom/hsl-map-style
 
 # Bundle app source
 COPY . ${WORK}
+
+# Force rebuild
+RUN echo `date` > builddate
+
+# Fetch and import data
+RUN curl http://dev.hsl.fi/infopoiminta/latest/all.zip > all.zip && \
+  unzip all.zip -d ${WORK}/data/src && \
+  node -r babel-register scripts/import.js
 
 EXPOSE 8000
 
