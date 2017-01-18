@@ -22,9 +22,6 @@ RUN npm install
 # Bundle app source
 COPY . ${WORK}
 
-# Force rebuild
-RUN echo `date` > builddate
-
 # Fetch and import data
 RUN curl http://dev.hsl.fi/infopoiminta/latest/all.zip > all.zip && \
   unzip all.zip -d ${WORK}/data/src && \
