@@ -18,7 +18,7 @@ Download and extract [http://dev.hsl.fi/infopoiminta/latest/](http://dev.hsl.fi/
 
 Convert relevant DAT files to JSON:
 ```
-node -r babel-register scripts/import.js
+npm import
 ```
 
 ### Run
