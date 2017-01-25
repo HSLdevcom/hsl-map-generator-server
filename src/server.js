@@ -41,8 +41,8 @@ function errorResponse(ctx, error) {
 function addStopInfos(routes) {
     return routes.map(route => {
         // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(({stopId, duration}) =>
-            ({ ...stops.find(stop => stop.stopId === stopId), duration }));
+        const stopInfos = route.stops.map(({ stopId, duration, timingStop }) =>
+            ({ ...stops.find(stop => stop.stopId === stopId), duration, timingStop }));
         return { ...route, stops: stopInfos };
     });
 }
