@@ -96,6 +96,8 @@ const reitti_fields = [
     [20, null],
     [3, "duration", true],
     [3, "stopNumber", true],
+    [94, null],
+    [1, "timingStop", true],
 ];
 
 const reittimuoto_fields = [
@@ -134,7 +136,10 @@ const aikat_fields = [
 function segmentsToStopList(segments) {
     return segments
         .sort((a, b) => a.stopNumber - b.stopNumber)
-        .map(({duration, stopId}) => ({duration, stopId}));
+        .map(({duration, stopId, timingStop}) =>
+            timingStop !== 0 ? ({duration, stopId, timingStop}) : ({duration, stopId})
+        );
+
 };
 
 function segmentsToRoutes(segments, routeId) {
