@@ -112,13 +112,6 @@ const reittimuoto_fields = [
     [7, "coordY"],
 ];
 
-//CSV file fields: part index, key
-const ajantasaus_fields = [
-    [0, "id"],
-    [1, "direction"],
-    [4, "stopId"],
-];
-
 const aikat_fields = [
     [7, "stopId"],
     [6, "routeId"],
@@ -248,11 +241,10 @@ const sourceFiles = [
     parseDat(sourcePath("linja3.dat"), linja3_fields),
     parseDat(sourcePath("reitti.dat"), reitti_fields),
     parseDat(sourcePath("reittimuoto.dat"), reittimuoto_fields),
-    parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
 Promise.all(sourceFiles)
-    .then(([stops, terminals, stopAreas, lines, routes, routeSegments, geometries, timingStops]) => {
+    .then(([stops, terminals, stopAreas, lines, routes, routeSegments, geometries]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
@@ -273,9 +265,6 @@ Promise.all(sourceFiles)
     const routeGeometries = transformGeometries(geometries);
     fs.writeFileSync(outputPath("routeGeometries.geojson"), JSON.stringify(routeGeometries), "utf8");
     console.log(`Succesfully imported ${routeGeometries.features.length} route geometries`);
-
-    fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
-    console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
 
     return splitDat(sourcePath("aikat.dat"), outputPath("timetables"), 1, 8);
 }).then((paths) => {
