@@ -20,7 +20,6 @@ const terminals = require(`${dataPath}/terminals.json`);
 const stopAreas = require(`${dataPath}/stopAreas.json`);
 const lines = require(`${dataPath}/lines.json`);
 const routesById = require(`${dataPath}/routes.json`);
-const timingStops = require(`${dataPath}/timingStops.json`);
 const routeGeometries = JSON.parse(fs.readFileSync(`${dataPath}/routeGeometries.geojson`, "utf8"));
 
 const PORT = 8000;
@@ -39,24 +38,11 @@ function errorResponse(ctx, error) {
     console.log(error.stack);
 }
 
-function getTimingStopIds(routeId, direction) {
-    return timingStops
-        .filter(stop => (stop.id === routeId) && (stop.direction === direction))
-        .map(stop => stop.stopId)
-}
-
-function addStopInfos(routes, routeId) {
+function addStopInfos(routes) {
     return routes.map(route => {
-        // TODO: Import and use timing stop field from dat file
-        const timingStopIds = getTimingStopIds(routeId, route.direction);
-
         // Replace stop ids with full stop info
-        const stopInfos = route.stops.map(({stopId, duration}) => {
-            const stopInfo = { ...stops.find(stop => stop.stopId === stopId), duration };
-            const isTimingStop = timingStopIds.some(val => val === stopId);
-            return isTimingStop ? { ...stopInfo, isTiming: true } : stopInfo;
-        });
-
+        const stopInfos = route.stops.map(({stopId, duration}) =>
+            ({ ...stops.find(stop => stop.stopId === stopId), duration }));
         return { ...route, stops: stopInfos };
     });
 }
@@ -112,8 +98,7 @@ router.get("/routesById/:routeId", (ctx) => {
     const route = routesById[routeId];
 
     if (route) {
-        console.log(route);
-        const routes = addStopInfos(route, routeId);
+        const routes = addStopInfos(route);
         return successResponse(ctx, routes);
     }
     return errorResponse(ctx, new Error(`Route ${routeId} not found`));
@@ -125,7 +110,7 @@ router.get("/routesByLine/:lineId", (ctx) => {
 
     forEach(routesById, (routes, routeId) => {
         if (routeId === lineId || routeId.slice(0, -1) === lineId) {
-            lineRoutesById[routeId] = addStopInfos(routes, routeId);
+            lineRoutesById[routeId] = addStopInfos(routes);
         }
     });
     return successResponse(ctx, lineRoutesById);
