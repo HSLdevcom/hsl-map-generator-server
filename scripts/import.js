@@ -130,7 +130,7 @@ function segmentsToStopList(segments) {
     return segments
         .sort((a, b) => a.stopNumber - b.stopNumber)
         .map(({duration, stopId, timingStopType}) =>
-            timingStopType !== 0 ? ({duration, stopId, timingStopType}) : ({duration, stopId})
+            timingStopType > 0 ? ({duration, stopId, timingStopType}) : ({duration, stopId})
         );
 
 };
