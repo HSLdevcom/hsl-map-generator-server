@@ -96,6 +96,8 @@ const reitti_fields = [
     [20, null],
     [3, "duration", true],
     [3, "stopNumber", true],
+    [94, null],
+    [1, "timingStopType", true],
 ];
 
 const reittimuoto_fields = [
@@ -108,13 +110,6 @@ const reittimuoto_fields = [
     [4, null],
     [7, "coordX"],
     [7, "coordY"],
-];
-
-//CSV file fields: part index, key
-const ajantasaus_fields = [
-    [0, "id"],
-    [1, "direction"],
-    [4, "stopId"],
 ];
 
 const aikat_fields = [
@@ -134,7 +129,10 @@ const aikat_fields = [
 function segmentsToStopList(segments) {
     return segments
         .sort((a, b) => a.stopNumber - b.stopNumber)
-        .map(({duration, stopId}) => ({duration, stopId}));
+        .map(({duration, stopId, timingStopType}) =>
+            timingStopType > 0 ? ({duration, stopId, timingStopType}) : ({duration, stopId})
+        );
+
 };
 
 function segmentsToRoutes(segments, routeId) {
@@ -243,11 +241,10 @@ const sourceFiles = [
     parseDat(sourcePath("linja3.dat"), linja3_fields),
     parseDat(sourcePath("reitti.dat"), reitti_fields),
     parseDat(sourcePath("reittimuoto.dat"), reittimuoto_fields),
-    parseCsv(sourcePath("ajantasaus.csv"), ajantasaus_fields),
 ];
 
 Promise.all(sourceFiles)
-    .then(([stops, terminals, stopAreas, lines, routes, routeSegments, geometries, timingStops]) => {
+    .then(([stops, terminals, stopAreas, lines, routes, routeSegments, geometries]) => {
     fs.writeFileSync(outputPath("stops.json"), JSON.stringify(stops), "utf8");
     console.log(`Succesfully imported ${stops.length} stops`);
 
@@ -268,9 +265,6 @@ Promise.all(sourceFiles)
     const routeGeometries = transformGeometries(geometries);
     fs.writeFileSync(outputPath("routeGeometries.geojson"), JSON.stringify(routeGeometries), "utf8");
     console.log(`Succesfully imported ${routeGeometries.features.length} route geometries`);
-
-    fs.writeFileSync(outputPath("timingStops.json"), JSON.stringify(timingStops), "utf8");
-    console.log(`Succesfully imported ${Object.keys(timingStops).length} timing stops`);
 
     return splitDat(sourcePath("aikat.dat"), outputPath("timetables"), 1, 8);
 }).then((paths) => {

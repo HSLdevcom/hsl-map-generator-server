@@ -7,7 +7,8 @@
     "prestart": "npm run build",
     "start": "node dist/server",
     "watch": "babel-watch src/server",
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "import": "node -r babel-register scripts/import.js"
   },
   "repository": {
     "type": "git",
