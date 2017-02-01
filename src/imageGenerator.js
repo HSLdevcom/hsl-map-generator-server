@@ -1,10 +1,19 @@
+const path = require("path");
 const tilelive = require("tilelive");
 const tileliveGl = require("tilelive-gl");
 const stream = require("stream");
 const PNGEncoder = require("png-stream").Encoder;
 const omit = require("lodash/omit");
 const viewportMercator = require("viewport-mercator-project");
-const defaultStyle = require("hsl-map-style/hsl-gl-map-v9.json");
+const hslMapStyle = require("hsl-map-style");
+
+const glyphsPath = `file://${path.join(__dirname, ".." , "public")}/`;
+
+const defaultStyle = hslMapStyle.generateStyle({
+    lang: "fi",
+    extensions: ["icons"],
+    glyphsUrl: glyphsPath,
+});
 
 const MAX_TILE_SIZE = 1000;
 const CHANNELS = 4;
@@ -30,7 +39,7 @@ const defaultOptions = {
 function createSource(options, style = null) {
     const glSource = {
         protocol: "gl:",
-        style: style  || defaultStyle,
+        style: style || defaultStyle,
         query: { scale: options.scale || defaultOptions.scale }
     };
 
