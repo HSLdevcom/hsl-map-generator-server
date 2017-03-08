@@ -49,8 +49,10 @@ function addStopInfos(routes) {
 
 router.post("/generateImage", ctx => {
     const { options, style } = ctx.request.body;
-    const imageStream = imageGenerator.generate(options, style);
-    successResponse(ctx, imageStream, "image/png");
+    const { outStream, worldFile } = imageGenerator.generate(options, style);
+    ctx.response.set("Access-Control-Expose-Headers", "World-File");
+    ctx.response.set("World-File", worldFile);
+    successResponse(ctx, outStream, "image/png");
 });
 
 router.get("/stopIds", (ctx) => {

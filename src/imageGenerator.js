@@ -5,6 +5,7 @@ const stream = require("stream");
 const PNGEncoder = require("png-stream").Encoder;
 const omit = require("lodash/omit");
 const viewportMercator = require("viewport-mercator-project");
+const proj4 = require("proj4");
 const hslMapStyle = require("hsl-map-style");
 
 const glyphsPath = `file://${path.join(__dirname, ".." , "public")}/`;
@@ -68,6 +69,24 @@ function generateTile(glInstance, options) {
     });
 }
 
+function createWorldFile(tileInfo) {
+    const { width, height, viewport, viewportWidth, viewportHeight } = tileInfo;
+
+    const topLeft = viewport.unproject([0, 0]);
+    const bottomRight = viewport.unproject([viewportWidth, viewportHeight]);
+
+    const [left, top] = proj4("EPSG:4326", "EPSG:3857", topLeft);
+    const [right, bottom] = proj4("EPSG:4326", "EPSG:3857", bottomRight);
+
+    const widthOfPixel = (right - left) / width;
+    const heightOfPixel = (bottom - top) / height;
+
+    const centerOfLeftPixel = left + (widthOfPixel / 2);
+    const centerOfTopPixel = top - (heightOfPixel / 2);
+
+    return `${widthOfPixel}|0|0|${heightOfPixel}|${centerOfLeftPixel}|${centerOfTopPixel}|`;
+}
+
 function createTileInfo(options) {
     const tileCountX = Math.ceil(options.width / MAX_TILE_SIZE);
     const tileCountY = Math.ceil(options.height / MAX_TILE_SIZE);
@@ -77,18 +96,18 @@ function createTileInfo(options) {
     // Actual pixel values of generated tiles
     const tileWidth = Math.floor(widthOption * options.scale);
     const tileHeight = Math.floor(heightOption * options.scale);
-
+    // Pixel width and height of generated image
     const width = tileWidth * tileCountX;
     const height = tileHeight * tileCountY;
 
-    // TODO: Expand last tiles in rows and columns to fill dimensions
-
+    const viewportWidth = widthOption * tileCountX;
+    const viewportHeight = heightOption * tileCountY;
     const viewport = viewportMercator({
         longitude: options.center[0],
         latitude: options.center[1],
         zoom: options.zoom,
-        width: options.width,
-        height: options.height,
+        width: viewportWidth,
+        height: viewportHeight,
     });
 
     let tiles = [];
@@ -109,6 +128,9 @@ function createTileInfo(options) {
     return {
         width,
         height,
+        viewport,
+        viewportWidth,
+        viewportHeight,
         tiles,
         tileCountX,
         tileCountY,
@@ -161,12 +183,13 @@ function generateRow(glInstance, options, outStream, tileInfo, rowIndex) {
  * Renders a map image
  * @param {Object} opts - Options passed to tilelive-gl
  * @param {Object} style - GL map style (optional)
- * @return {Readable} - PNG map image stream
+ * @return {Object} - PNG map image stream
  */
 function generate(opts, style) {
     const { source, options } = createSource(opts, style);
 
     const tileInfo = createTileInfo(options);
+    const worldFile = createWorldFile(tileInfo);
     const outStream = createOutStream(tileInfo);
 
     initGl(source).then(glInstance => {
@@ -179,7 +202,8 @@ function generate(opts, style) {
             outStream.end();
         });
     });
-    return outStream;
+
+    return { outStream, worldFile };
 }
 
 module.exports = {
