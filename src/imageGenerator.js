@@ -146,6 +146,18 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
     });
 }
 
+function generateRow(glInstance, options, outStream, tileInfo, rowIndex) {
+    let prev;
+    const buffer = createBuffer(tileInfo, rowIndex);
+    for (let x = 0; x < tileInfo.tileCountX; x++) {
+        const tileIndex = (rowIndex * tileInfo.tileCountX) + x;
+        const next = () => addTile(buffer, glInstance, options, tileInfo, tileIndex);
+        prev = prev ? prev.then(next) : next();
+    }
+    prev = prev.then(() => outStream.write(buffer.data));
+    return prev;
+}
+
 /**
  * Renders a map image
  * @param {Object} opts - Options passed to tilelive-gl
@@ -161,13 +173,8 @@ function generate(opts, style) {
     initGl(source).then(glInstance => {
         let prev;
         for (let y = 0; y < tileInfo.tileCountY; y++) {
-            const buffer = createBuffer(tileInfo);
-            for (let x = 0; x < tileInfo.tileCountX; x++) {
-                const tileIndex = y * tileInfo.tileCountX + x;
-                const next = () => addTile(buffer, glInstance, options, tileInfo, tileIndex);
-                prev = prev ? prev.then(next) : next();
-            }
-            prev = prev.then(() => outStream.write(buffer.data));
+            const next = () => generateRow(glInstance, options, outStream, tileInfo, y);
+            prev = prev ? prev.then(next) : next();
         }
         return prev.then(() => {
             outStream.end();
