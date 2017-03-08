@@ -78,6 +78,9 @@ function createTileInfo(options) {
     const tileWidth = Math.floor(widthOption * options.scale);
     const tileHeight = Math.floor(heightOption * options.scale);
 
+    const width = tileWidth * tileCountX;
+    const height = tileHeight * tileCountY;
+
     // TODO: Expand last tiles in rows and columns to fill dimensions
 
     const viewport = viewportMercator({
@@ -104,6 +107,8 @@ function createTileInfo(options) {
     }
 
     return {
+        width,
+        height,
         tiles,
         tileCountX,
         tileCountY,
@@ -113,14 +118,8 @@ function createTileInfo(options) {
 }
 
 function createBuffer(tileInfo) {
-    const bufferLength = tileInfo.tileCountX * tileInfo.tileWidth * tileInfo.tileHeight * CHANNELS;
-
-    return {
-        data: Buffer.alloc(bufferLength),
-        width: tileInfo.tileWidth * tileInfo.tileCountX,
-        height: tileInfo.tileHeight,
-        channels: CHANNELS,
-    };
+    const bufferLength = tileInfo.width * tileInfo.height * CHANNELS;
+    return Buffer.alloc(bufferLength);
 }
 
 function createOutStream(tileInfo) {
@@ -139,8 +138,8 @@ function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
         let bufferIndex = tileParams.offset * CHANNELS;
 
         while (tileIndex < tileLength) {
-            tile.data.copy(buffer.data, bufferIndex, tileIndex, tileIndex + tile.width * CHANNELS);
-            bufferIndex += buffer.width * CHANNELS;
+            tile.data.copy(buffer, bufferIndex, tileIndex, tileIndex + tile.width * CHANNELS);
+            bufferIndex += tileInfo.width * CHANNELS;
             tileIndex += tile.width * CHANNELS;
         }
     });
@@ -154,7 +153,7 @@ function generateRow(glInstance, options, outStream, tileInfo, rowIndex) {
         const next = () => addTile(buffer, glInstance, options, tileInfo, tileIndex);
         prev = prev ? prev.then(next) : next();
     }
-    prev = prev.then(() => outStream.write(buffer.data));
+    prev = prev.then(() => outStream.write(buffer));
     return prev;
 }
 
