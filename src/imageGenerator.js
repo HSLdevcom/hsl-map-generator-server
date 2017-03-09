@@ -140,7 +140,7 @@ function createTileInfo(options) {
 }
 
 function createBuffer(tileInfo) {
-    const bufferLength = tileInfo.width * tileInfo.height * CHANNELS;
+    const bufferLength = tileInfo.width * tileInfo.tileHeight * CHANNELS;
     return Buffer.alloc(bufferLength);
 }
 
@@ -201,6 +201,8 @@ function generate(opts, style) {
         return prev.then(() => {
             outStream.end();
         });
+    }).catch((error) => {
+        console.log(error);
     });
 
     return { outStream, worldFile };
