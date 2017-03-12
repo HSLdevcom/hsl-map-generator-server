@@ -16,7 +16,7 @@ const defaultStyle = hslMapStyle.generateStyle({
     glyphsUrl: glyphsPath,
 });
 
-const MAX_TILE_SIZE = 1000;
+const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
 
 tileliveGl.registerProtocols(tilelive);
@@ -88,8 +88,9 @@ function createWorldFile(tileInfo) {
 }
 
 function createTileInfo(options) {
-    const tileCountX = Math.ceil(options.width / MAX_TILE_SIZE);
-    const tileCountY = Math.ceil(options.height / MAX_TILE_SIZE);
+    const maxSize = Math.round(MAX_TILE_SIZE / options.scale);
+    const tileCountX = Math.ceil(options.width / maxSize);
+    const tileCountY = Math.ceil(options.height / maxSize);
     // Width and height values passed to tilelive-gl
     const widthOption = Math.floor(options.width / tileCountX);
     const heightOption = Math.floor(options.height / tileCountY);
