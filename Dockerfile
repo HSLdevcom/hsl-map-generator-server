@@ -5,6 +5,10 @@ RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y unzip \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y -t jessie-backports libgl1-mesa-glx libgl1-mesa-dri xserver-xorg-video-dummy xserver-xorg-input-mouse xserver-xorg-input-kbd
 
+RUN echo "deb http://ftp.us.debian.org/debian testing main" >> /etc/apt/sources.list
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -t testing gcc-6
+
 ENV WORK /opt/mapgenerator
 
 # Create app directory
