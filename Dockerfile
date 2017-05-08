@@ -3,7 +3,7 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/s
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y unzip \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y -t jessie-backports libgl1-mesa-glx libgl1-mesa-dri xserver-xorg-video-dummy xserver-xorg-input-mouse xserver-xorg-input-kbd
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y -t jessie-backports libgl1-mesa-glx libgl1-mesa-dri libgles2-mesa xserver-xorg-video-dummy xserver-xorg-input-mouse xserver-xorg-input-kbd
 
 RUN echo "deb http://ftp.us.debian.org/debian testing main" >> /etc/apt/sources.list
 
