@@ -45,7 +45,7 @@
     "proj4": "^2.4.3",
     "replacestream": "^4.0.2",
     "tilelive": "^5.12.2",
-    "tilelive-gl": "git+https://github.com/HSLdevcom/tilelive-gl.git",
+    "tilelive-gl": "github:hsldevcom/tilelive-gl#c5d9f8aac3862f1bcbb152ed19871f23f728e5c6",
     "viewport-mercator-project": "^2.1.0"
   }
 }

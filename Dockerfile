@@ -1,4 +1,4 @@
-FROM node:4.6
+FROM node:6
 RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list
 
 RUN apt-get update \
