@@ -30,6 +30,4 @@ tmp
 # Users Environment Variables
 .lock-wscript
 
-route-maps/**
-
 dist
