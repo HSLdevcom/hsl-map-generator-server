@@ -8,7 +8,7 @@ Server component for [hsl-map-publisher](https://github.com/HSLdevcom/hsl-map-pu
 
 Install dependencies:
 ```
-npm install
+yarn install
 ```
 
 ### Run

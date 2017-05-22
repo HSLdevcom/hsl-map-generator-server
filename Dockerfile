@@ -17,7 +17,8 @@ WORKDIR ${WORK}
 
 # Install app dependencies
 COPY package.json ${WORK}
-RUN npm install
+COPY yarn.lock ${WORK}
+RUN yarn install
 
 # Bundle app source
 COPY . ${WORK}
