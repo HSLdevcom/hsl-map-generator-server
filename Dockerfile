@@ -22,11 +22,6 @@ RUN npm install
 # Bundle app source
 COPY . ${WORK}
 
-# Fetch and import data
-RUN curl http://dev.hsl.fi/infopoiminta/latest/all.zip > all.zip && \
-  unzip all.zip -d ${WORK}/data/src && \
-  node -r babel-register scripts/import.js
-
 EXPOSE 8000
 
 CMD cd ${WORK}/node_modules/hsl-map-style && \
