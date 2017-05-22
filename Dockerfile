@@ -1,4 +1,4 @@
-FROM node:4.6
+FROM node:6
 RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list
 
 RUN apt-get update \
@@ -17,15 +17,11 @@ WORKDIR ${WORK}
 
 # Install app dependencies
 COPY package.json ${WORK}
-RUN npm install
+COPY yarn.lock ${WORK}
+RUN yarn install
 
 # Bundle app source
 COPY . ${WORK}
-
-# Fetch and import data
-RUN curl http://dev.hsl.fi/infopoiminta/latest/all.zip > all.zip && \
-  unzip all.zip -d ${WORK}/data/src && \
-  node -r babel-register scripts/import.js
 
 EXPOSE 8000
 
