@@ -3,7 +3,7 @@ const Koa = require("koa");
 const app = new Koa();
 const serve = require("koa-static");
 const router = require("koa-router")();
-const bodyParser = require("koa-bodyparser")();
+const bodyParser = require("koa-bodyparser")({ jsonLimit: "50mb" });
 const cors = require("koa-cors")();
 
 const imageGenerator = require("./imageGenerator");
