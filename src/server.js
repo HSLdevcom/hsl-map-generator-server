@@ -1,37 +1,39 @@
-const path = require("path");
-const Koa = require("koa");
-const app = new Koa();
-const serve = require("koa-static");
-const router = require("koa-router")();
-const bodyParser = require("koa-bodyparser")({ jsonLimit: "50mb" });
-const cors = require("koa-cors")();
+import path from 'path';
 
-const imageGenerator = require("./imageGenerator");
+import Koa from 'koa';
+import KoaStatic from 'koa-static';
+import KoaRouter from 'koa-router';
+import KoaBodyParser from 'koa-bodyparser';
+import KoaCors from 'koa-cors';
 
-const dataPath = path.join(__dirname, "..", "data");
-const publicPath = path.join(__dirname, "..", "public");
+import generate from './imageGenerator';
+
+const publicPath = path.join(__dirname, '..', 'public');
 
 const PORT = 8000;
 
-router.post("/generateImage", ctx => {
-    const { options, style } = ctx.request.body;
-    const { outStream, worldFile } = imageGenerator.generate(options, style);
-    ctx.response.set("Access-Control-Expose-Headers", "World-File");
-    ctx.response.set("World-File", worldFile);
-    ctx.status = 200;
-    ctx.type = "image/png";
-    ctx.body = outStream;
+const app = new Koa();
+const router = new KoaRouter();
+
+router.post('/generateImage', (ctx) => {
+  const { options, style } = ctx.request.body;
+  const { outStream, worldFile } = generate(options, style);
+  ctx.response.set('Access-Control-Expose-Headers', 'World-File');
+  ctx.response.set('World-File', worldFile);
+  ctx.status = 200;
+  ctx.type = 'image/png';
+  ctx.body = outStream;
 });
 
 app
-    .use(cors)
-    .use(bodyParser)
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .use(serve(publicPath))
-    .listen(PORT, (err) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log(`Listening at port ${PORT}`);
-    });
+  .use(new KoaCors())
+  .use(new KoaBodyParser({ jsonLimit: '50mb' }))
+  .use(router.routes())
+  .use(router.allowedMethods())
+  .use(new KoaStatic(publicPath))
+  .listen(PORT, (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(`Listening at port ${PORT}`);
+  });

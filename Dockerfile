@@ -1,4 +1,4 @@
-FROM node:6
+FROM node:8
 RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list
 
 RUN apt-get update \
@@ -25,9 +25,7 @@ COPY . ${WORK}
 
 EXPOSE 8000
 
-CMD cd ${WORK}/node_modules/hsl-map-style && \
-  unzip -P ${FONTSTACK_PASSWORD} fontstack.zip && \
-  cd ${WORK} && \
+CMD cd ${WORK} && \
   Xorg -dpi 96 -nolisten tcp -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./10.log -config ./xorg.conf :10 & \
   sleep 15 && \
   DISPLAY=":10" node_modules/.bin/forever start -c "npm start" ./ && \
