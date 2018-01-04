@@ -1,15 +1,11 @@
 const path = require("path");
 const Koa = require("koa");
 const app = new Koa();
-const serve = require("koa-static");
 const router = require("koa-router")();
 const bodyParser = require("koa-bodyparser")({ jsonLimit: "50mb" });
 const cors = require("koa-cors")();
 
 const imageGenerator = require("./imageGenerator");
-
-const dataPath = path.join(__dirname, "..", "data");
-const publicPath = path.join(__dirname, "..", "public");
 
 const PORT = 8000;
 
@@ -28,7 +24,6 @@ app
     .use(bodyParser)
     .use(router.routes())
     .use(router.allowedMethods())
-    .use(serve(publicPath))
     .listen(PORT, (err) => {
         if (err) {
             console.log(err);
