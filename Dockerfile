@@ -18,10 +18,12 @@ WORKDIR ${WORK}
 # Install app dependencies
 COPY package.json ${WORK}
 COPY yarn.lock ${WORK}
-RUN yarn install
+RUN yarn
 
 # Bundle app source
 COPY . ${WORK}
+
+RUN yarn lint
 
 EXPOSE 8000
 
