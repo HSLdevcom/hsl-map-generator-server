@@ -6,15 +6,6 @@ const PNGEncoder = require("png-stream").Encoder;
 const omit = require("lodash/omit");
 const viewportMercator = require("viewport-mercator-project");
 const proj4 = require("proj4");
-const hslMapStyle = require("hsl-map-style");
-
-const glyphsPath = `file://${path.join(__dirname, ".." , "public")}/`;
-
-const defaultStyle = hslMapStyle.generateStyle({
-    lang: "fi",
-    extensions: ["icons"],
-    glyphsUrl: glyphsPath,
-});
 
 const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
@@ -40,7 +31,7 @@ const defaultOptions = {
 function createSource(options, style = null) {
     const glSource = {
         protocol: "gl:",
-        style: style || defaultStyle,
+        style: style,
         query: { scale: options.scale || defaultOptions.scale }
     };
 
