@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser')({ jsonLimit: '50mb' });
-const cors = require('koa-cors')();
+const cors = require('@koa/cors')();
 
 const app = new Koa();
 
