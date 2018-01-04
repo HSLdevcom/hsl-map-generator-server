@@ -4,10 +4,8 @@
   "description": "Server component for the HSL map generator",
   "main": "src/server.js",
   "scripts": {
-    "prestart": "npm run build",
-    "start": "node dist/server",
-    "watch": "babel-watch src/server",
-    "build": "babel src --out-dir dist"
+    "start": "node src/server",
+    "watch": "nodemon src/server"
   },
   "repository": {
     "type": "git",
@@ -21,19 +19,10 @@
   },
   "homepage": "https://github.com/HSLdevcom/hsl-map-generator-server",
   "devDependencies": {
-    "babel-cli": "^6.16.0",
-    "babel-core": "6.14.0",
-    "babel-plugin-transform-object-rest-spread": "^6.16.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-polyfill": "6.13.0",
-    "babel-preset-latest": "6.14.0",
-    "babel-register": "6.14.0",
-    "babel-runtime": "^6.11.6",
-    "babel-watch": "^2.0.3-rc0",
-    "forever": "^0.15.3"
+    "forever": "^0.15.3",
+    "nodemon": "^1.14.7"
   },
   "dependencies": {
-    "immutable": "^3.8.1",
     "koa": "2.0.0",
     "koa-bodyparser": "^3.2.0",
     "koa-cors": "0.0.16",
@@ -41,7 +30,6 @@
     "lodash": "^4.15.0",
     "png-stream": "^1.0.4",
     "proj4": "^2.4.3",
-    "replacestream": "^4.0.2",
     "tilelive": "^5.12.2",
     "tilelive-gl": "github:hsldevcom/tilelive-gl#c5d9f8aac3862f1bcbb152ed19871f23f728e5c6",
     "viewport-mercator-project": "^2.1.0"

@@ -35,7 +35,7 @@ function createSource(options, style = null) {
         query: { scale: options.scale || defaultOptions.scale }
     };
 
-    const glOptions = { ...defaultOptions, ...options };
+    const glOptions = Object.assign({}, defaultOptions, options);
 
     return { source: glSource, options: glOptions };
 }
@@ -53,9 +53,15 @@ function initGl(source) {
 }
 
 function generateTile(glInstance, options) {
-    const opts = { ...options, format: "raw" };
+    const opts = Object.assign({}, options, { format: "raw" });
     return new Promise((resolve, reject) => {
-        const callback = (error, data, info) => error ? reject(error) : resolve({ data, ...info });
+        const callback = (error, data, info) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(Object.assign({}, info, { data }));
+          }
+        };
         glInstance.getStatic.bind(glInstance)(opts, callback, true);
     });
 }
@@ -144,7 +150,7 @@ function createOutStream(tileInfo) {
 
 function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
     const tileParams = tileInfo.tiles[tileIndex];
-    const tileOptions = { ...mapOptions, ...tileParams.options };
+    const tileOptions = Object.assign({}, mapOptions, tileParams.options);
 
     return generateTile(glInstance, tileOptions).then((tile) => {
         let tileIndex = 0;
