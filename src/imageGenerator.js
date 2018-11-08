@@ -1,5 +1,5 @@
-const tilelive = require('tilelive');
-const tileliveGl = require('tilelive-gl');
+const tilelive = require('@mapbox/tilelive');
+const tileliveGl = require('./tileliveMapbox');
 const PNGEncoder = require('png-stream').Encoder;
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
@@ -49,18 +49,10 @@ function initGl(source) {
   });
 }
 
-function generateTile(glInstance, options) {
+async function generateTile(glInstance, options) {
   const opts = Object.assign({}, options, { format: 'raw' });
-  return new Promise((resolve, reject) => {
-    const callback = (error, data, info) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(Object.assign({}, info, { data }));
-      }
-    };
-    glInstance.getStatic.bind(glInstance)(opts, callback, true);
-  });
+  const { info, data } = await glInstance.getStatic.call(glInstance, opts);
+  return { ...info, data };
 }
 
 function createWorldFile(tileInfo) {
@@ -150,33 +142,35 @@ function createOutStream(tileInfo) {
   return new PNGEncoder(width, height, { colorSpace: 'rgba' });
 }
 
-function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
+async function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
   const tileParams = tileInfo.tiles[tileIndex];
   const tileOptions = Object.assign({}, mapOptions, tileParams.options);
 
-  return generateTile(glInstance, tileOptions).then((tile) => {
-    const tileLength = tile.width * tile.height * tile.channels;
-    let tileOffset = 0;
-    let bufferOffset = tileParams.offset * CHANNELS;
+  const tile = await generateTile(glInstance, tileOptions);
 
-    while (tileOffset < tileLength) {
-      tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
-      bufferOffset += tileInfo.width * CHANNELS;
-      tileOffset += tile.width * CHANNELS;
-    }
-  });
+  const tileLength = tile.width * tile.height * tile.channels;
+  let tileOffset = 0;
+  let bufferOffset = tileParams.offset * CHANNELS;
+
+  while (tileOffset < tileLength) {
+    tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
+    bufferOffset += tileInfo.width * CHANNELS;
+    tileOffset += tile.width * CHANNELS;
+  }
 }
 
-function generateRow(glInstance, options, outStream, tileInfo, rowIndex) {
-  let prev;
+async function generateRow(glInstance, options, tileInfo, rowIndex) {
   const buffer = createBuffer(tileInfo, rowIndex);
+  const tilePromises = [];
+
   for (let x = 0; x < tileInfo.tileCountX; x += 1) {
     const tileIndex = (rowIndex * tileInfo.tileCountX) + x;
-    const next = () => addTile(buffer, glInstance, options, tileInfo, tileIndex);
-    prev = prev ? prev.then(next) : next();
+    const tilePromise = addTile(buffer, glInstance, options, tileInfo, tileIndex);
+    tilePromises.push(tilePromise);
   }
-  prev = prev.then(() => outStream.write(buffer));
-  return prev;
+
+  await Promise.all(tilePromises);
+  return buffer;
 }
 
 /**
@@ -192,15 +186,18 @@ function generate(opts, style) {
   const worldFile = createWorldFile(tileInfo);
   const outStream = createOutStream(tileInfo);
 
-  initGl(source).then((glInstance) => {
-    let prev;
+  initGl(source).then(async (glInstance) => {
+    const rowPromises = [];
+
     for (let y = 0; y < tileInfo.tileCountY; y += 1) {
-      const next = () => generateRow(glInstance, options, outStream, tileInfo, y);
-      prev = prev ? prev.then(next) : next();
+      const rowPromise = generateRow(glInstance, options, tileInfo, y);
+      rowPromises.push(rowPromise);
     }
-    return prev.then(() => {
-      outStream.end();
-    });
+
+    const buffers = await Promise.all(rowPromises);
+    buffers.forEach(buffer => outStream.write(buffer));
+
+    outStream.end();
   }).catch((error) => {
     console.log(error); // eslint-disable-line no-console
   });
