@@ -32,6 +32,7 @@
     "koa-bodyparser": "^3.2.0",
     "koa-router": "^7.3.0",
     "lodash": "^4.15.0",
+    "p-cancelable": "^1.0.0",
     "png-stream": "^1.0.4",
     "proj4": "^2.4.3",
     "tilelive": "^5.12.2",

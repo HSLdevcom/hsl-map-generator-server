@@ -192,13 +192,25 @@ function generate(opts, style) {
   const worldFile = createWorldFile(tileInfo);
   const outStream = createOutStream(tileInfo);
 
+  let isCancelled = false;
+
+  outStream.on('close', () => {
+    isCancelled = true;
+  });
+
   initGl(source).then((glInstance) => {
-    let prev;
+    let row = Promise.resolve();
+
     for (let y = 0; y < tileInfo.tileCountY; y += 1) {
+      if (isCancelled) {
+        break;
+      }
+
       const next = () => generateRow(glInstance, options, outStream, tileInfo, y);
-      prev = prev ? prev.then(next) : next();
+      row = row ? row.then(next) : next();
     }
-    return prev.then(() => {
+
+    return row.then(() => {
       outStream.end();
     });
   }).catch((error) => {
