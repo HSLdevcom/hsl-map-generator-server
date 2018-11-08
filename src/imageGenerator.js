@@ -192,26 +192,18 @@ function generate(opts, style) {
   const worldFile = createWorldFile(tileInfo);
   const outStream = createOutStream(tileInfo);
 
-  try {
-    initGl(source)
-      .then((glInstance) => {
-        let prev;
-
-        for (let y = 0; y < tileInfo.tileCountY; y += 1) {
-          const next = () => generateRow(glInstance, options, outStream, tileInfo, y);
-          prev = prev ? prev.then(next) : next();
-        }
-
-        return prev.then(() => {
-          outStream.end();
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } catch (err) {
-    console.log(err);
-  }
+  initGl(source).then((glInstance) => {
+    let prev;
+    for (let y = 0; y < tileInfo.tileCountY; y += 1) {
+      const next = () => generateRow(glInstance, options, outStream, tileInfo, y);
+      prev = prev ? prev.then(next) : next();
+    }
+    return prev.then(() => {
+      outStream.end();
+    });
+  }).catch((error) => {
+    console.log(error); // eslint-disable-line no-console
+  });
 
   return { outStream, worldFile };
 }
