@@ -3,6 +3,7 @@ const tileliveGl = require('./tileliveMapbox');
 const PNGEncoder = require('png-stream').Encoder;
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
+const sortBy = require('lodash/sortBy');
 
 const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
@@ -112,7 +113,8 @@ function createTileInfo(options) {
           width: widthOption,
           height: heightOption,
         },
-        offset: x * tileWidth,
+        x,
+        y,
       });
     }
   }
@@ -132,45 +134,34 @@ function createTileInfo(options) {
 }
 
 function createBuffer(tileInfo) {
-  const bufferLength = tileInfo.width * tileInfo.tileHeight * CHANNELS;
+  const bufferLength = tileInfo.width * tileInfo.height * CHANNELS;
   return Buffer.alloc(bufferLength);
 }
 
 function createOutStream(tileInfo) {
-  const width = tileInfo.tileWidth * tileInfo.tileCountX;
-  const height = tileInfo.tileHeight * tileInfo.tileCountY;
+  const { width, height } = tileInfo;
   return new PNGEncoder(width, height, { colorSpace: 'rgba' });
 }
 
-async function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
+function getBufferPosition(x, y, tileInfo) {
+
+}
+
+async function createTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
   const tileParams = tileInfo.tiles[tileIndex];
   const tileOptions = Object.assign({}, mapOptions, tileParams.options);
 
   const tile = await generateTile(glInstance, tileOptions);
 
-  const tileLength = tile.width * tile.height * tile.channels;
+  const tileLength = tile.width * tile.height * CHANNELS;
   let tileOffset = 0;
-  let bufferOffset = tileParams.offset * CHANNELS;
+  let bufferOffset = ((tileInfo.width * (tileParams.y * tile.height)) + (tileParams.x * tile.width)) * CHANNELS;
 
   while (tileOffset < tileLength) {
     tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
     bufferOffset += tileInfo.width * CHANNELS;
     tileOffset += tile.width * CHANNELS;
   }
-}
-
-async function generateRow(glInstance, options, tileInfo, rowIndex) {
-  const buffer = createBuffer(tileInfo, rowIndex);
-  const tilePromises = [];
-
-  for (let x = 0; x < tileInfo.tileCountX; x += 1) {
-    const tileIndex = (rowIndex * tileInfo.tileCountX) + x;
-    const tilePromise = addTile(buffer, glInstance, options, tileInfo, tileIndex);
-    tilePromises.push(tilePromise);
-  }
-
-  await Promise.all(tilePromises);
-  return buffer;
 }
 
 /**
@@ -187,16 +178,22 @@ function generate(opts, style) {
   const outStream = createOutStream(tileInfo);
 
   initGl(source).then(async (glInstance) => {
-    const rowPromises = [];
+    const buffer = createBuffer(tileInfo);
+    const tilePromises = [];
 
     for (let y = 0; y < tileInfo.tileCountY; y += 1) {
-      const rowPromise = generateRow(glInstance, options, tileInfo, y);
-      rowPromises.push(rowPromise);
+      for (let x = 0; x < tileInfo.tileCountX; x += 1) {
+        const tileIndex = (y * tileInfo.tileCountX) + x;
+        const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileIndex);
+        tilePromises.push(tilePromise);
+      }
     }
 
-    const buffers = await Promise.all(rowPromises);
-    buffers.forEach(buffer => outStream.write(buffer));
+    await Promise.all(tilePromises);
+    // Write the buffer to the PNG stream
+    outStream.write(buffer);
 
+    // And we're done!
     outStream.end();
   }).catch((error) => {
     console.log(error); // eslint-disable-line no-console

@@ -1,20 +1,16 @@
-const Sphericalmercator = require('sphericalmercator');
 const mbgl = require('@mapbox/mapbox-gl-native');
-const Png = require('pngjs').PNG;
-const PngQuant = require('pngquant');
 const request = require('requestretry');
 const url = require('url');
 const fs = require('fs');
-const concat = require('concat-stream');
 const { createPool } = require('generic-pool');
 const N_CPUS = require('os')
   .cpus().length;
 
-const sm = new Sphericalmercator();
-
 function pool(style, options) {
   async function create() {
-    return new mbgl.Map(options);
+    const map = new mbgl.Map(options);
+    await map.load(style);
+    return map;
   }
 
   async function destroy(map) {
@@ -61,9 +57,9 @@ function mbglRequest(req, callback) {
           console.error(err, opts);
           callback(err);
         }
-      } else if (res == undefined) {
+      } else if (res == undefined) { // eslint-disable-line eqeqeq
         callback(null, { data: Buffer.alloc(0) });
-      } else if (res.statusCode == 200) {
+      } else if (res.statusCode == 200) { // eslint-disable-line eqeqeq
         if (res.headers.modified) { response.modified = new Date(res.headers.modified); }
         if (res.headers.expires) { response.expires = new Date(res.headers.expires); }
         if (res.headers.etag) { response.etag = res.headers.etag; }
@@ -71,7 +67,7 @@ function mbglRequest(req, callback) {
         response.data = body;
 
         callback(null, response);
-      } else if (res.statusCode == 404) {
+      } else if (res.statusCode == 404) { // eslint-disable-line eqeqeq
         if (res.headers.modified) { response.modified = new Date(res.headers.modified); }
         if (res.headers.expires) { response.expires = new Date(res.headers.expires); }
         if (res.headers.etag) { response.etag = res.headers.etag; }
@@ -92,7 +88,6 @@ class GL {
     if (!options.style) return callback(new Error('Missing GL style JSON'));
 
     this._scale = options.query.scale || 1;
-    this._layerTileSize = options.query.layerTileSize || 512;
 
     this._pool = pool(options.style, {
       request: mbglRequest,
@@ -107,12 +102,8 @@ class GL {
     const that = this;
     const map = await this._pool.acquire();
 
-    // TODO: fix Style is not loaded error
-
     return new Promise((resolve, reject) => {
       map.render(options, (err, data) => {
-        console.log(err);
-
         if (err) {
           reject(err);
           return;
@@ -133,10 +124,6 @@ class GL {
         });
       });
     });
-  }
-
-  getInfo(callback) {
-    callback(null, {});
   }
 }
 
