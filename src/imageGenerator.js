@@ -3,7 +3,6 @@ const tileliveGl = require('./tileliveMapbox');
 const PNGEncoder = require('png-stream').Encoder;
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
-const sortBy = require('lodash/sortBy');
 
 const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
@@ -143,19 +142,14 @@ function createOutStream(tileInfo) {
   return new PNGEncoder(width, height, { colorSpace: 'rgba' });
 }
 
-function getBufferPosition(x, y, tileInfo) {
-
-}
-
-async function createTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
-  const tileParams = tileInfo.tiles[tileIndex];
+async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams) {
   const tileOptions = Object.assign({}, mapOptions, tileParams.options);
-
   const tile = await generateTile(glInstance, tileOptions);
 
   const tileLength = tile.width * tile.height * CHANNELS;
   let tileOffset = 0;
-  let bufferOffset = ((tileInfo.width * (tileParams.y * tile.height)) + (tileParams.x * tile.width)) * CHANNELS;
+  let bufferOffset =
+    ((tileInfo.width * (tileParams.y * tile.height)) + (tileParams.x * tile.width)) * CHANNELS;
 
   while (tileOffset < tileLength) {
     tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
@@ -181,18 +175,14 @@ function generate(opts, style) {
     const buffer = createBuffer(tileInfo);
     const tilePromises = [];
 
-    for (let y = 0; y < tileInfo.tileCountY; y += 1) {
-      for (let x = 0; x < tileInfo.tileCountX; x += 1) {
-        const tileIndex = (y * tileInfo.tileCountX) + x;
-        const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileIndex);
-        tilePromises.push(tilePromise);
-      }
+    for (const tileConfig of tileInfo.tiles) {
+      const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig);
+      tilePromises.push(tilePromise);
     }
 
     await Promise.all(tilePromises);
     // Write the buffer to the PNG stream
     outStream.write(buffer);
-
     // And we're done!
     outStream.end();
   }).catch((error) => {
