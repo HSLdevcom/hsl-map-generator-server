@@ -134,7 +134,7 @@ function createTileInfo(options) {
 
 function createBuffer(tileInfo) {
   const bufferLength = tileInfo.width * tileInfo.height * CHANNELS;
-  return Buffer.alloc(bufferLength);
+  return Buffer.allocUnsafe(bufferLength);
 }
 
 function createOutStream(tileInfo) {
@@ -164,30 +164,48 @@ async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams) 
  * @param {Object} style - GL map style (optional)
  * @return {Object} - PNG map image stream
  */
-function generate(opts, style) {
+async function generate(opts, style, isCancelled) {
   const { source, options } = createSource(opts, style);
 
   const tileInfo = createTileInfo(options);
   const worldFile = createWorldFile(tileInfo);
   const outStream = createOutStream(tileInfo);
 
-  initGl(source).then(async (glInstance) => {
-    const buffer = createBuffer(tileInfo);
-    const tilePromises = [];
+  let glInstance;
 
+  try {
+    glInstance = await initGl(source);
+  } catch (err) {
+    console.error('Failed initializing the Mapbox GL instance.');
+    throw err;
+  }
+
+  console.time('Generate');
+  const buffer = createBuffer(tileInfo);
+  const tilePromises = [];
+
+  try {
     for (const tileConfig of tileInfo.tiles) {
+      if (isCancelled()) {
+        outStream.destroy(new Error('Render was cancelled.'));
+        return false;
+      }
+
       const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig);
       tilePromises.push(tilePromise);
     }
 
+    // Wait for all tiles to be written to the buffer
     await Promise.all(tilePromises);
-    // Write the buffer to the PNG stream
-    outStream.write(buffer);
-    // And we're done!
-    outStream.end();
-  }).catch((error) => {
-    console.log(error); // eslint-disable-line no-console
-  });
+  } catch (err) {
+    console.error('Failed generating the tiles.');
+    throw err;
+  }
+  // Write the buffer to the PNG stream
+  outStream.write(buffer);
+  // And we're done!
+  outStream.end();
+  console.timeEnd('Generate');
 
   return { outStream, worldFile };
 }
