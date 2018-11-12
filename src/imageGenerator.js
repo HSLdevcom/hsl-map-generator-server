@@ -3,6 +3,7 @@ const tileliveGl = require('./tileliveMapbox');
 const PNGEncoder = require('png-stream').Encoder;
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
+const pEvery = require('p-every');
 
 const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
@@ -49,10 +50,24 @@ function initGl(source) {
   });
 }
 
-async function generateTile(glInstance, options) {
+async function generateTile(glInstance, options, isCanceled) {
   const opts = Object.assign({}, options, { format: 'raw' });
-  const { info, data } = await glInstance.getStatic.call(glInstance, opts);
-  return { ...info, data };
+  let generated;
+
+  try {
+    generated = await glInstance.getStatic.call(glInstance, opts, isCanceled);
+  } catch (err) {
+    return false;
+  }
+
+  if (generated) {
+    return {
+      ...generated.info,
+      data: generated.data,
+    };
+  }
+
+  return false;
 }
 
 function createWorldFile(tileInfo) {
@@ -142,9 +157,18 @@ function createOutStream(tileInfo) {
   return new PNGEncoder(width, height, { colorSpace: 'rgba' });
 }
 
-async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams) {
+async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams, isCanceled) {
   const tileOptions = Object.assign({}, mapOptions, tileParams.options);
-  const tile = await generateTile(glInstance, tileOptions);
+
+  if (isCanceled()) {
+    return false;
+  }
+
+  const tile = await generateTile(glInstance, tileOptions, isCanceled);
+
+  if (!tile) {
+    return false;
+  }
 
   const tileLength = tile.width * tile.height * CHANNELS;
   let tileOffset = 0;
@@ -156,6 +180,8 @@ async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams) 
     bufferOffset += tileInfo.width * CHANNELS;
     tileOffset += tile.width * CHANNELS;
   }
+
+  return true;
 }
 
 /**
@@ -164,7 +190,7 @@ async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams) 
  * @param {Object} style - GL map style (optional)
  * @return {Object} - PNG map image stream
  */
-async function generate(opts, style, isCancelled) {
+async function generate(opts, style, isCanceled) {
   const { source, options } = createSource(opts, style);
 
   const tileInfo = createTileInfo(options);
@@ -180,33 +206,47 @@ async function generate(opts, style, isCancelled) {
     throw err;
   }
 
-  console.time('Generate');
   const buffer = createBuffer(tileInfo);
   const tilePromises = [];
 
-  try {
-    for (const tileConfig of tileInfo.tiles) {
-      if (isCancelled()) {
-        outStream.destroy(new Error('Render was cancelled.'));
-        return false;
-      }
-
-      const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig);
-      tilePromises.push(tilePromise);
-    }
-
-    // Wait for all tiles to be written to the buffer
-    await Promise.all(tilePromises);
-  } catch (err) {
-    console.error('Failed generating the tiles.');
-    throw err;
+  if (isCanceled()) {
+    return false;
   }
+
+  for (const tileConfig of tileInfo.tiles) {
+    const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig, isCanceled);
+    tilePromises.push(tilePromise);
+  }
+
+  let tilesSucceeded = false;
+
+  try {
+    // Wait for all tiles to be written to the buffer. Make sure all createTile calls returned true.
+    tilesSucceeded = await pEvery(tilePromises, success => success === true);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+
+  if (!tilesSucceeded || isCanceled()) {
+    return false;
+  }
+
+  console.log('Tiles finished.');
+
   // Write the buffer to the PNG stream
   outStream.write(buffer);
+
+  // One last cancelled check...
+  if (isCanceled()) {
+    outStream.destroy(new Error('Cancelled.'));
+    return false;
+  }
+
   // And we're done!
   outStream.end();
-  console.timeEnd('Generate');
 
+  // eslint-disable-next-line consistent-return
   return { outStream, worldFile };
 }
 

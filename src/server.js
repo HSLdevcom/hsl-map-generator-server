@@ -2,17 +2,15 @@ const Koa = require('koa');
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser')({ jsonLimit: '50mb' });
 const cors = require('@koa/cors')();
+const get = require('lodash/get');
 const PCancelable = require('p-cancelable');
-const PQueue = require('p-queue');
-const pTimeout = require('p-timeout');
-const pFinally = require('p-finally');
 
 const app = new Koa();
 
 const imageGenerator = require('./imageGenerator');
 
 const PORT = 8000;
-const RENDER_TIMEOUT = 10 * 60 * 1000;
+const RENDER_TIMEOUT = 60 * 1000;
 
 const processes = new Map();
 
@@ -21,57 +19,82 @@ function createRenderKey(options) {
 }
 
 function createRenderProcess(options, style) {
-  const renderPromise = new PCancelable(async (resolve, reject, onCancel) => {
-    let isCancelled = false;
+  const process = new PCancelable((resolve, reject, onCancel) => {
+    let canceled = false;
 
     onCancel(() => {
-      isCancelled = true;
+      canceled = true;
     });
 
-    try {
-      const generated = await imageGenerator.generate(options, style, () => isCancelled);
-      resolve(generated);
-    } catch (err) {
-      reject(err);
-    }
+    imageGenerator.generate(options, style, () => canceled).then(resolve, reject);
   });
 
-  return pTimeout(
-    renderPromise,
-    RENDER_TIMEOUT,
-    new pTimeout.TimeoutError(`Render timed out after ${RENDER_TIMEOUT / 1000} seconds`)
-  );
+  return process;
 }
 
-async function processImage(options, style) {
+function processImage(options, style) {
   const key = createRenderKey(options);
   let process = processes.get(key);
 
   if (!process) {
     process = createRenderProcess(options, style);
     processes.set(key, process);
+  } else {
+    console.log('Found existing process.');
   }
-
-  pFinally(process, () => {
-    processes.delete(key);
-  });
 
   return process;
 }
 
 router.post('/generateImage', async (ctx) => {
-  ctx.request.socket.setTimeout(RENDER_TIMEOUT);
+  ctx.request.socket.setTimeout(5 * RENDER_TIMEOUT);
 
   const { options, style } = ctx.request.body;
-  const { outStream, worldFile } = await processImage(options, style);
+  const processPromise = processImage(options, style);
 
-  ctx.response.set('Access-Control-Expose-Headers', 'World-File');
-  ctx.response.set('World-File', worldFile);
-  ctx.status = 200;
-  ctx.type = 'image/png';
-  ctx.body = outStream;
+  ctx.req.on('close', () => {
+    processPromise.cancel();
+  });
 
-  outStream.on('finish', () => console.log('Done.'));
+  console.log('Map render started.');
+
+  let processResult;
+  const renderKey = createRenderKey(options);
+
+  try {
+    processResult = await processPromise;
+  } catch (err) {
+    console.log('Map render failed,', err.message);
+    processResult = false;
+  }
+
+  if (!processResult) {
+    processes.delete(renderKey);
+
+    ctx.status = 500;
+    ctx.body = 'Failed or canceled.';
+    return false;
+  }
+
+  const stream = get(processResult, 'outStream', null);
+  const world = get(processResult, 'worldFile', null);
+
+  return new Promise((resolve, reject) => {
+    stream.on('finish', () => {
+      processes.delete(renderKey);
+
+      ctx.response.set('Access-Control-Expose-Headers', 'World-File');
+      ctx.response.set('World-File', world);
+      ctx.status = 200;
+      ctx.type = 'image/png';
+      ctx.body = stream;
+
+      console.log('Done.');
+      resolve();
+    });
+
+    stream.on('error', reject);
+  });
 });
 
 app

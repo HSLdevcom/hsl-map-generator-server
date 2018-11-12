@@ -94,35 +94,63 @@ class GL {
       ratio: this._scale,
     });
 
+    this.canceled = false;
+
     const gl = this;
     setImmediate(callback, null, gl);
   }
 
-  async getStatic(options) {
+  onCanceled() {
+    this.canceled = true;
+
+    this._pool.drain().then(() => {
+      this._pool.clear();
+    });
+  }
+
+  async getStatic(options, isCanceled) {
     const that = this;
+
+    if (this.canceled) {
+      return false;
+    }
+
     const map = await this._pool.acquire();
 
+    // eslint-disable-next-line consistent-return
     return new Promise((resolve, reject) => {
-      map.render(options, (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      // First cancel check before rendering the tile
+      if (isCanceled()) {
+        that.onCanceled();
+        reject(new Error('Render was canceled.'));
+      } else {
+        map.render(options, (err, data) => {
+          if (err) {
+            reject(err);
+            return;
+          }
 
-        that._pool.release(map);
+          // Second canceled check before returning the tile
+          if (isCanceled()) {
+            that.onCanceled();
+            reject(new Error('Render was canceled.'));
+          } else {
+            that._pool.release(map);
 
-        const width = Math.floor(options.width * that._scale);
-        const height = Math.floor(options.height * that._scale);
+            const width = Math.floor(options.width * that._scale);
+            const height = Math.floor(options.height * that._scale);
 
-        resolve({
-          data,
-          info: {
-            width,
-            height,
-            channels: 4,
-          },
+            resolve({
+              data,
+              info: {
+                width,
+                height,
+                channels: 4,
+              },
+            });
+          }
         });
-      });
+      }
     });
   }
 }
