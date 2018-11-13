@@ -109,8 +109,6 @@ class GL {
   }
 
   async getStatic(options, isCanceled) {
-    const that = this;
-
     if (this.canceled) {
       return false;
     }
@@ -121,7 +119,7 @@ class GL {
     return new Promise((resolve, reject) => {
       // First cancel check before rendering the tile
       if (isCanceled()) {
-        that.onCanceled();
+        this.onCanceled();
         reject(new Error('Render was canceled.'));
       } else {
         map.render(options, (err, data) => {
@@ -132,13 +130,13 @@ class GL {
 
           // Second canceled check before returning the tile
           if (isCanceled()) {
-            that.onCanceled();
+            this.onCanceled();
             reject(new Error('Render was canceled.'));
           } else {
-            that._pool.release(map);
+            this._pool.release(map);
 
-            const width = Math.floor(options.width * that._scale);
-            const height = Math.floor(options.height * that._scale);
+            const width = Math.floor(options.width * this._scale);
+            const height = Math.floor(options.height * this._scale);
 
             resolve({
               data,
