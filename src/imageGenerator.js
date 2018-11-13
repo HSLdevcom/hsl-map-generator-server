@@ -237,8 +237,10 @@ async function generate(opts, style, isCanceled) {
     tilesSucceeded = await pEvery(tilePromises, success => success === true);
   } catch (err) {
     console.log(err);
-    return false;
   }
+
+  // Drain the mapbox-gl pool so that we don't leave zombie pools hanging around.
+  await glInstance.clearPool();
 
   // tilesSucceeded is false if some createTile calls returned false.
   // This indicates either that the process was cancelled or some other

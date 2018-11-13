@@ -22,7 +22,9 @@ function pool(style, options) {
     create,
     destroy,
   }, {
-    max: N_CPUS,
+    max: N_CPUS < 10 ? 10 : N_CPUS, // Minimum of 10 instances
+    min: 1,
+    evictionRunIntervalMillis: 1000 * 60, // Clean idle instances every minute
   });
 }
 
@@ -100,16 +102,17 @@ class GL {
     setImmediate(callback, null, gl);
   }
 
-  onCanceled() {
+  clearPool() {
     this.canceled = true;
 
-    this._pool.drain().then(() => {
+    return this._pool.drain().then(() => {
       this._pool.clear();
+      this._pool = null;
     });
   }
 
   async getStatic(options, isCanceled) {
-    if (this.canceled) {
+    if (this.canceled || !this._pool) {
       return false;
     }
 
@@ -119,7 +122,7 @@ class GL {
     return new Promise((resolve, reject) => {
       // First cancel check before rendering the tile
       if (isCanceled()) {
-        this.onCanceled();
+        this.clearPool();
         reject(new Error('Render was canceled.'));
       } else {
         map.render(options, (err, data) => {
@@ -130,7 +133,7 @@ class GL {
 
           // Second canceled check before returning the tile
           if (isCanceled()) {
-            this.onCanceled();
+            this.clearPool();
             reject(new Error('Render was canceled.'));
           } else {
             this._pool.release(map);
