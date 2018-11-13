@@ -12,20 +12,28 @@ const imageGenerator = require('./imageGenerator');
 const PORT = 8000;
 const RENDER_TIMEOUT = 60 * 1000;
 
+// Record all render processes in this map.
 const processes = new Map();
 
+// Simple way to create a string that identifies the render process.
+// This should be considered opaque through the rest of the script,
+// so the implementation of this function can change as needed.
 function createRenderKey(options) {
   return JSON.stringify(options);
 }
 
 function createRenderProcess(options, style) {
+  // Create a cancelable promise.
   const process = new PCancelable((resolve, reject, onCancel) => {
     let canceled = false;
 
+    // The cancellation works with a simple flag. The render process will check the status during
+    // every iteration of it's loop using the isCanceled callback argument.
     onCancel(() => {
       canceled = true;
     });
 
+    // Kick off the render process and integrate the promise into the cancelable promise.
     imageGenerator.generate(options, style, () => canceled).then(resolve, reject);
   });
 
@@ -33,38 +41,67 @@ function createRenderProcess(options, style) {
 }
 
 function getRenderProcess(options, style) {
+  // Create a key with which we can find an ongoing render process.
   const key = createRenderKey(options);
   let process = processes.get(key);
 
   if (!process) {
-    process = createRenderProcess(options, style);
+    // Create a new process if none was found. This should happen in the vast majority of cases.
+    process = { promise: createRenderProcess(options, style), clients: 1 };
+    // Remember this process under this key.
     processes.set(key, process);
   } else {
-    console.log('Found existing process.');
+    // Bump the client count on the existing process and update the record.
+    process.clients += 1;
+    processes.set(key, process);
   }
 
-  return process;
+  return process.promise;
+}
+
+function removeRenderProcess(options) {
+  // The key identifies the render process.
+  const key = createRenderKey(options);
+  const process = processes.get(key);
+
+  if (process) {
+    // Decrease the client count
+    process.clients -= 1;
+
+    // If this was the last client, just delete the process.
+    if (process.clients <= 0) {
+      processes.delete(key);
+    } else {
+      // Else, update the process record.
+      processes.set(key, process);
+    }
+  }
 }
 
 router.post('/generateImage', async (ctx) => {
-  // 5 seconds timeout
+  // 5 minutes timeout
   ctx.request.socket.setTimeout(5 * RENDER_TIMEOUT);
+  let requestClosed = false;
 
   const { options, style } = ctx.request.body;
   // Creates a new render process or finds one that is already started on this server.
   const processPromise = getRenderProcess(options, style);
 
   // If the client disconnects, cancel the process.
-  // TODO: Make sure that other client's weren't using the process...
   ctx.req.on('close', () => {
-    processPromise.cancel();
+    requestClosed = true;
+    const key = createRenderKey(options);
+    const process = processes.get(key);
+
+    if (get(process, 'clients', 1) === 1) {
+      console.log('Only client, cancelling.');
+      process.promise.cancel();
+    }
   });
 
   console.log('Map render started.');
 
   let processResult;
-  // The render key is used for looking up a process from the process map.
-  const renderKey = createRenderKey(options);
 
   try {
     // Await the promise to get the result
@@ -75,10 +112,12 @@ router.post('/generateImage', async (ctx) => {
   }
 
   // If the result is false, the render process failed or was cancelled.
-  if (!processResult) {
+  if (!processResult || requestClosed) {
     // Make sure to delete the process from the map.
-    processes.delete(renderKey);
+    removeRenderProcess(options);
 
+    // If the request was cancelled, it doesn't really matter what we respond with.
+    // Just make it something sensible in case it failed for other reasons.
     ctx.status = 500;
     ctx.body = 'Failed or canceled.';
     return false;
@@ -91,15 +130,20 @@ router.post('/generateImage', async (ctx) => {
   return new Promise((resolve, reject) => {
     stream.on('finish', () => {
       // Clean up the process from the map, we don't need these hanging around.
-      processes.delete(renderKey);
+      removeRenderProcess(options);
 
-      ctx.response.set('Access-Control-Expose-Headers', 'World-File');
-      ctx.response.set('World-File', world);
-      ctx.status = 200;
-      ctx.type = 'image/png';
-      ctx.body = stream; // Send the PNG stream to the client.
+      if (!requestClosed) {
+        ctx.response.set('Access-Control-Expose-Headers', 'World-File');
+        ctx.response.set('World-File', world);
+        ctx.status = 200;
+        ctx.type = 'image/png';
+        ctx.body = stream; // Send the PNG stream to the client.
 
-      console.log('Done.');
+        console.log('Done.');
+      } else {
+        console.log('Render finished but request was closed.');
+      }
+
       resolve(); // Resolve to tell Koa that you're done.
     });
 
