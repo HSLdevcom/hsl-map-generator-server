@@ -32,7 +32,7 @@ function createRenderProcess(options, style) {
   return process;
 }
 
-function processImage(options, style) {
+function getRenderProcess(options, style) {
   const key = createRenderKey(options);
   let process = processes.get(key);
 
@@ -47,11 +47,15 @@ function processImage(options, style) {
 }
 
 router.post('/generateImage', async (ctx) => {
+  // 5 seconds timeout
   ctx.request.socket.setTimeout(5 * RENDER_TIMEOUT);
 
   const { options, style } = ctx.request.body;
-  const processPromise = processImage(options, style);
+  // Creates a new render process or finds one that is already started on this server.
+  const processPromise = getRenderProcess(options, style);
 
+  // If the client disconnects, cancel the process.
+  // TODO: Make sure that other client's weren't using the process...
   ctx.req.on('close', () => {
     processPromise.cancel();
   });
@@ -59,16 +63,20 @@ router.post('/generateImage', async (ctx) => {
   console.log('Map render started.');
 
   let processResult;
+  // The render key is used for looking up a process from the process map.
   const renderKey = createRenderKey(options);
 
   try {
+    // Await the promise to get the result
     processResult = await processPromise;
   } catch (err) {
     console.log('Map render failed,', err.message);
     processResult = false;
   }
 
+  // If the result is false, the render process failed or was cancelled.
   if (!processResult) {
+    // Make sure to delete the process from the map.
     processes.delete(renderKey);
 
     ctx.status = 500;
@@ -79,21 +87,23 @@ router.post('/generateImage', async (ctx) => {
   const stream = get(processResult, 'outStream', null);
   const world = get(processResult, 'worldFile', null);
 
+  // Promisify the stream state
   return new Promise((resolve, reject) => {
     stream.on('finish', () => {
+      // Clean up the process from the map, we don't need these hanging around.
       processes.delete(renderKey);
 
       ctx.response.set('Access-Control-Expose-Headers', 'World-File');
       ctx.response.set('World-File', world);
       ctx.status = 200;
       ctx.type = 'image/png';
-      ctx.body = stream;
+      ctx.body = stream; // Send the PNG stream to the client.
 
       console.log('Done.');
-      resolve();
+      resolve(); // Resolve to tell Koa that you're done.
     });
 
-    stream.on('error', reject);
+    stream.on('error', reject); // Notify Koa that everything isn't OK if the stream errored.
   });
 });
 

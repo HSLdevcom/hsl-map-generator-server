@@ -50,6 +50,8 @@ function initGl(source) {
   });
 }
 
+// Generates the tile and returns the image buffer (along with info) on completion,
+// or false if there was an issue like process cancellation,
 async function generateTile(glInstance, options, isCanceled) {
   const opts = Object.assign({}, options, { format: 'raw' });
   let generated;
@@ -147,6 +149,7 @@ function createTileInfo(options) {
   };
 }
 
+// Creates a buffer with space for the pixels of the requested image size.
 function createBuffer(tileInfo) {
   const bufferLength = tileInfo.width * tileInfo.height * CHANNELS;
   return Buffer.allocUnsafe(bufferLength);
@@ -157,6 +160,8 @@ function createOutStream(tileInfo) {
   return new PNGEncoder(width, height, { colorSpace: 'rgba' });
 }
 
+// Generate the map tile and write it to the buffer.
+// Return true when the tile was written to the buffer successfully, false if cancelled.
 async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams, isCanceled) {
   const tileOptions = Object.assign({}, mapOptions, tileParams.options);
 
@@ -207,12 +212,19 @@ async function generate(opts, style, isCanceled) {
   }
 
   const buffer = createBuffer(tileInfo);
+  // The promises collected here will resolve as the tiles
+  // are written to the image buffer. The resolved value
+  // of the promises indicates if the tile was
+  // successfully written to the buffer.
   const tilePromises = [];
 
   if (isCanceled()) {
     return false;
   }
 
+  // createTile returns true if the tile was successfully rendered.
+  // All promises need to be true for the image to be written, if some
+  // are false it means that the process was cancelled.
   for (const tileConfig of tileInfo.tiles) {
     const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig, isCanceled);
     tilePromises.push(tilePromise);
@@ -228,6 +240,9 @@ async function generate(opts, style, isCanceled) {
     return false;
   }
 
+  // tilesSucceeded is false if some createTile calls returned false.
+  // This indicates either that the process was cancelled or some other
+  // error occured when generating the tile.
   if (!tilesSucceeded || isCanceled()) {
     return false;
   }
@@ -246,7 +261,6 @@ async function generate(opts, style, isCanceled) {
   // And we're done!
   outStream.end();
 
-  // eslint-disable-next-line consistent-return
   return { outStream, worldFile };
 }
 
