@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const router = require('koa-router')();
-const bodyParser = require('koa-bodyparser')({ jsonLimit: '50mb' });
-const cors = require('@koa/cors')();
+const bodyParser = require('koa-bodyparser');
+const cors = require('@koa/cors');
 const get = require('lodash/get');
 const PCancelable = require('p-cancelable');
 
@@ -152,8 +152,8 @@ router.post('/generateImage', async (ctx) => {
 });
 
 app
-  .use(cors)
-  .use(bodyParser)
+  .use(cors({ origin: '*' }))
+  .use(bodyParser({ jsonLimit: '50mb' }))
   .use(router.routes())
   .use(router.allowedMethods())
   .listen(PORT, () => console.log(`Listening at port ${PORT}`)); // eslint-disable-line no-console
