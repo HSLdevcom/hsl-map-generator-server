@@ -1,8 +1,9 @@
-const tilelive = require('tilelive');
-const tileliveGl = require('tilelive-gl');
+const tilelive = require('@mapbox/tilelive');
+const tileliveGl = require('./tileliveMapbox');
 const PNGEncoder = require('png-stream').Encoder;
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
+const pEvery = require('p-every');
 
 const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
@@ -49,18 +50,26 @@ function initGl(source) {
   });
 }
 
-function generateTile(glInstance, options) {
+// Generates the tile and returns the image buffer (along with info) on completion,
+// or false if there was an issue like process cancellation,
+async function generateTile(glInstance, options, isCanceled) {
   const opts = Object.assign({}, options, { format: 'raw' });
-  return new Promise((resolve, reject) => {
-    const callback = (error, data, info) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(Object.assign({}, info, { data }));
-      }
+  let generated;
+
+  try {
+    generated = await glInstance.getStatic.call(glInstance, opts, isCanceled);
+  } catch (err) {
+    return false;
+  }
+
+  if (generated) {
+    return {
+      ...generated.info,
+      data: generated.data,
     };
-    glInstance.getStatic.bind(glInstance)(opts, callback, true);
-  });
+  }
+
+  return false;
 }
 
 function createWorldFile(tileInfo) {
@@ -120,7 +129,8 @@ function createTileInfo(options) {
           width: widthOption,
           height: heightOption,
         },
-        offset: x * tileWidth,
+        x,
+        y,
       });
     }
   }
@@ -139,44 +149,44 @@ function createTileInfo(options) {
   };
 }
 
+// Creates a buffer with space for the pixels of the requested image size.
 function createBuffer(tileInfo) {
-  const bufferLength = tileInfo.width * tileInfo.tileHeight * CHANNELS;
-  return Buffer.alloc(bufferLength);
+  const bufferLength = tileInfo.width * tileInfo.height * CHANNELS;
+  return Buffer.allocUnsafe(bufferLength);
 }
 
 function createOutStream(tileInfo) {
-  const width = tileInfo.tileWidth * tileInfo.tileCountX;
-  const height = tileInfo.tileHeight * tileInfo.tileCountY;
+  const { width, height } = tileInfo;
   return new PNGEncoder(width, height, { colorSpace: 'rgba' });
 }
 
-function addTile(buffer, glInstance, mapOptions, tileInfo, tileIndex) {
-  const tileParams = tileInfo.tiles[tileIndex];
+// Generate the map tile and write it to the buffer.
+// Return true when the tile was written to the buffer successfully, false if cancelled.
+async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams, isCanceled) {
   const tileOptions = Object.assign({}, mapOptions, tileParams.options);
 
-  return generateTile(glInstance, tileOptions).then((tile) => {
-    const tileLength = tile.width * tile.height * tile.channels;
-    let tileOffset = 0;
-    let bufferOffset = tileParams.offset * CHANNELS;
-
-    while (tileOffset < tileLength) {
-      tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
-      bufferOffset += tileInfo.width * CHANNELS;
-      tileOffset += tile.width * CHANNELS;
-    }
-  });
-}
-
-function generateRow(glInstance, options, outStream, tileInfo, rowIndex) {
-  let prev;
-  const buffer = createBuffer(tileInfo, rowIndex);
-  for (let x = 0; x < tileInfo.tileCountX; x += 1) {
-    const tileIndex = (rowIndex * tileInfo.tileCountX) + x;
-    const next = () => addTile(buffer, glInstance, options, tileInfo, tileIndex);
-    prev = prev ? prev.then(next) : next();
+  if (isCanceled()) {
+    return false;
   }
-  prev = prev.then(() => outStream.write(buffer));
-  return prev;
+
+  const tile = await generateTile(glInstance, tileOptions, isCanceled);
+
+  if (!tile) {
+    return false;
+  }
+
+  const tileLength = tile.width * tile.height * CHANNELS;
+  let tileOffset = 0;
+  let bufferOffset =
+    ((tileInfo.width * (tileParams.y * tile.height)) + (tileParams.x * tile.width)) * CHANNELS;
+
+  while (tileOffset < tileLength) {
+    tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
+    bufferOffset += tileInfo.width * CHANNELS;
+    tileOffset += tile.width * CHANNELS;
+  }
+
+  return true;
 }
 
 /**
@@ -185,25 +195,73 @@ function generateRow(glInstance, options, outStream, tileInfo, rowIndex) {
  * @param {Object} style - GL map style (optional)
  * @return {Object} - PNG map image stream
  */
-function generate(opts, style) {
+async function generate(opts, style, isCanceled) {
   const { source, options } = createSource(opts, style);
 
   const tileInfo = createTileInfo(options);
   const worldFile = createWorldFile(tileInfo);
   const outStream = createOutStream(tileInfo);
 
-  initGl(source).then((glInstance) => {
-    let prev;
-    for (let y = 0; y < tileInfo.tileCountY; y += 1) {
-      const next = () => generateRow(glInstance, options, outStream, tileInfo, y);
-      prev = prev ? prev.then(next) : next();
-    }
-    return prev.then(() => {
-      outStream.end();
-    });
-  }).catch((error) => {
-    console.log(error); // eslint-disable-line no-console
-  });
+  let glInstance;
+
+  try {
+    glInstance = await initGl(source);
+  } catch (err) {
+    console.error('Failed initializing the Mapbox GL instance.');
+    throw err;
+  }
+
+  const buffer = createBuffer(tileInfo);
+  // The promises collected here will resolve as the tiles
+  // are written to the image buffer. The resolved value
+  // of the promises indicates if the tile was
+  // successfully written to the buffer.
+  const tilePromises = [];
+
+  if (isCanceled()) {
+    return false;
+  }
+
+  // createTile returns true if the tile was successfully rendered.
+  // All promises need to be true for the image to be written, if some
+  // are false it means that the process was cancelled.
+  for (const tileConfig of tileInfo.tiles) {
+    const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig, isCanceled);
+    tilePromises.push(tilePromise);
+  }
+
+  let tilesSucceeded = false;
+
+  try {
+    // Wait for all tiles to be written to the buffer. Make sure all createTile calls returned true.
+    tilesSucceeded = await pEvery(tilePromises, success => success === true);
+  } catch (err) {
+    console.log(err);
+  }
+
+  // Drain the mapbox-gl pool so that we don't leave zombie pools hanging around.
+  await glInstance.clearPool();
+
+  // tilesSucceeded is false if some createTile calls returned false.
+  // This indicates either that the process was cancelled or some other
+  // error occured when generating the tile.
+  if (!tilesSucceeded || isCanceled()) {
+    return false;
+  }
+
+  console.log('Tiles finished.');
+
+  // Write the buffer to the PNG stream
+  outStream.write(buffer);
+
+  // One last cancelled check...
+  if (isCanceled()) {
+    outStream.destroy(new Error('Cancelled.'));
+    return false;
+  }
+
+  // And we're done!
+  outStream.end();
 
   return { outStream, worldFile };
 }
