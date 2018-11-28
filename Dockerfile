@@ -13,13 +13,13 @@ WORKDIR ${WORK}
 
 # Install app dependencies
 COPY package.json ${WORK}
-COPY package-lock.json ${WORK}
-RUN npm install
+COPY yarn.lock ${WORK}
+RUN yarn
 
 # Bundle app source
 COPY . ${WORK}
 
-RUN npm run lint
+RUN yarn run lint
 
 EXPOSE 8000
 
