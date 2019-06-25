@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:8
 
 RUN echo "deb http://ftp.us.debian.org/debian testing main" >> /etc/apt/sources.list
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq -t testing gcc-6
