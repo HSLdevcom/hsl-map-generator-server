@@ -91,13 +91,13 @@ router.post('/generateImage', async ctx => {
   ctx.req.on('close', () => {
     requestClosed = true;
 
-    const key = createRenderKey(options);
+    /*const key = createRenderKey(options);
     const process = processes.get(key);
 
     if (get(process, 'clients', 1) === 1) {
       console.log('Only client, cancelling.');
       process.promise.cancel();
-    }
+    }*/
   });
 
   console.log('Map render started.');
