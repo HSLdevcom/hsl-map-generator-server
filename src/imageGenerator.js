@@ -73,9 +73,7 @@ async function generateTile(glInstance, options, isCanceled) {
 }
 
 function createWorldFile(tileInfo) {
-  const {
-    width, height, viewport, viewportWidth, viewportHeight,
-  } = tileInfo;
+  const { width, height, viewport, viewportWidth, viewportHeight } = tileInfo;
 
   const topLeft = viewport.unproject([0, 0]);
   const bottomRight = viewport.unproject([viewportWidth, viewportHeight]);
@@ -86,8 +84,8 @@ function createWorldFile(tileInfo) {
   const widthOfPixel = (right - left) / width;
   const heightOfPixel = (bottom - top) / height;
 
-  const centerOfLeftPixel = left + (widthOfPixel / 2);
-  const centerOfTopPixel = top - (heightOfPixel / 2);
+  const centerOfLeftPixel = left + widthOfPixel / 2;
+  const centerOfTopPixel = top - heightOfPixel / 2;
 
   return `${widthOfPixel}|0|0|${heightOfPixel}|${centerOfLeftPixel}|${centerOfTopPixel}|`;
 }
@@ -119,10 +117,7 @@ function createTileInfo(options) {
   const tiles = [];
   for (let y = 0; y < tileCountY; y += 1) {
     for (let x = 0; x < tileCountX; x += 1) {
-      const center = [
-        (x * widthOption) + (widthOption / 2),
-        (y * heightOption) + (heightOption / 2),
-      ];
+      const center = [x * widthOption + widthOption / 2, y * heightOption + heightOption / 2];
       tiles.push({
         options: {
           center: viewport.unproject(center),
@@ -178,10 +173,10 @@ async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams, 
   const tileLength = tile.width * tile.height * CHANNELS;
   let tileOffset = 0;
   let bufferOffset =
-    ((tileInfo.width * (tileParams.y * tile.height)) + (tileParams.x * tile.width)) * CHANNELS;
+    (tileInfo.width * (tileParams.y * tile.height) + tileParams.x * tile.width) * CHANNELS;
 
   while (tileOffset < tileLength) {
-    tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + (tile.width * CHANNELS));
+    tile.data.copy(buffer, bufferOffset, tileOffset, tileOffset + tile.width * CHANNELS);
     bufferOffset += tileInfo.width * CHANNELS;
     tileOffset += tile.width * CHANNELS;
   }

@@ -3,8 +3,7 @@ const request = require('requestretry');
 const url = require('url');
 const fs = require('fs');
 const { createPool } = require('generic-pool');
-const N_CPUS = require('os')
-  .cpus().length;
+const N_CPUS = require('os').cpus().length;
 
 function pool(style, options) {
   async function create() {
@@ -18,14 +17,17 @@ function pool(style, options) {
     return true;
   }
 
-  return createPool({
-    create,
-    destroy,
-  }, {
-    max: N_CPUS < 10 ? 10 : N_CPUS, // Minimum of 10 instances
-    min: 1,
-    evictionRunIntervalMillis: 1000 * 60, // Clean idle instances every minute
-  });
+  return createPool(
+    {
+      create,
+      destroy,
+    },
+    {
+      max: N_CPUS < 10 ? 10 : N_CPUS, // Minimum of 10 instances
+      min: 1,
+      evictionRunIntervalMillis: 1000 * 60, // Clean idle instances every minute
+    },
+  );
 }
 
 function mbglRequest(req, callback) {
@@ -59,20 +61,35 @@ function mbglRequest(req, callback) {
           console.error(err, opts);
           callback(err);
         }
-      } else if (res == undefined) { // eslint-disable-line eqeqeq
+      } else if (res == undefined) {
+        // eslint-disable-line eqeqeq
         callback(null, { data: Buffer.alloc(0) });
-      } else if (res.statusCode == 200) { // eslint-disable-line eqeqeq
-        if (res.headers.modified) { response.modified = new Date(res.headers.modified); }
-        if (res.headers.expires) { response.expires = new Date(res.headers.expires); }
-        if (res.headers.etag) { response.etag = res.headers.etag; }
+      } else if (res.statusCode == 200) {
+        // eslint-disable-line eqeqeq
+        if (res.headers.modified) {
+          response.modified = new Date(res.headers.modified);
+        }
+        if (res.headers.expires) {
+          response.expires = new Date(res.headers.expires);
+        }
+        if (res.headers.etag) {
+          response.etag = res.headers.etag;
+        }
 
         response.data = body;
 
         callback(null, response);
-      } else if (res.statusCode == 404) { // eslint-disable-line eqeqeq
-        if (res.headers.modified) { response.modified = new Date(res.headers.modified); }
-        if (res.headers.expires) { response.expires = new Date(res.headers.expires); }
-        if (res.headers.etag) { response.etag = res.headers.etag; }
+      } else if (res.statusCode == 404) {
+        // eslint-disable-line eqeqeq
+        if (res.headers.modified) {
+          response.modified = new Date(res.headers.modified);
+        }
+        if (res.headers.expires) {
+          response.expires = new Date(res.headers.expires);
+        }
+        if (res.headers.etag) {
+          response.etag = res.headers.etag;
+        }
 
         response.data = Buffer.alloc(0);
 
@@ -86,7 +103,8 @@ function mbglRequest(req, callback) {
 
 class GL {
   constructor(options, callback) {
-    if (!options || (typeof options !== 'object' && typeof options !== 'string')) return callback(new Error('options must be an object or a string'));
+    if (!options || (typeof options !== 'object' && typeof options !== 'string'))
+      return callback(new Error('options must be an object or a string'));
     if (!options.style) return callback(new Error('Missing GL style JSON'));
 
     this._scale = options.query.scale || 1;
@@ -157,7 +175,7 @@ class GL {
 }
 
 module.exports = GL;
-module.exports.registerProtocols = function (tilelive) {
+module.exports.registerProtocols = function(tilelive) {
   // eslint-disable-next-line no-param-reassign
   tilelive.protocols['gl:'] = GL;
 };
