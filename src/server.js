@@ -100,6 +100,7 @@ router.post('/generateImage', async ctx => {
     }*/
   });
 
+  // eslint-disable-next-line no-console
   console.log('Map render started.');
 
   let processResult;
@@ -108,6 +109,7 @@ router.post('/generateImage', async ctx => {
     // Await the promise to get the result
     processResult = await processPromise;
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log('Map render failed,', err.message);
     processResult = false;
   }
@@ -140,8 +142,10 @@ router.post('/generateImage', async ctx => {
         ctx.type = 'image/png';
         ctx.body = stream; // Send the PNG stream to the client.
 
+        // eslint-disable-next-line no-console
         console.log('Done.');
       } else {
+        // eslint-disable-next-line no-console
         console.log('Render finished but request was closed.');
       }
 

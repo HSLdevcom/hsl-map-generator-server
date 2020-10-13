@@ -58,13 +58,14 @@ function mbglRequest(req, callback) {
         if (err.code === 'Z_BUF_ERROR') {
           callback(null, { data: Buffer.alloc(0) });
         } else {
+          // eslint-disable-next-line no-console
           console.error(err, opts);
           callback(err);
         }
-      } else if (res == undefined) {
+      } else if (res === undefined) {
         // eslint-disable-line eqeqeq
         callback(null, { data: Buffer.alloc(0) });
-      } else if (res.statusCode == 200) {
+      } else if (res.statusCode === 200) {
         // eslint-disable-line eqeqeq
         if (res.headers.modified) {
           response.modified = new Date(res.headers.modified);
@@ -79,7 +80,7 @@ function mbglRequest(req, callback) {
         response.data = body;
 
         callback(null, response);
-      } else if (res.statusCode == 404) {
+      } else if (res.statusCode === 404) {
         // eslint-disable-line eqeqeq
         if (res.headers.modified) {
           response.modified = new Date(res.headers.modified);
@@ -175,6 +176,7 @@ class GL {
 }
 
 module.exports = GL;
+// eslint-disable-next-line func-names
 module.exports.registerProtocols = function(tilelive) {
   // eslint-disable-next-line no-param-reassign
   tilelive.protocols['gl:'] = GL;

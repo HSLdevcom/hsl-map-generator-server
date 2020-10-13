@@ -1,9 +1,9 @@
 const tilelive = require('@mapbox/tilelive');
-const tileliveGl = require('./tileliveMapbox');
 const PNGEncoder = require('png-stream').Encoder;
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
 const pEvery = require('p-every');
+const tileliveGl = require('./tileliveMapbox');
 
 const MAX_TILE_SIZE = 2000;
 const CHANNELS = 4;
@@ -202,6 +202,7 @@ async function generate(opts, style, isCanceled) {
   try {
     glInstance = await initGl(source);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('Failed initializing the Mapbox GL instance.');
     throw err;
   }
@@ -231,6 +232,7 @@ async function generate(opts, style, isCanceled) {
     // Wait for all tiles to be written to the buffer. Make sure all createTile calls returned true.
     tilesSucceeded = await pEvery(tilePromises, success => success === true);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
   }
 
@@ -244,6 +246,7 @@ async function generate(opts, style, isCanceled) {
     return false;
   }
 
+  // eslint-disable-next-line no-console
   console.log('Tiles finished.');
 
   // Write the buffer to the PNG stream
