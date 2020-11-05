@@ -32,11 +32,10 @@ function createSource(options, style = null) {
   // The bug can be reproduced by generating a 150x150 map with generator-ui and removing the rounding below.
 
   const roundedScale = Math.round(options.scale * 10000) / 10000;
-  options.scale = roundedScale;
   const glSource = {
     protocol: 'gl:',
     style,
-    query: { scale: options.scale || defaultOptions.scale },
+    query: { scale: roundedScale || defaultOptions.scale },
   };
 
   const glOptions = Object.assign({}, defaultOptions, options);
