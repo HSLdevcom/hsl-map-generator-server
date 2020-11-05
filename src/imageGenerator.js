@@ -27,6 +27,12 @@ const defaultOptions = {
  * @return {Promise} - TileLive source and options
  */
 function createSource(options, style = null) {
+  // When the generated map is small enough, repeating decimals in scale parameter create a problem when copying the data to buffer later.
+  // This happens in the createTile function where tile.data.copy is used. A RangeError: out of range index is thrown.
+  // The bug can be reproduced by generating a 150x150 map with generator-ui and removing the rounding below.
+
+  const roundedScale = Math.round(options.scale * 10000) / 10000;
+  options.scale = roundedScale;
   const glSource = {
     protocol: 'gl:',
     style,
