@@ -1,9 +1,9 @@
 FROM node:8
 
 RUN echo "deb http://ftp.us.debian.org/debian testing main" >> /etc/apt/sources.list
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq -t testing gcc-6
-
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgl1-mesa-glx libgl1-mesa-dri libgles2-mesa xserver-xorg-video-dummy -o APT::Immediate-Configure=0
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq -t testing gcc-6 --no-install-recommends \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgl1-mesa-glx libgl1-mesa-dri libgles2-mesa xserver-xorg-video-dummy -o APT::Immediate-Configure=0 --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV WORK /opt/mapgenerator
 
@@ -12,9 +12,8 @@ RUN mkdir -p ${WORK}
 WORKDIR ${WORK}
 
 # Install app dependencies
-COPY package.json ${WORK}
-COPY yarn.lock ${WORK}
-RUN yarn
+COPY package.json yarn.lock ${WORK}
+RUN yarn && yarn cache clean
 
 # Bundle app source
 COPY . ${WORK}
