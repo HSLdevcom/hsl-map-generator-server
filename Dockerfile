@@ -12,7 +12,7 @@ RUN mkdir -p ${WORK}
 WORKDIR ${WORK}
 
 # Install app dependencies
-COPY package.json yarn.lock ${WORK}
+COPY package.json yarn.lock ${WORK}/
 RUN yarn && yarn cache clean
 
 # Bundle app source

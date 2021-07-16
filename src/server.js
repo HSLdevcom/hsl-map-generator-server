@@ -4,6 +4,7 @@ const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const get = require('lodash/get');
 const PCancelable = require('p-cancelable');
+const stringHash = require('string-hash');
 
 const app = new Koa();
 
@@ -15,11 +16,12 @@ const RENDER_TIMEOUT = 60 * 1000;
 // Record all render processes in this map.
 const processes = new Map();
 
-// Simple way to create a string that identifies the render process.
-// This should be considered opaque through the rest of the script,
-// so the implementation of this function can change as needed.
-function createRenderKey(options) {
-  return JSON.stringify(options);
+// Key is the hash of the string representation of options and style.
+// If they'll be the same, it's safe to use the same rendering process.
+// Earlier this was just the stringified options, but there were problems
+// if the area was the same but the styles were different.
+function createRenderKey(options, style) {
+  return stringHash(JSON.stringify(options) + JSON.stringify(style));
 }
 
 function createRenderProcess(options, style) {
@@ -42,7 +44,7 @@ function createRenderProcess(options, style) {
 
 function getRenderProcess(options, style) {
   // Create a key with which we can find an ongoing render process.
-  const key = createRenderKey(options);
+  const key = createRenderKey(options, style);
   let process = processes.get(key);
 
   if (!process) {
@@ -59,9 +61,9 @@ function getRenderProcess(options, style) {
   return process.promise;
 }
 
-function removeRenderProcess(options) {
+function removeRenderProcess(options, style) {
   // The key identifies the render process.
-  const key = createRenderKey(options);
+  const key = createRenderKey(options, style);
   const process = processes.get(key);
 
   if (process) {
@@ -117,7 +119,7 @@ router.post('/generateImage', async ctx => {
   // If the result is false, the render process failed or was cancelled.
   if (!processResult || requestClosed) {
     // Make sure to delete the process from the map.
-    removeRenderProcess(options);
+    removeRenderProcess(options, style);
 
     // If the request was cancelled, it doesn't really matter what we respond with.
     // Just make it something sensible in case it failed for other reasons.
@@ -133,7 +135,7 @@ router.post('/generateImage', async ctx => {
   return new Promise((resolve, reject) => {
     stream.on('finish', () => {
       // Clean up the process from the map, we don't need these hanging around.
-      removeRenderProcess(options);
+      removeRenderProcess(options, style);
 
       if (!requestClosed) {
         ctx.response.set('Access-Control-Expose-Headers', 'World-File');
