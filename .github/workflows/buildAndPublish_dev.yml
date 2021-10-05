@@ -25,7 +25,7 @@ jobs:
           images: hsldevcom/hsl-map-publisher
 
       - name: Build and push
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
