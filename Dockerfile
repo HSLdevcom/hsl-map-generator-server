@@ -1,8 +1,6 @@
-FROM node:8
+FROM node:8-stretch
 
-RUN echo "deb http://ftp.us.debian.org/debian testing main" >> /etc/apt/sources.list
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq -t testing gcc-6 --no-install-recommends \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgl1-mesa-glx libgl1-mesa-dri libgles2-mesa xserver-xorg-video-dummy -o APT::Immediate-Configure=0 --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgl1-mesa-glx libgl1-mesa-dri libgles2-mesa xserver-xorg-video-dummy --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 ENV WORK /opt/mapgenerator
