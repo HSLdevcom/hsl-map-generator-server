@@ -1,4 +1,4 @@
-FROM node:8-stretch
+FROM node:8-buster-slim
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgl1-mesa-glx libgl1-mesa-dri libgles2-mesa xserver-xorg-video-dummy --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
