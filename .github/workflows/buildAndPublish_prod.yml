@@ -22,13 +22,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: hsldevcom/hsl-map-publisher
+          images: hsldevcom/hsl-map-generator-server
 
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
-          name: hsldevcom/hsl-map-publisher
+          name: hsldevcom/hsl-map-generator-server
           push: ${{ github.event_name == 'push' }}
-          tags: hsldevcom/hsl-map-publisher:production
+          tags: hsldevcom/hsl-map-generator-server:production
           labels: ${{ steps.meta.outputs.labels }}
