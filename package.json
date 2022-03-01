@@ -44,7 +44,7 @@
     "png-stream": "^1.0.4",
     "proj4": "^2.5.0",
     "request": "^2.88.0",
-    "requestretry": "^3.0.2",
+    "requestretry": "^7.0.0",
     "string-hash": "^1.1.3",
     "viewport-mercator-project": "^2.1.0"
   }
