@@ -26,14 +26,14 @@
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.0",
-    "forever": "^4.0.1",
     "nodemon": "^1.14.7",
     "prettier": "^1.18.2"
   },
   "dependencies": {
     "@koa/cors": "^2.2.1",
-    "@mapbox/mapbox-gl-native": "^4.2.0",
-    "@mapbox/tilelive": "^6.0.0",
+    "@mapbox/mapbox-gl-native": "^5.0.2",
+    "@mapbox/tilelive": "^6.1.0",
+    "forever": "<=4.0.2",
     "generic-pool": "^3.4.2",
     "koa": "^2.4.1",
     "koa-bodyparser": "^3.2.0",
