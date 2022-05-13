@@ -18,6 +18,7 @@ const defaultOptions = {
   scale: 1,
   pitch: 0,
   bearing: 0,
+  bufferWidth: 5,
 };
 
 /**
@@ -35,7 +36,10 @@ function createSource(options, style = null) {
   const glSource = {
     protocol: 'gl:',
     style,
-    query: { scale: roundedScale || defaultOptions.scale },
+    query: {
+      scale: roundedScale || defaultOptions.scale,
+      bufferWidth: options.bufferWidth || defaultOptions.bufferWidth,
+    },
   };
 
   const glOptions = Object.assign({}, defaultOptions, options);
