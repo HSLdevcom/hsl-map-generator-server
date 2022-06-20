@@ -23,7 +23,5 @@ EXPOSE 8000
 CMD \
   cd ${WORK} && \
   Xorg -dpi 96 -nolisten tcp -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./10.log -config ./xorg.conf :10 & \
-  sleep 15 && \
-  DISPLAY=":10" node_modules/.bin/forever start -c "npm start" ./ && \
-  sleep 10 && \
-  node_modules/.bin/forever logs -f 0
+  DISPLAY=":10" yarn forever start -c "yarn start" ./ && \
+  yarn forever logs -f 0
