@@ -15,7 +15,6 @@ const RENDER_TIMEOUT = 60 * 1000;
 
 // Record all render processes in this map.
 const processes = new Map();
-
 // Key is the hash of the string representation of options and style.
 // If they'll be the same, it's safe to use the same rendering process.
 // Earlier this was just the stringified options, but there were problems
@@ -133,28 +132,32 @@ router.post('/generateImage', async ctx => {
 
   // Promisify the stream state
   return new Promise((resolve, reject) => {
-    stream.on('finish', () => {
-      // Clean up the process from the map, we don't need these hanging around.
-      removeRenderProcess(options, style);
+    stream
+      .then(res => {
+        // Clean up the process from the map, we don't need these hanging around.
+        removeRenderProcess(options, style);
 
-      if (!requestClosed) {
-        ctx.response.set('Access-Control-Expose-Headers', 'World-File');
-        ctx.response.set('World-File', world);
-        ctx.status = 200;
-        ctx.type = 'image/png';
-        ctx.body = stream; // Send the PNG stream to the client.
+        if (!requestClosed) {
+          ctx.response.set('Access-Control-Expose-Headers', 'World-File');
+          ctx.response.set('World-File', world);
+          ctx.status = 200;
+          ctx.type = 'image/png';
+          ctx.body = res; // Send the PNG stream to the client.
 
+          // eslint-disable-next-line no-console
+          console.log('Done.');
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('Render finished but request was closed.');
+        }
+
+        resolve(); // Resolve to tell Koa that you're done.
+      })
+      .catch(err => {
         // eslint-disable-next-line no-console
-        console.log('Done.');
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('Render finished but request was closed.');
-      }
-
-      resolve(); // Resolve to tell Koa that you're done.
-    });
-
-    stream.on('error', reject); // Notify Koa that everything isn't OK if the stream errored.
+        console.log('Could not send the request:', err);
+        reject();
+      });
   });
 });
 
