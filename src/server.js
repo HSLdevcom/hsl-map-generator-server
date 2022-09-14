@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const router = require('koa-router')();
+const Router = require('@koa/router');
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const get = require('lodash/get');
@@ -7,6 +7,7 @@ const PCancelable = require('p-cancelable');
 const stringHash = require('string-hash');
 
 const app = new Koa();
+const router = new Router();
 
 const imageGenerator = require('./imageGenerator');
 
