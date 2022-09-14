@@ -1,4 +1,4 @@
-const mbgl = require('@mapbox/mapbox-gl-native');
+const mbgl = require('@maplibre/maplibre-gl-native');
 const sharp = require('sharp');
 const request = require('requestretry');
 const url = require('url');

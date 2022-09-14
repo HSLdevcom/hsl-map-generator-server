@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.1",
-    "@mapbox/mapbox-gl-native": "^5.0.2",
     "@mapbox/tilelive": "^6.1.0",
+    "@maplibre/maplibre-gl-native": "^5.0.1-pre.0",
     "forever": "<=4.0.2",
     "generic-pool": "^3.8.2",
     "koa": "^2.4.1",
