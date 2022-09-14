@@ -1,6 +1,7 @@
 const tilelive = require('@mapbox/tilelive');
 const sharp = require('sharp');
-const viewportMercator = require('viewport-mercator-project');
+const { WebMercatorViewport } = require('@math.gl/web-mercator');
+// const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
 const pEvery = require('p-every');
 const tileliveGl = require('./tileliveMapbox');
@@ -115,7 +116,7 @@ function createTileInfo(options) {
 
   const viewportWidth = widthOption * tileCountX;
   const viewportHeight = heightOption * tileCountY;
-  const viewport = viewportMercator({
+  const viewport = new WebMercatorViewport({
     longitude: options.center[0],
     latitude: options.center[1],
     zoom: options.zoom,
