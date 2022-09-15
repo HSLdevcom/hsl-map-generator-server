@@ -64,10 +64,8 @@ function mbglRequest(req, callback) {
           callback(err);
         }
       } else if (res === undefined) {
-        // eslint-disable-line eqeqeq
         callback(null, { data: Buffer.alloc(0) });
       } else if (res.statusCode === 200) {
-        // eslint-disable-line eqeqeq
         if (res.headers.modified) {
           response.modified = new Date(res.headers.modified);
         }
@@ -82,7 +80,6 @@ function mbglRequest(req, callback) {
 
         callback(null, response);
       } else if (res.statusCode === 404) {
-        // eslint-disable-line eqeqeq
         if (res.headers.modified) {
           response.modified = new Date(res.headers.modified);
         }
@@ -106,8 +103,8 @@ function mbglRequest(req, callback) {
 class GL {
   constructor(options, callback) {
     if (!options || (typeof options !== 'object' && typeof options !== 'string'))
-      return callback(new Error('options must be an object or a string'));
-    if (!options.style) return callback(new Error('Missing GL style JSON'));
+      return callback(new Error('options must be an object or a string')); // eslint-disable-line no-constructor-return
+    if (!options.style) return callback(new Error('Missing GL style JSON')); // eslint-disable-line no-constructor-return
 
     this._scale = options.query.scale || 1;
     this._bufferWidth = options.query.bufferWidth || 0;
@@ -136,13 +133,13 @@ class GL {
     if (this.canceled || !this._pool) {
       return false;
     }
-    const renderOptions = Object.assign({}, options, {
+    const renderOptions = {
+      ...options,
       width: options.width + 2 * this._bufferWidth,
       height: options.height + 2 * this._bufferWidth,
-    });
+    };
     const map = await this._pool.acquire();
 
-    // eslint-disable-next-line consistent-return
     return new Promise((resolve, reject) => {
       // First cancel check before rendering the tile
       if (isCanceled()) {
@@ -181,7 +178,7 @@ class GL {
                 height: imageHeight,
               })
               .toBuffer()
-              .then(image => {
+              .then((image) => {
                 resolve({
                   data: image,
                   info: {
@@ -200,7 +197,7 @@ class GL {
 
 module.exports = GL;
 // eslint-disable-next-line func-names
-module.exports.registerProtocols = function(tilelive) {
+module.exports.registerProtocols = function (tilelive) {
   // eslint-disable-next-line no-param-reassign
   tilelive.protocols['gl:'] = GL;
 };

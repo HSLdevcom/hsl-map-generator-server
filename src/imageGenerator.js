@@ -1,7 +1,6 @@
 const tilelive = require('@mapbox/tilelive');
 const sharp = require('sharp');
 const { WebMercatorViewport } = require('@math.gl/web-mercator');
-// const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
 const pEvery = require('p-every');
 const tileliveGl = require('./tileliveMapbox');
@@ -43,7 +42,7 @@ function createSource(options, style = null) {
     },
   };
 
-  const glOptions = Object.assign({}, defaultOptions, options);
+  const glOptions = { ...defaultOptions, ...options };
 
   return { source: glSource, options: glOptions };
 }
@@ -63,7 +62,7 @@ function initGl(source) {
 // Generates the tile and returns the image buffer (along with info) on completion,
 // or false if there was an issue like process cancellation,
 async function generateTile(glInstance, options, isCanceled) {
-  const opts = Object.assign({}, options, { format: 'raw' });
+  const opts = { ...options, format: 'raw' };
   let generated;
 
   try {
@@ -83,10 +82,10 @@ async function generateTile(glInstance, options, isCanceled) {
 }
 
 function createWorldFile(tileInfo) {
-  const { width, height, viewport, viewportWidth, viewportHeight } = tileInfo;
+  const { width, height, viewport } = tileInfo;
 
   const topLeft = viewport.unproject([0, 0]);
-  const bottomRight = viewport.unproject([viewportWidth, viewportHeight]);
+  const bottomRight = viewport.unproject([viewport.width, viewport.height]);
 
   const [left, top] = proj4('EPSG:4326', 'EPSG:3857', topLeft);
   const [right, bottom] = proj4('EPSG:4326', 'EPSG:3857', bottomRight);
@@ -144,13 +143,7 @@ function createTileInfo(options) {
     width,
     height,
     viewport,
-    viewportWidth,
-    viewportHeight,
     tiles,
-    tileCountX,
-    tileCountY,
-    tileWidth,
-    tileHeight,
   };
 }
 
@@ -163,7 +156,7 @@ function createBuffer(tileInfo) {
 // Generate the map tile and write it to the buffer.
 // Return true when the tile was written to the buffer successfully, false if cancelled.
 async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams, isCanceled) {
-  const tileOptions = Object.assign({}, mapOptions, tileParams.options);
+  const tileOptions = { ...mapOptions, ...tileParams.options };
 
   if (isCanceled()) {
     return false;
@@ -234,7 +227,7 @@ async function generate(opts, style, isCanceled) {
 
   try {
     // Wait for all tiles to be written to the buffer. Make sure all createTile calls returned true.
-    tilesSucceeded = await pEvery(tilePromises, success => success === true);
+    tilesSucceeded = await pEvery(tilePromises, (success) => success === true);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);

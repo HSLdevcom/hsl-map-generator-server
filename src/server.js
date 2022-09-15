@@ -80,7 +80,7 @@ function removeRenderProcess(options, style) {
   }
 }
 
-router.post('/generateImage', async ctx => {
+router.post('/generateImage', async (ctx) => {
   // 5 minutes timeout
   ctx.request.socket.setTimeout(5 * RENDER_TIMEOUT);
   let requestClosed = false;
@@ -134,7 +134,7 @@ router.post('/generateImage', async ctx => {
   // Promisify the stream state
   return new Promise((resolve, reject) => {
     stream
-      .then(res => {
+      .then((res) => {
         // Clean up the process from the map, we don't need these hanging around.
         removeRenderProcess(options, style);
 
@@ -154,7 +154,7 @@ router.post('/generateImage', async ctx => {
 
         resolve(); // Resolve to tell Koa that you're done.
       })
-      .catch(err => {
+      .catch((err) => {
         // eslint-disable-next-line no-console
         console.log('Could not send the request:', err);
         reject();

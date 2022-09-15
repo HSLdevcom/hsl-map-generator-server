@@ -13,17 +13,20 @@ yarn install
 
 ### Run
 
+Set up xorg-server (may not be required):
+```
+apt install xserver-xorg-video-dummy
+Xorg -dpi 96 -nolisten tcp -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./10.log -config ./xorg.conf :10 &
+export DISPLAY=":10"
+```
+
+
 Start server:
 ```
-npm start
+yarn start
 ```
 
-Start server in development mode:
+Start server in development (hot-reload) mode:
 ```
-npm run watch
-```
-
-Build production version to `dist`:
-```
-npm run build
+yarn run watch
 ```
