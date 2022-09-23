@@ -1,11 +1,11 @@
 const tilelive = require('@mapbox/tilelive');
-const PNGEncoder = require('png-stream').Encoder;
+const sharp = require('sharp');
 const viewportMercator = require('viewport-mercator-project');
 const proj4 = require('proj4');
 const pEvery = require('p-every');
 const tileliveGl = require('./tileliveMapbox');
 
-const MAX_TILE_SIZE = 2000;
+const MAX_TILE_SIZE = 5000;
 const CHANNELS = 4;
 
 tileliveGl.registerProtocols(tilelive);
@@ -18,6 +18,7 @@ const defaultOptions = {
   scale: 1,
   pitch: 0,
   bearing: 0,
+  bufferWidth: 5,
 };
 
 /**
@@ -35,7 +36,10 @@ function createSource(options, style = null) {
   const glSource = {
     protocol: 'gl:',
     style,
-    query: { scale: roundedScale || defaultOptions.scale },
+    query: {
+      scale: roundedScale || defaultOptions.scale,
+      bufferWidth: options.bufferWidth || defaultOptions.bufferWidth,
+    },
   };
 
   const glOptions = Object.assign({}, defaultOptions, options);
@@ -155,11 +159,6 @@ function createBuffer(tileInfo) {
   return Buffer.allocUnsafe(bufferLength);
 }
 
-function createOutStream(tileInfo) {
-  const { width, height } = tileInfo;
-  return new PNGEncoder(width, height, { colorSpace: 'rgba' });
-}
-
 // Generate the map tile and write it to the buffer.
 // Return true when the tile was written to the buffer successfully, false if cancelled.
 async function createTile(buffer, glInstance, mapOptions, tileInfo, tileParams, isCanceled) {
@@ -200,7 +199,6 @@ async function generate(opts, style, isCanceled) {
 
   const tileInfo = createTileInfo(options);
   const worldFile = createWorldFile(tileInfo);
-  const outStream = createOutStream(tileInfo);
 
   let glInstance;
 
@@ -255,16 +253,19 @@ async function generate(opts, style, isCanceled) {
   console.log('Tiles finished.');
 
   // Write the buffer to the PNG stream
-  outStream.write(buffer);
+
+  const outStream = sharp(buffer, {
+    raw: { width: tileInfo.width, height: tileInfo.height, channels: 4 },
+    limitInputPixels: false,
+  })
+    .png()
+    .toBuffer();
 
   // One last cancelled check...
   if (isCanceled()) {
     outStream.destroy(new Error('Cancelled.'));
     return false;
   }
-
-  // And we're done!
-  outStream.end();
 
   return { outStream, worldFile };
 }

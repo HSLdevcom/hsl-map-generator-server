@@ -1,4 +1,5 @@
 const mbgl = require('@mapbox/mapbox-gl-native');
+const sharp = require('sharp');
 const request = require('requestretry');
 const url = require('url');
 const fs = require('fs');
@@ -109,6 +110,7 @@ class GL {
     if (!options.style) return callback(new Error('Missing GL style JSON'));
 
     this._scale = options.query.scale || 1;
+    this._bufferWidth = options.query.bufferWidth || 0;
 
     this._pool = pool(options.style, {
       request: mbglRequest,
@@ -134,7 +136,10 @@ class GL {
     if (this.canceled || !this._pool) {
       return false;
     }
-
+    const renderOptions = Object.assign({}, options, {
+      width: options.width + 2 * this._bufferWidth,
+      height: options.height + 2 * this._bufferWidth,
+    });
     const map = await this._pool.acquire();
 
     // eslint-disable-next-line consistent-return
@@ -144,7 +149,7 @@ class GL {
         this.clearPool();
         reject(new Error('Render was canceled.'));
       } else {
-        map.render(options, (err, data) => {
+        map.render(renderOptions, (err, data) => {
           if (err) {
             reject(err);
             return;
@@ -157,17 +162,35 @@ class GL {
           } else {
             this._pool.release(map);
 
-            const width = Math.floor(options.width * this._scale);
-            const height = Math.floor(options.height * this._scale);
+            const renderWidth = Math.floor(renderOptions.width * this._scale);
+            const renderHeight = Math.floor(renderOptions.height * this._scale);
 
-            resolve({
-              data,
-              info: {
-                width,
-                height,
+            const imageWidth = Math.floor(options.width * this._scale);
+            const imageHeight = Math.floor(options.height * this._scale);
+            sharp(data, {
+              raw: {
+                width: renderWidth,
+                height: renderHeight,
                 channels: 4,
               },
-            });
+            })
+              .extract({
+                left: Math.floor(this._scale * this._bufferWidth),
+                top: Math.floor(this._scale * this._bufferWidth),
+                width: imageWidth,
+                height: imageHeight,
+              })
+              .toBuffer()
+              .then(image => {
+                resolve({
+                  data: image,
+                  info: {
+                    width: imageWidth,
+                    height: imageHeight,
+                    channels: 4,
+                  },
+                });
+              });
           }
         });
       }
