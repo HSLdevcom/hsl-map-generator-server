@@ -162,6 +162,10 @@ router.post('/generateImage', async (ctx) => {
   });
 });
 
+router.get('/health', async (ctx) => {
+  ctx.status = 200;
+});
+
 app
   .use(cors({ origin: '*' }))
   .use(bodyParser({ jsonLimit: '50mb' }))
