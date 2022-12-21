@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const router = require('koa-router')();
+const Router = require('@koa/router');
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const get = require('lodash/get');
@@ -7,6 +7,7 @@ const PCancelable = require('p-cancelable');
 const stringHash = require('string-hash');
 
 const app = new Koa();
+const router = new Router();
 
 const imageGenerator = require('./imageGenerator');
 
@@ -79,7 +80,7 @@ function removeRenderProcess(options, style) {
   }
 }
 
-router.post('/generateImage', async ctx => {
+router.post('/generateImage', async (ctx) => {
   // 5 minutes timeout
   ctx.request.socket.setTimeout(5 * RENDER_TIMEOUT);
   let requestClosed = false;
@@ -133,7 +134,7 @@ router.post('/generateImage', async ctx => {
   // Promisify the stream state
   return new Promise((resolve, reject) => {
     stream
-      .then(res => {
+      .then((res) => {
         // Clean up the process from the map, we don't need these hanging around.
         removeRenderProcess(options, style);
 
@@ -153,12 +154,16 @@ router.post('/generateImage', async ctx => {
 
         resolve(); // Resolve to tell Koa that you're done.
       })
-      .catch(err => {
+      .catch((err) => {
         // eslint-disable-next-line no-console
         console.log('Could not send the request:', err);
         reject();
       });
   });
+});
+
+router.get('/health', async (ctx) => {
+  ctx.status = 200;
 });
 
 app
