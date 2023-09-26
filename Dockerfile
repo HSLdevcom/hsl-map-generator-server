@@ -33,5 +33,4 @@ EXPOSE 8000
 CMD \
   cd ${WORK} && \
   Xorg -dpi 96 -nolisten tcp -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./10.log -config ./xorg.conf :10 & \
-  DISPLAY=":10" yarn forever start -c "yarn start" ./ && \
-  yarn forever logs -f 0
+  DISPLAY=":10" yarn start
