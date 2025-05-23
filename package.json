@@ -1,6 +1,6 @@
 {
   "name": "hsl-map-generator-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Server component for the HSL map generator",
   "main": "src/server.js",
   "scripts": {
