@@ -25,7 +25,7 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.1.10",
     "prettier": "^3.6.2"
   },
   "dependencies": {
@@ -38,7 +38,7 @@
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.3.0",
     "lodash": "^4.17.21",
-    "p-cancelable": "^2.1.1",
+    "p-cancelable": "^4.0.1",
     "p-every": "^2.0.0",
     "proj4": "^2.8.1",
     "request": "^2.88.2",
