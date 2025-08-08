@@ -33,7 +33,7 @@
     "@koa/router": "^12.0.0",
     "@mapbox/tilelive": "^6.1.1",
     "@maplibre/maplibre-gl-native": "^5.1.1",
-    "@math.gl/web-mercator": "^3.6.3",
+    "@math.gl/web-mercator": "^4.1.0",
     "generic-pool": "^3.9.0",
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.3.0",
