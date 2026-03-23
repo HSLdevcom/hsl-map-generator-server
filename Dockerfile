@@ -1,4 +1,4 @@
-FROM node:16-bullseye-slim
+FROM node:20-bullseye-slim
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq wget xserver-xorg-video-dummy libjemalloc2 \
   # maplibre-native dependencies
