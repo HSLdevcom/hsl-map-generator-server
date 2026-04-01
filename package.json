@@ -1,10 +1,11 @@
 {
   "name": "hsl-map-generator-server",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Server component for the HSL map generator",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server",
+    "start:local": "bash start-local.sh",
     "watch": "nodemon src/server",
     "lint": "eslint src"
   },
@@ -14,7 +15,7 @@
   },
   "keywords": [],
   "author": "Hannes Junnila <hannes.junnila@gmail.com>",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/HSLdevcom/hsl-map-generator-server/issues"
   },
@@ -25,25 +26,41 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
-    "nodemon": "^2.0.20",
-    "prettier": "^2.8.3"
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
+  },
+  "resolutions": {
+    "**/form-data": "2.5.5",
+    "braces": "3.0.3",
+    "cross-spawn": "7.0.6",
+    "npm-run-all/minimatch": "3.1.5",
+    "eslint/minimatch": "3.1.5",
+    "eslint-plugin-import/minimatch": "3.1.5",
+    "nodemon/minimatch": "3.1.5",
+    "@eslint/eslintrc/minimatch": "3.1.5",
+    "@humanwhocodes/config-array/minimatch": "3.1.5",
+    "eslint-config-airbnb-base/semver": "6.3.1",
+    "eslint-plugin-import/semver": "6.3.1",
+    "make-dir/semver": "6.3.1",
+    "semver@2 || 3 || 4 || 5": "5.7.2",
+    "tar-fs": "3.1.2"
   },
   "dependencies": {
-    "@koa/cors": "^4.0.0",
-    "@koa/router": "^12.0.0",
+    "@koa/cors": "^5.0.0",
+    "@koa/router": "^15.3.1",
     "@mapbox/tilelive": "^6.1.1",
-    "@maplibre/maplibre-gl-native": "^5.1.1",
+    "@maplibre/maplibre-gl-native": "^6.4.0",
     "@math.gl/web-mercator": "^3.6.3",
     "generic-pool": "^3.9.0",
-    "koa": "^2.14.1",
+    "koa": "^2.15.5",
     "koa-bodyparser": "^4.3.0",
     "lodash": "^4.17.21",
-    "p-cancelable": "^2.1.1",
+    "p-cancelable": "2.1.1",
     "p-every": "^2.0.0",
     "proj4": "^2.8.1",
     "request": "^2.88.2",
     "requestretry": "^7.1.0",
-    "sharp": "^0.31.3",
+    "sharp": "^0.34.5",
     "string-hash": "^1.1.3"
   }
 }
