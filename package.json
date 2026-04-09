@@ -43,7 +43,11 @@
     "eslint-plugin-import/semver": "6.3.1",
     "make-dir/semver": "6.3.1",
     "semver@2 || 3 || 4 || 5": "5.7.2",
-    "tar-fs": "3.1.2"
+    "tar-fs": "3.1.2",
+    "lodash": "4.18.1",
+    "flatted": "3.4.2",
+    "picomatch": "2.3.2",
+    "path-to-regexp": "8.4.2"
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",
@@ -54,7 +58,7 @@
     "generic-pool": "^3.9.0",
     "koa": "^2.15.5",
     "koa-bodyparser": "^4.3.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "p-cancelable": "2.1.1",
     "p-every": "^2.0.0",
     "proj4": "^2.8.1",
