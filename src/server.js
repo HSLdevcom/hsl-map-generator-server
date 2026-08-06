@@ -86,24 +86,23 @@ router.post('/generateImage', async (ctx) => {
   let requestClosed = false;
 
   const { options, style } = ctx.request.body;
+  const key = createRenderKey(options, style);
+  const existing = processes.get(key);
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `[generateImage] ${existing ? 'Joining existing' : 'New'} render — ` +
+      `${options.width}x${options.height} scale=${options.scale} zoom=${options.zoom} ` +
+      `center=[${options.center}] key=${key}`,
+  );
+
   // Creates a new render process or finds one that is already started on this server.
   const processPromise = getRenderProcess(options, style);
 
   // If the client disconnects, cancel the process.
   ctx.req.on('close', () => {
     requestClosed = true;
-
-    /*const key = createRenderKey(options);
-    const process = processes.get(key);
-
-    if (get(process, 'clients', 1) === 1) {
-      console.log('Only client, cancelling.');
-      process.promise.cancel();
-    }*/
   });
-
-  // eslint-disable-next-line no-console
-  console.log('Map render started.');
 
   let processResult;
 
@@ -112,7 +111,7 @@ router.post('/generateImage', async (ctx) => {
     processResult = await processPromise;
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.log('Map render failed,', err.message);
+    console.log(`[generateImage] Render failed — key=${key} error=${err.message}`);
     processResult = false;
   }
 
@@ -146,17 +145,20 @@ router.post('/generateImage', async (ctx) => {
           ctx.body = res; // Send the PNG stream to the client.
 
           // eslint-disable-next-line no-console
-          console.log('Done.');
+          console.log(`[generateImage] Done — key=${key}`);
         } else {
           // eslint-disable-next-line no-console
-          console.log('Render finished but request was closed.');
+          console.log(`[generateImage] Render finished but request was closed — key=${key}`);
         }
 
         resolve(); // Resolve to tell Koa that you're done.
       })
       .catch((err) => {
+        // Clean up the process from the map, we don't need these hanging around.
+        removeRenderProcess(options, style);
+
         // eslint-disable-next-line no-console
-        console.log('Could not send the request:', err);
+        console.log(`[generateImage] Could not send response — key=${key} error=${err}`);
         reject();
       });
   });
