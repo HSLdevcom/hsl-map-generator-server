@@ -204,43 +204,55 @@ async function generate(opts, style, isCanceled) {
     throw err;
   }
 
-  const buffer = createBuffer(tileInfo);
   // The promises collected here will resolve as the tiles
   // are written to the image buffer. The resolved value
   // of the promises indicates if the tile was
   // successfully written to the buffer.
   const tilePromises = [];
 
-  if (isCanceled()) {
-    return false;
-  }
-
-  // createTile returns true if the tile was successfully rendered.
-  // All promises need to be true for the image to be written, if some
-  // are false it means that the process was cancelled.
-  for (const tileConfig of tileInfo.tiles) {
-    const tilePromise = createTile(buffer, glInstance, options, tileInfo, tileConfig, isCanceled);
-    tilePromises.push(tilePromise);
-  }
-
   let tilesSucceeded = false;
+  let buffer;
 
   try {
-    // Wait for all tiles to be written to the buffer. Make sure all createTile calls returned true.
-    tilesSucceeded = await pEvery(tilePromises, (success) => success === true);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.log(err);
-  }
+    if (isCanceled()) {
+      return false;
+    }
 
-  // Drain the mapbox-gl pool so that we don't leave zombie pools hanging around.
-  await glInstance.clearPool();
+    buffer = createBuffer(tileInfo);
 
-  // tilesSucceeded is false if some createTile calls returned false.
-  // This indicates either that the process was cancelled or some other
-  // error occured when generating the tile.
-  if (!tilesSucceeded || isCanceled()) {
-    return false;
+    // createTile returns true if the tile was successfully rendered.
+    // All promises need to be true for the image to be written, if some
+    // are false it means that the process was cancelled.
+    for (const tileConfig of tileInfo.tiles) {
+      const tilePromise = createTile(
+        buffer,
+        glInstance,
+        options,
+        tileInfo,
+        tileConfig,
+        isCanceled,
+      );
+      tilePromises.push(tilePromise);
+    }
+
+    try {
+      // Wait for all tiles to be written to the buffer. Make sure all createTile calls returned true.
+      tilesSucceeded = await pEvery(tilePromises, (success) => success === true);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+    }
+
+    // tilesSucceeded is false if some createTile calls returned false.
+    // This indicates either that the process was cancelled or some other
+    // error occured when generating the tile.
+    if (!tilesSucceeded || isCanceled()) {
+      return false;
+    }
+  } finally {
+    // Drain the mapbox-gl pool so that we don't leave zombie pools hanging around,
+    // even if something above threw (e.g. buffer allocation failing for large images).
+    await glInstance.clearPool();
   }
 
   // eslint-disable-next-line no-console
