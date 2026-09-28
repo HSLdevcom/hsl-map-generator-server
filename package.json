@@ -1,6 +1,9 @@
 {
   "name": "hsl-map-generator-server",
-  "version": "1.0.3",
+  "version": "1.0.4",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "description": "Server component for the HSL map generator",
   "main": "src/server.js",
   "scripts": {
@@ -69,7 +72,7 @@
     "proj4": "^2.8.1",
     "request": "^2.88.2",
     "requestretry": "^7.1.0",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.4",
     "string-hash": "^1.1.3"
   }
 }
