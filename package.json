@@ -1,6 +1,6 @@
 {
   "name": "hsl-map-generator-server",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "engines": {
     "node": ">=22.12.0"
   },
