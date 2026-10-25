@@ -2,7 +2,7 @@
   "name": "hsl-map-generator-server",
   "version": "1.0.4",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.12.0"
   },
   "description": "Server component for the HSL map generator",
   "main": "src/server.js",
