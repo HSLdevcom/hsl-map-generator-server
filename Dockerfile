@@ -1,8 +1,8 @@
 FROM ubuntu:24.04
 
-# Install Node.js 20 from NodeSource
+# Install Node.js 22 from NodeSource
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq curl ca-certificates --no-install-recommends \
-  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+  && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
   && apt-get install -yq nodejs \
   && npm install -g yarn \
   && rm -rf /var/lib/apt/lists/*
