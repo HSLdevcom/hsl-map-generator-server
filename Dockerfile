@@ -33,14 +33,23 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
 ENV WORK=/opt/mapgenerator
 ENV NODE_ENV=production
 
+# Run as the unprivileged uid 1000 user like the HSL base image does: rename Ubuntu's default
+# user to node. Xorg with the dummy driver runs unprivileged; it needs the X socket directory.
+RUN usermod -l node -d /home/node -m ubuntu \
+  && groupmod -n node ubuntu \
+  && mkdir -p ${WORK} /tmp/.X11-unix \
+  && chmod 1777 /tmp/.X11-unix \
+  && chown node:node ${WORK}
+
 WORKDIR ${WORK}
+USER node
 
 # Install app dependencies
-COPY package.json package-lock.json ${WORK}/
+COPY --chown=node:node package.json package-lock.json ${WORK}/
 RUN npm ci --omit=dev && npm cache clean --force
 
 # Bundle app source
-COPY . ${WORK}
+COPY --chown=node:node . ${WORK}
 
 EXPOSE 8000
 
