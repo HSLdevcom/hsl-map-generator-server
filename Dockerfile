@@ -1,45 +1,48 @@
-FROM ubuntu:24.04
+# Node 24 comes from the HSL base image, but the runtime OS stays Ubuntu 24.04 (noble).
+# The prebuilt @maplibre/maplibre-gl-native binary (lib/node-v137/mbgl.node) is built on
+# Ubuntu 24.04: it needs GLIBC_2.38, GLIBCXX_3.4.32, libicu*.so.74 and libjpeg.so.8.
+# The HSL base image is Debian bookworm (glibc 2.36, GLIBCXX_3.4.30, ICU 72, libjpeg62),
+# so the renderer cannot load there.
+FROM hsldevcom/infodevops-docker-base-images:1.1.0-24-node AS node
 
-# Install Node.js 22 from NodeSource
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq curl ca-certificates --no-install-recommends \
-  && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-  && apt-get install -yq nodejs \
-  && npm install -g yarn \
+FROM ubuntu:24.04 AS production
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Runtime libraries of the maplibre-gl-native prebuilt binary, Xorg with the dummy driver and
+# mesa (software GL) for headless rendering, jemalloc for sharp.
+# DL3008: apt packages are intentionally unpinned (the Ubuntu archive only keeps the latest).
+# hadolint ignore=DL3008
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+    ca-certificates tini \
+    xserver-xorg-core xserver-xorg-video-dummy \
+    libgl1-mesa-dri libglx-mesa0 libopengl0 libglx0 libx11-6 libxext6 \
+    libcurl4t64 libuv1t64 libpng16-16t64 libwebp7 libjpeg-turbo8 libicu74 \
+    libjemalloc2 \
   && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-  wget xserver-xorg-video-dummy libjemalloc2 \
-  # maplibre-native dependencies
-  ccache cmake ninja-build pkg-config xvfb \
-  libcurl4-openssl-dev libglfw3-dev libuv1-dev \
-  g++ libc++-dev libc++abi-dev \
-  libpng-dev libgl1-mesa-dev libgl1-mesa-dri \
-  # runtime deps required by maplibre-gl-native prebuilt binary
-  libwebp-dev libjpeg-dev libicu-dev \
-  --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm
+RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+  && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+  && node --version && npm --version
 
-# shapr works better with jemalloc
+# sharp works better with jemalloc
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
 ENV WORK=/opt/mapgenerator
 ENV NODE_ENV=production
 
-# Create app directory
-RUN mkdir -p ${WORK}
 WORKDIR ${WORK}
 
 # Install app dependencies
-COPY package.json yarn.lock ${WORK}/
-RUN yarn && yarn cache clean
+COPY package.json package-lock.json ${WORK}/
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Bundle app source
 COPY . ${WORK}
 
-# RUN yarn run lint
-
 EXPOSE 8000
 
-CMD \
-  cd ${WORK} && \
-  Xorg -dpi 96 -nolisten tcp -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./10.log -config ./xorg.conf :10 & \
-  DISPLAY=":10" yarn start
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["sh", "-c", "Xorg -dpi 96 -nolisten tcp -noreset +extension GLX +extension RANDR +extension RENDER -logfile ./10.log -config ./xorg.conf :10 & DISPLAY=:10 exec node src/server.js"]

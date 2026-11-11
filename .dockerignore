@@ -1,6 +1,14 @@
 .git
 .gitignore
+.github
 node_modules
+deps
+test
+lcov.info
+junit.xml
+megalinter-reports
+AGENTS.md
+CLAUDE.md
 
 logs
 *.log

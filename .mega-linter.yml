@@ -1,0 +1,6 @@
+# Extends shared HSL defaults; only repo-specific overrides below.
+EXTENDS:
+  - https://raw.githubusercontent.com/HSLdevcom/transitdata-shared-workflows/234db0afad207e5af97e17e597b9f0933d22b4c0/megalinter/base.yml
+
+# Generated / vendor / data dirs
+FILTER_REGEX_EXCLUDE: '(^|/)(node_modules|dist|build|output|coverage|megalinter-reports|\.idea|\.husky|lcov\.info|junit\.xml|package-lock\.json)(/|$)'
