@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: HSLdevcom/transitdata-shared-workflows/.github/workflows/ci-cd-typescript.yml@b4dfad21325ddeb396df4697194cfee0ba0a50d7  # transitdata-shared-workflows PR #37, until it is released
+    uses: HSLdevcom/transitdata-shared-workflows/.github/workflows/ci-cd-typescript.yml@17857cb49f6af15e2f8a07e4ef3224b975e68de1  # transitdata-shared-workflows PR #37, until it is released
     secrets: inherit  # zizmor: ignore[secrets-inherit] shared workflow declares no secrets: block
     with:
       checkAndTestOutsideDocker: true
